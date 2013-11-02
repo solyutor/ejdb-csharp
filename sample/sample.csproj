@@ -63,16 +63,16 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\nejdb.csproj">
-      <Project>{A24C964C-771F-4359-8C93-4BFCBE451D8B}</Project>
-      <Name>nejdb</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EJDB\nejdb.csproj">
+      <Project>{A24C964C-771F-4359-8C93-4BFCBE451D8B}</Project>
+      <Name>nejdb</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

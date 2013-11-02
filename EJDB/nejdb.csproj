@@ -52,9 +52,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -63,7 +60,6 @@
     <Compile Include="Ejdb.DB\EJDB.cs" />
     <Compile Include="Ejdb.IO\ExtBinaryReader.cs" />
     <Compile Include="Ejdb.IO\ExtBinaryWriter.cs" />
-    <Compile Include="Ejdb.Tests\TestBSON.cs" />
     <Compile Include="Ejdb.Utils\TypeExtension.cs" />
     <Compile Include="Ejdb.BSON\BSONType.cs" />
     <Compile Include="Ejdb.BSON\InvalidBSONDataException.cs" />
@@ -79,7 +75,6 @@
     <Compile Include="Ejdb.BSON\BSONDocument.cs" />
     <Compile Include="Ejdb.BSON\BSONConstants.cs" />
     <Compile Include="Ejdb.DB\EJDBException.cs" />
-    <Compile Include="Ejdb.Tests\TestEJDB.cs" />
     <Compile Include="Ejdb.DB\EJDBQuery.cs" />
     <Compile Include="Ejdb.DB\EJDBQueryException.cs" />
     <Compile Include="Ejdb.DB\EJDBQCursor.cs" />
@@ -99,6 +94,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Ejdb.Tests\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
