@@ -14,6 +14,7 @@
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
 using System;
+using Ejdb.Utils;
 using NUnit.Framework;
 using Ejdb.DB;
 using Ejdb.BSON;
@@ -25,7 +26,7 @@ namespace Ejdb.Tests {
 	
 		[Test]
 		public void Test1OpenClose() {
-			EJDB jb = new EJDB("testdb1", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			EJDB jb = new EJDB("testdb1", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			Assert.IsTrue(jb.IsOpen);
 			Assert.AreEqual(0, jb.LastDBErrorCode);
 			Assert.AreEqual("success", jb.LastDBErrorMsg);
@@ -36,7 +37,7 @@ namespace Ejdb.Tests {
 
 		[Test]
 		public void Test2EnsureCollection() {
-			EJDB jb = new EJDB("testdb1", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			EJDB jb = new EJDB("testdb1", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			EJDBCollectionOptionsN co = new EJDBCollectionOptionsN();
 			co.large = true;
 			co.compressed = false;
@@ -47,7 +48,7 @@ namespace Ejdb.Tests {
 
 		[Test]
 		public void Test3SaveLoad() {
-			EJDB jb = new EJDB("testdb1", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			EJDB jb = new EJDB("testdb1", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			Assert.IsTrue(jb.IsOpen);
 			BSONDocument doc = new BSONDocument().SetNumber("age", 33);
 			Assert.IsNull(doc["_id"]);
@@ -80,7 +81,7 @@ namespace Ejdb.Tests {
 
 		[Test]
 		public void Test4Q1() {
-			EJDB jb = new EJDB("testdb1", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			EJDB jb = new EJDB("testdb1", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			Assert.IsTrue(jb.IsOpen);
 			BSONDocument doc = new BSONDocument().SetNumber("age", 33);
 			Assert.IsNull(doc["_id"]);
@@ -120,7 +121,7 @@ namespace Ejdb.Tests {
 
 		[Test]
 		public void Test4Q2() {
-			EJDB jb = new EJDB("testdb1", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			EJDB jb = new EJDB("testdb1", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			Assert.IsTrue(jb.IsOpen);
 
 			var parrot1 = BSONDocument.ValueOf(new{

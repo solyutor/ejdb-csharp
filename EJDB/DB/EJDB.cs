@@ -15,134 +15,23 @@
 // ============================================================================================
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB {
-
-	/// <summary>
-	/// Corresponds to <c>EJCOLLOPTS</c> in ejdb.h
-	/// </summary>
-	public struct EJDBCollectionOptionsN {
-		[MarshalAs(UnmanagedType.U1)]
-		public bool large;
-
-		[MarshalAs(UnmanagedType.U1)]
-		public bool compressed;
-
-		public long records;
-
-		public int cachedrecords;
-	}
-
 	/// <summary>
 	/// EJDB database native wrapper.
 	/// </summary>
 	public class EJDB : IDisposable {
-		//.//////////////////////////////////////////////////////////////////
-		// 						Native open modes
-		//.//////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Open as a reader.
-		/// </summary>
-		public const int JBOREADER = 1 << 0;
 
-		/// <summary>
-		/// Open as a writer.
-		/// </summary>
-		public const int JBOWRITER = 1 << 1;
+		
 
-		/// <summary>
-		/// Create if db file not exists. 
-		/// </summary>
-		public const int JBOCREAT = 1 << 2;
-
-		/// <summary>
-		/// Truncate db on open.
-		/// </summary>
-		public const int JBOTRUNC = 1 << 3;
-
-		/// <summary>
-		/// Open without locking. 
-		/// </summary>
-		public const int JBONOLCK = 1 << 4;
-
-		/// <summary>
-		/// Lock without blocking.
-		/// </summary>
-		public const int JBOLCKNB = 1 << 5;
-
-		/// <summary>
-		/// Synchronize every transaction with storage.
-		/// </summary>
-		public const int JBOTSYNC = 1 << 6;
-
-		/// <summary>
-		/// The default open mode <c>(JBOWRITER | JBOCREAT)</c>
-		/// </summary>
-		public const int DEFAULT_OPEN_MODE = (JBOWRITER | JBOCREAT);
-		//.//////////////////////////////////////////////////////////////////
-		// 				 Native index operations & types (ejdb.h)
-		//.//////////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Drop index.
-		/// </summary>
-		const int JBIDXDROP = 1 << 0;
-
-		/// <summary>
-		/// Drop index for all types.
-		/// </summary>
-		const int JBIDXDROPALL = 1 << 1;
-
-		/// <summary>
-		/// Optimize indexes.
-		/// </summary>
-		const int JBIDXOP = 1 << 2;
-
-		/// <summary>
-		/// Rebuild index.
-		/// </summary>
-		const int JBIDXREBLD = 1 << 3;
-
-		/// <summary>
-		/// Number index.
-		/// </summary>
-		const int JBIDXNUM = 1 << 4;
-
-		/// <summary>
-		/// String index.
-		/// </summary>
-		const int JBIDXSTR = 1 << 5;
-
-		/// <summary>
-		/// Array token index.
-		/// </summary>
-		const int JBIDXARR = 1 << 6;
-
-		/// <summary>
-		/// Case insensitive string index.
-		/// </summary>
-		const int JBIDXISTR = 1 << 7;
-
-		/// <summary>
-		/// The EJDB library version
-		/// </summary>
-		static string _LIBVERSION;
-
-		/// <summary>
-		/// The EJDB library version hex code.
-		/// </summary>
-		static long _LIBHEXVERSION;
+		
 
 		/// <summary>
 		/// Name if EJDB library
 		/// </summary>
-		#if EJDBDLL
-		public const string EJDB_LIB_NAME = "tcejdbdll";
-#else
-		public const string EJDB_LIB_NAME = "tcejdb";
-		#endif
+		
 		/// <summary>
 		/// Pointer to the native EJDB instance.
 		/// </summary>
@@ -155,32 +44,9 @@ namespace Ejdb.DB {
 
 		#region NativeRefs
 
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbnew", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern IntPtr _ejdbnew();
+		
 
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbdel", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern IntPtr _ejdbdel([In] IntPtr db);
-
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern bool _ejdbopen([In] IntPtr db, [In] IntPtr path, int mode);
-
-		internal static bool _ejdbopen(IntPtr db, string path, int mode) {
-			IntPtr pptr = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(path, Encoding.UTF8);
-			try {
-				return _ejdbopen(db, pptr, mode);
-			} finally {
-				Marshal.FreeHGlobal(pptr); //UnixMarshal.FreeHeap(pptr);
-			}
-		}
-
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbclose", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern bool _ejdbclose([In] IntPtr db);
-
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbisopen", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern bool _ejdbisopen([In] IntPtr db);
-
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbecode", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern int _ejdbecode([In] IntPtr db);
+		
 
 		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdberrmsg", CallingConvention = CallingConvention.Cdecl)]
 		internal static extern IntPtr _ejdberrmsg(int ecode);
@@ -271,8 +137,7 @@ namespace Ejdb.DB {
 		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranstatus", CallingConvention = CallingConvention.Cdecl)]
 		internal static extern bool _ejdbtranstatus([In] IntPtr coll, out bool txactive);
 		//EJDB_EXPORT const char *ejdbversion();
-		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbversion", CallingConvention = CallingConvention.Cdecl)]
-		internal static extern IntPtr _ejdbversion();
+		
 		//EJDB_EXPORT bson* json2bson(const char *jsonstr);
 		[DllImport(EJDB_LIB_NAME, EntryPoint = "json2bson", CallingConvention = CallingConvention.Cdecl)]
 		internal static extern IntPtr _json2bson([In] IntPtr jsonstr);
@@ -368,62 +233,21 @@ namespace Ejdb.DB {
 			}
 		}
 
-		/// <summary>
-		/// Gets the EJDB library version.
-		/// </summary>
-		/// <value>The LIB version.</value>
-		public static string LIBVersion {
-			get {
-				if (_LIBVERSION != null) {
-					return _LIBVERSION;
-				}
-				lock (typeof(EJDB)) {
-					if (_LIBVERSION != null) {
-						return _LIBVERSION;
-					}
-					IntPtr vres = _ejdbversion();
-					if (vres == IntPtr.Zero) {
-						throw new Exception("Unable to get ejdb library version");
-					}
-					_LIBVERSION = Native.StringFromNativeUtf8(vres); //UnixMarshal.PtrToString(vres, Encoding.UTF8);
-				}
-				return _LIBVERSION;
-			}		
-		}
+		
 
-		/// <summary>
-		/// Gets the EJDB library hex encoded version.
-		/// </summary>
-		/// <remarks>
-		/// E.g: for the version "1.1.13" return value will be: 0x1113
-		/// </remarks>
-		/// <value>The lib hex version.</value>
-		public static long LibHexVersion {
-			get {
-				if (_LIBHEXVERSION != 0) {
-					return _LIBHEXVERSION;
-				}
-				lock (typeof(EJDB)) {
-					if (_LIBHEXVERSION != 0) {
-						return _LIBHEXVERSION;
-					}
-					_LIBHEXVERSION = Convert.ToInt64("0x" + LIBVersion.Replace(".", ""), 16);
-				}
-				return _LIBHEXVERSION;
-			}
-		}
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Ejdb.DB.EJDB"/> class.
 		/// </summary>
 		/// <param name="path">The main database file path.</param>
 		/// <param name="omode">Open mode.</param>
-		public EJDB(string path, int omode = DEFAULT_OPEN_MODE) {
+		public EJDB(string path, int omode = EjdbDatabaseHandle.DEFAULT_OPEN_MODE) {
 			if (EJDB.LibHexVersion < 0x1113) {
 				throw new EJDBException("EJDB library version must be at least '1.1.13' or greater");
 			}
 			bool rv;
-			_db = _ejdbnew();
+			_db = EjbdLibraryHandle._ejdbnew();
 			if (_db == IntPtr.Zero) {
 				throw new EJDBException("Unable to create ejdb instance");
 			}
@@ -447,7 +271,7 @@ namespace Ejdb.DB {
 				IntPtr db = _db;
 				_db = IntPtr.Zero;
 				if (db != IntPtr.Zero) {
-					_ejdbdel(db);
+					EjbdLibraryHandle._ejdbdel(db);
 				}
 			}
 		}

@@ -57,35 +57,43 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Ejdb.DB\EJDB.cs" />
-    <Compile Include="Ejdb.IO\ExtBinaryReader.cs" />
-    <Compile Include="Ejdb.IO\ExtBinaryWriter.cs" />
-    <Compile Include="Ejdb.Utils\TypeExtension.cs" />
-    <Compile Include="Ejdb.BSON\BSONType.cs" />
-    <Compile Include="Ejdb.BSON\InvalidBSONDataException.cs" />
-    <Compile Include="Ejdb.BSON\BSONOid.cs" />
-    <Compile Include="Ejdb.BSON\BSONTimestamp.cs" />
-    <Compile Include="Ejdb.BSON\BSONRegexp.cs" />
-    <Compile Include="Ejdb.BSON\IBSONValue.cs" />
-    <Compile Include="Ejdb.BSON\BSONValue.cs" />
-    <Compile Include="Ejdb.BSON\BSONIterator.cs" />
-    <Compile Include="Ejdb.BSON\BSONArray.cs" />
-    <Compile Include="Ejdb.BSON\BSONCodeWScope.cs" />
-    <Compile Include="Ejdb.BSON\BSONBinData.cs" />
-    <Compile Include="Ejdb.BSON\BSONDocument.cs" />
-    <Compile Include="Ejdb.BSON\BSONConstants.cs" />
-    <Compile Include="Ejdb.DB\EJDBException.cs" />
-    <Compile Include="Ejdb.DB\EJDBQuery.cs" />
-    <Compile Include="Ejdb.DB\EJDBQueryException.cs" />
-    <Compile Include="Ejdb.DB\EJDBQCursor.cs" />
-    <Compile Include="Ejdb.BSON\BSONull.cs" />
-    <Compile Include="Ejdb.BSON\BSONUndefined.cs" />
+    <Compile Include="DB\EJDB.cs" />
+    <Compile Include="DB\EJDBCollectionOptionsN.cs" />
+    <Compile Include="DB\IndexOperations.cs" />
+    <Compile Include="DB\OpenMode.cs" />
+    <Compile Include="IO\ExtBinaryReader.cs" />
+    <Compile Include="IO\ExtBinaryWriter.cs" />
+    <Compile Include="UnmanagedProcName.cs" />
+    <Compile Include="Utils\ResourceHelper.cs" />
+    <Compile Include="DB\EjdbDatabaseHandle.cs" />
+    <Compile Include="DB\EjbdLibraryHandle.cs" />
+    <Compile Include="DB\SafeMethodHandle.cs" />
+    <Compile Include="Utils\TypeExtension.cs" />
+    <Compile Include="BSON\BSONType.cs" />
+    <Compile Include="BSON\InvalidBSONDataException.cs" />
+    <Compile Include="BSON\BSONOid.cs" />
+    <Compile Include="BSON\BSONTimestamp.cs" />
+    <Compile Include="BSON\BSONRegexp.cs" />
+    <Compile Include="BSON\IBSONValue.cs" />
+    <Compile Include="BSON\BSONValue.cs" />
+    <Compile Include="BSON\BSONIterator.cs" />
+    <Compile Include="BSON\BSONArray.cs" />
+    <Compile Include="BSON\BSONCodeWScope.cs" />
+    <Compile Include="BSON\BSONBinData.cs" />
+    <Compile Include="BSON\BSONDocument.cs" />
+    <Compile Include="BSON\BSONConstants.cs" />
+    <Compile Include="DB\EJDBException.cs" />
+    <Compile Include="DB\EJDBQuery.cs" />
+    <Compile Include="DB\EJDBQueryException.cs" />
+    <Compile Include="DB\EJDBQCursor.cs" />
+    <Compile Include="BSON\BSONull.cs" />
+    <Compile Include="BSON\BSONUndefined.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Ejdb.Utils\Native.cs" />
+    <Compile Include="Utils\Native.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -96,7 +104,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Ejdb.Tests\" />
+    <EmbeddedResource Include="tcejdb64.dll" />
+    <Content Include="tcejdb32.dll" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

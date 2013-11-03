@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 
 namespace Ejdb.Utils {
 
-	public class Native {
+	public static class Native {
 		static Native() {
 		}
 
@@ -37,11 +37,35 @@ namespace Ejdb.Utils {
 			for (; Marshal.ReadByte(nativeUtf8, len) != 0; ++len) {
 			}
 			if (len == 0) {
-				return string.Empty;
+				return String.Empty;
 			}
 			byte[] buffer = new byte[len];
 			Marshal.Copy(nativeUtf8, buffer, 0, buffer.Length);
 			return Encoding.UTF8.GetString(buffer);
+		}
+
+		[DllImport("kernel32.dll", SetLastError = true)]
+		private static extern SafeMethodHandle GetProcAddress(IntPtr library, string procedureName);
+
+		public static TDelegate GetUnmanagedDelegate<TDelegate>(this EjbdLibraryHandle library) where TDelegate : class
+		{
+			var delegateType = typeof (TDelegate);
+			var attributeType = typeof (UnmanagedProcedure);
+			var customAttributes = delegateType.GetCustomAttributes(attributeType, false);
+			if (customAttributes.Length != 1)
+			{
+				throw new InvalidOperationException("Delegate " + delegateType.FullName + "should be marked with " + attributeType.FullName);
+			}
+
+			var procedureName = ((UnmanagedProcedure)customAttributes[0]).Name;
+			var methodHandle = GetProcAddress(library.DangerousGetHandle(), procedureName);
+			if (methodHandle.IsInvalid)
+			{
+				var error = Marshal.GetLastWin32Error();
+				throw new InvalidOperationException("Cannot get proc address '" + procedureName + "'. Win32 error =" + error);
+			}
+
+			return Marshal.GetDelegateForFunctionPointer(methodHandle.DangerousGetHandle(), delegateType) as TDelegate;
 		}
 	}
 }

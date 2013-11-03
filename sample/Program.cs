@@ -16,13 +16,14 @@
 using System;
 using Ejdb.DB;
 using Ejdb.BSON;
+using Ejdb.Utils;
 
 namespace sample {
 
 	class MainClass {
 
 		public static void Main(string[] args) {
-			var jb = new EJDB("zoo", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+			var jb = new EJDB("zoo", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			jb.ThrowExceptionOnFail = true;
 
 			var parrot1 = BSONDocument.ValueOf(new {
