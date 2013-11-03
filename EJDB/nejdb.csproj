@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DB\Collection.cs" />
     <Compile Include="DB\EJDB.cs" />
     <Compile Include="DB\EJDBCollectionOptionsN.cs" />
     <Compile Include="DB\IndexOperations.cs" />
@@ -64,9 +65,9 @@
     <Compile Include="IO\ExtBinaryReader.cs" />
     <Compile Include="IO\ExtBinaryWriter.cs" />
     <Compile Include="UnmanagedProcName.cs" />
-    <Compile Include="Utils\ResourceHelper.cs" />
-    <Compile Include="DB\EjdbDatabaseHandle.cs" />
-    <Compile Include="DB\EjbdLibraryHandle.cs" />
+    <Compile Include="ResourceHelper.cs" />
+    <Compile Include="DB\Database.cs" />
+    <Compile Include="DB\Library.cs" />
     <Compile Include="DB\SafeMethodHandle.cs" />
     <Compile Include="Utils\TypeExtension.cs" />
     <Compile Include="BSON\BSONType.cs" />

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 
 namespace Ejdb.DB
 {
@@ -7,7 +6,6 @@ namespace Ejdb.DB
 	// 						Native open modes
 	//.//////////////////////////////////////////////////////////////////
 	[Flags]
-	//[MarshalAs(UnmanagedType.I4)]
 	public enum OpenMode : int
 	{
 		/// <summary>

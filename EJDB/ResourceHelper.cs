@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Ejdb.Utils
+namespace Ejdb
 {
 	internal static class ResourceHelper
 	{

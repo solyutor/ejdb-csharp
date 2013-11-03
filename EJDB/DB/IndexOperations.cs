@@ -46,6 +46,6 @@ namespace Ejdb.DB
 		/// <summary>
 		/// Case insensitive string index. (JBIDXISTR)
 		/// </summary>
-		CaseInsensitiveString = 1 << 7;
+		CaseInsensitiveString = 1 << 7
 	}
 }

@@ -34,9 +34,9 @@ namespace Ejdb.DB {
 			this.Code = code;
 		}
 
-		public EJDBException(EJDB db) : base(db.LastDBErrorMsg) {
-			this.Code = db.LastDBErrorCode;
-		}
+		//public EJDBException(EJDB db) : base(db.LastDBErrorMsg) {
+		//	this.Code = db.LastDBErrorCode;
+		//}
 
 		public override string ToString() {
 			return string.Format("[EJDBException: Code={0}, Msg={1}]", Code, Message);

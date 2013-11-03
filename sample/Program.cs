@@ -23,49 +23,49 @@ namespace sample {
 	class MainClass {
 
 		public static void Main(string[] args) {
-			var jb = new EJDB("zoo", EjdbDatabaseHandle.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
-			jb.ThrowExceptionOnFail = true;
+		//	var jb = new EJDB("zoo", Database.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
+		//	jb.ThrowExceptionOnFail = true;
 
-			var parrot1 = BSONDocument.ValueOf(new {
-				name = "Grenny",
-				type = "African Grey",
-				male = true,
-				age = 1,
-				birthdate = DateTime.Now,
-				likes = new string[] { "green color", "night", "toys" },
-				extra = BSONull.VALUE
-			});
+		//	var parrot1 = BSONDocument.ValueOf(new {
+		//		name = "Grenny",
+		//		type = "African Grey",
+		//		male = true,
+		//		age = 1,
+		//		birthdate = DateTime.Now,
+		//		likes = new string[] { "green color", "night", "toys" },
+		//		extra = BSONull.VALUE
+		//	});
 
-			var parrot2 = BSONDocument.ValueOf(new {
-				name = "Bounty",
-				type = "Cockatoo",
-				male = false,
-				age = 15,
-				birthdate = DateTime.Now,
-				likes = new string[] { "sugar cane" }
-			});
+		//	var parrot2 = BSONDocument.ValueOf(new {
+		//		name = "Bounty",
+		//		type = "Cockatoo",
+		//		male = false,
+		//		age = 15,
+		//		birthdate = DateTime.Now,
+		//		likes = new string[] { "sugar cane" }
+		//	});
 
-			jb.Save("parrots", parrot1, parrot2);
+		//	jb.Save("parrots", parrot1, parrot2);
 
-			Console.WriteLine("Grenny OID: " + parrot1["_id"]);
-			Console.WriteLine("Bounty OID: " + parrot2["_id"]);
+		//	Console.WriteLine("Grenny OID: " + parrot1["_id"]);
+		//	Console.WriteLine("Bounty OID: " + parrot2["_id"]);
 
-			var q = jb.CreateQuery(new {
-				likes = "toys"
-			}, "parrots").OrderBy("name");
+		//	var q = jb.CreateQuery(new {
+		//		likes = "toys"
+		//	}, "parrots").OrderBy("name");
 
-			using (var cur = q.Find()) {
-				Console.WriteLine("Found " + cur.Length + " parrots");
-				foreach (var e in cur) {
-					//fetch  the `name` and the first element of likes array from the current BSON iterator.
-					//alternatively you can fetch whole document from the iterator: `e.ToBSONDocument()`
-					BSONDocument rdoc = e.ToBSONDocument("name", "likes.0");	
-					Console.WriteLine(string.Format("{0} likes the '{1}'", rdoc["name"], rdoc["likes.0"]));
-				}
-			}
-			q.Dispose();
-			jb.Dispose();
-            Console.ReadKey();
+		//	using (var cur = q.Find()) {
+		//		Console.WriteLine("Found " + cur.Length + " parrots");
+		//		foreach (var e in cur) {
+		//			//fetch  the `name` and the first element of likes array from the current BSON iterator.
+		//			//alternatively you can fetch whole document from the iterator: `e.ToBSONDocument()`
+		//			BSONDocument rdoc = e.ToBSONDocument("name", "likes.0");	
+		//			Console.WriteLine(string.Format("{0} likes the '{1}'", rdoc["name"], rdoc["likes.0"]));
+		//		}
+		//	}
+		//	q.Dispose();
+		//	jb.Dispose();
+		//	Console.ReadKey();
 		}
 	}
 }

@@ -5,7 +5,8 @@ namespace Ejdb.DB
 	/// <summary>
 	/// Corresponds to <c>EJCOLLOPTS</c> in ejdb.h
 	/// </summary>
-	public struct EJDBCollectionOptionsN {
+	[StructLayout(LayoutKind.Sequential)]
+	public struct EjdbCollectionOptionsN {
 		[MarshalAs(UnmanagedType.U1)]
 		public bool large;
 
