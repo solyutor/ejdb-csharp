@@ -62,6 +62,8 @@
     <Compile Include="DB\EJDBCollectionOptionsN.cs" />
     <Compile Include="DB\IndexOperations.cs" />
     <Compile Include="DB\OpenMode.cs" />
+    <Compile Include="DB\SafeDatabaseHandle.cs" />
+    <Compile Include="DB\SafeLibraryHandle.cs" />
     <Compile Include="IO\ExtBinaryReader.cs" />
     <Compile Include="IO\ExtBinaryWriter.cs" />
     <Compile Include="UnmanagedProcName.cs" />
