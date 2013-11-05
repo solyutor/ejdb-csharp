@@ -36,9 +36,7 @@
 
 
 
-//		//EJDB_EXPORT bool ejdbrmbson(EJCOLL *coll, bson_oid_t *oid);
-//		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
-//		internal static extern bool _ejdbrmbson([In] IntPtr coll, [In] byte[] oid);
+
 		
 		
 //		//EJDB_EXPORT bson* json2bson(const char *jsonstr);

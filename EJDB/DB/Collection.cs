@@ -18,6 +18,7 @@ namespace Ejdb.DB
 		private SyncDelegate _syncCollection;
 		private SaveBsonDelegate _saveBson;
 		private LoadBsonDelegate _loadBson;
+		private DeleteBsonDelegate _deleteBson;
 
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
@@ -29,18 +30,24 @@ namespace Ejdb.DB
 		//EJDB_EXPORT bool ejdbsavebson3(EJCOLL *jcoll, void *bsdata, bson_oid_t *oid, bool merge);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsavebson3", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsavebson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
-		
+		//TODO: Possible save methods: bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid) 
+		//TODO: Possible save methods: bool ejdbsavebson2(EJCOLL *coll, bson *bs, bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
 		private delegate bool SaveBsonDelegate([In] CollectionHandle collection,[In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
-		//TODO: Possible save methods: bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid) 
-		//TODO: Possible save methods: bool ejdbsavebson2(EJCOLL *coll, bson *bs, bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 
+
 
 		//EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
 		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [Out] byte[] oid);
-		
+
+		//EJDB_EXPORT bool ejdbrmbson(EJCOLL *coll, bson_oid_t *oid);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern bool _ejdbrmbson([In] IntPtr coll, [In] byte[] oid);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
+		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] byte[]  objectId);
+
 		//EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbtranbegin([In] IntPtr coll);
@@ -70,7 +77,6 @@ namespace Ejdb.DB
 		//internal static extern bool _ejdbsyncoll([In] IntPtr coll);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
 		private delegate bool SyncDelegate([In] CollectionHandle collection);
-
 
 		////EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsetindex", CallingConvention = CallingConvention.Cdecl)]
@@ -112,6 +118,7 @@ namespace Ejdb.DB
 
 			_saveBson = LibraryHandle.GetUnmanagedDelegate<SaveBsonDelegate>();
 			_loadBson = LibraryHandle.GetUnmanagedDelegate<LoadBsonDelegate>();
+			_deleteBson = LibraryHandle.GetUnmanagedDelegate<DeleteBsonDelegate>();
 		}
 
 
@@ -152,7 +159,6 @@ namespace Ejdb.DB
 				{
 					return isActive;
 				}
-
 				throw EJDBException.FromDatabase(_database, "Failed to get transaction status");
 			}
 		}
@@ -220,6 +226,22 @@ namespace Ejdb.DB
 			{
 				return _database.Library.ConvertToBsonDocument(bson);
 			}
+		}
+
+		/// <summary>
+		/// Loads JSON object identified by OID from the collection.
+		/// </summary>
+		/// <remarks>
+		/// Returns <c>null</c> if object is not found.
+		/// </remarks>
+		/// <param name="oid">Id of an object</param>
+		public void Delete(BSONOid oid)
+		{
+			if (_deleteBson(_collectionHandle, oid.ToBytes()))
+			{
+				return;
+			}
+			throw EJDBException.FromDatabase(_database, "Failed to save bson");
 		}
 
 		public void Dispose()
