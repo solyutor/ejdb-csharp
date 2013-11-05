@@ -41,6 +41,14 @@ namespace Ejdb.Tests
 		}
 
 		[Test]
+		public void Can_sync_database()
+		{
+			_dataBase.Open(DbName);
+
+			_dataBase.Synchronize();
+		}
+
+		[Test]
 		public void Can_create_collection_data_base()
 		{
 			_dataBase.Open(DbName);
@@ -107,6 +115,16 @@ namespace Ejdb.Tests
 
 			Assert.That(isActive, Is.True, "Transaction should be active after begin");
 			Assert.That(notActiveTransaction, Is.True, "Transaction should be active after commit");
+		}
+
+		[Test]
+		public void Can_synchronize_collection()
+		{
+			_dataBase.Open(DbName);
+
+			var collection = _dataBase.CreateCollection("Test", new CollectionOptions());
+
+			collection.Synchronize();
 		}
 	}
 }

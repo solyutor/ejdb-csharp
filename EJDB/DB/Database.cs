@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -22,7 +21,7 @@ namespace Ejdb.DB
 		private GetErrorCodeDelegate _getErrorCode;
 		private GetMetaDelegate _getMetadata;
 		
-		private SyncDelegate _syncDelegate;
+		private SyncDelegate _sync;
 		private CommandDelegate _command;
 		
 
@@ -81,7 +80,7 @@ namespace Ejdb.DB
 
 			
 			_command = libraryHandle.GetUnmanagedDelegate<CommandDelegate>();
-			_syncDelegate = libraryHandle.GetUnmanagedDelegate<SyncDelegate>();
+			_sync = libraryHandle.GetUnmanagedDelegate<SyncDelegate>();
 		}
 
 		/// <summary>
@@ -122,19 +121,18 @@ namespace Ejdb.DB
 			return new Collection(this, name);
 		}
 
+		/// <summary>
+		/// Synchronize database state with disk
+		/// </summary>
+		public void Synchronize()
+		{
+			if (_sync(DatabaseHandle))
+			{
+				return;
+			}
+			throw EJDBException.FromDatabase(this, "Error when trying to sync db");
+		}
 
-		//internal IntPtr _ejdbgetcoll(IntPtr db, string cname)
-		//{
-		//	IntPtr cptr = Native.NativeUtf8FromString(name); //UnixMarshal.StringToHeap(name, Encoding.UTF8);
-		//	try
-		//	{
-		//		return _getCollection(DatabaseHandle, cptr);
-		//	}
-		//	finally
-		//	{
-		//		Marshal.FreeHGlobal(cptr); //UnixMarshal.FreeHeap(cptr);
-		//	}
-		//}
 
 		///// <summary>
 		///// Gets info of EJDB database itself and its collections.
@@ -260,7 +258,7 @@ namespace Ejdb.DB
 			_isOpen = null;
 			_getErrorCode = null;
 			_getMetadata = null;
-			_syncDelegate = null;
+			_sync = null;
 			_command = null;
 			DatabaseHandle = null;
 		}

@@ -15,6 +15,7 @@ namespace Ejdb.DB
 		private CommitTransactionDelegate _commitTransaction;
 		private RollbackTransactionDelegate _rollbackTransaction;
 		private TransactionStatusDelegate _transactionStatus;
+		private SyncDelegate _syncCollection;
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbrmcoll([In] IntPtr db, [In] IntPtr cname, bool unlink);
@@ -56,9 +57,12 @@ namespace Ejdb.DB
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranstatus")]
 		private delegate bool TransactionStatusDelegate([In] CollectionHandle collection, out bool isActive);
 
-		////EJDB_EXPORT bool ejdbsyncoll(EJDB *jb)
+		////EJDB_EXPORT bool ejdbsyncoll(EJCOLL *coll)
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsyncoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsyncoll([In] IntPtr coll);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
+		private delegate bool SyncDelegate([In] CollectionHandle collection);
+
 
 		////EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsetindex", CallingConvention = CallingConvention.Cdecl)]
@@ -95,6 +99,7 @@ namespace Ejdb.DB
 			_commitTransaction = LibraryHandle.GetUnmanagedDelegate<CommitTransactionDelegate>();
 			_rollbackTransaction = LibraryHandle.GetUnmanagedDelegate<RollbackTransactionDelegate>();
 			_transactionStatus = LibraryHandle.GetUnmanagedDelegate<TransactionStatusDelegate>();
+			_syncCollection = LibraryHandle.GetUnmanagedDelegate<SyncDelegate>();
 		}
 
 
@@ -138,6 +143,15 @@ namespace Ejdb.DB
 
 				throw EJDBException.FromDatabase(_database, "Failed to get transaction status");
 			}
+		}
+
+		public void Synchronize()
+		{
+			if (_syncCollection(_collectionHandle))
+			{
+				return;
+			}
+			throw EJDBException.FromDatabase(_database, "Failed to sync collection");
 		}
 
 
