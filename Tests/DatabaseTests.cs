@@ -48,6 +48,21 @@ namespace Ejdb.Tests
 			_dataBase.Synchronize();
 		}
 
+
+		[Test]
+		public void Database_metadata_returns_info_about_collections()
+		{
+			_dataBase.Open(DbName);
+
+			_dataBase.CreateCollection("TheFirst", new CollectionOptions());
+
+			var metaData = _dataBase.DatabaseMetadata;
+
+			var metaDataAsString = metaData.ToString();
+
+			StringAssert.Contains("TheFirst", metaDataAsString);
+		}
+
 		[Test]
 		public void Can_create_collection_data_base()
 		{
@@ -56,7 +71,12 @@ namespace Ejdb.Tests
 			var collection = _dataBase.CreateCollection("TheFirst", new CollectionOptions());
 
 			collection.Drop();
-			//TODO: Assert using metadata
+
+			var metaData = _dataBase.DatabaseMetadata;
+
+			var metaDataAsString = metaData.ToString();
+
+			StringAssert.DoesNotContain("TheFirst", metaDataAsString);
 		}
 
 		[Test]
@@ -64,11 +84,9 @@ namespace Ejdb.Tests
 		{
 			_dataBase.Open(DbName);
 
-			var collection1 = _dataBase.CreateCollection("TheFirst", new CollectionOptions());
+			_dataBase.CreateCollection("TheFirst", new CollectionOptions());
 
-			var collection2 = _dataBase.GetCollection("TheFirst");
-
-			//TODO: Assert using metadata
+			Assert.DoesNotThrow(() => _dataBase.GetCollection("TheFirst"));
 		}
 
 		[Test]

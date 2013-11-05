@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Ejdb.Utils;
-using Microsoft.Win32.SafeHandles;
 
 namespace Ejdb.DB
 {

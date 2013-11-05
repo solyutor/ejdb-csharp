@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DB\BsonHandle.cs" />
     <Compile Include="DB\Collection.cs" />
     <Compile Include="DB\CollectionHandle.cs" />
     <Compile Include="DB\EJDB.cs" />

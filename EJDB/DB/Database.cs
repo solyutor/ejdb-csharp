@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -20,10 +21,10 @@ namespace Ejdb.DB
 		private IsOpenDelegate _isOpen;
 		private GetErrorCodeDelegate _getErrorCode;
 		private GetMetaDelegate _getMetadata;
-		
+
 		private SyncDelegate _sync;
 		private CommandDelegate _command;
-		
+
 
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
@@ -78,7 +79,7 @@ namespace Ejdb.DB
 			_getErrorCode = libraryHandle.GetUnmanagedDelegate<GetErrorCodeDelegate>();
 			_getMetadata = libraryHandle.GetUnmanagedDelegate<GetMetaDelegate>();
 
-			
+
 			_command = libraryHandle.GetUnmanagedDelegate<CommandDelegate>();
 			_sync = libraryHandle.GetUnmanagedDelegate<SyncDelegate>();
 		}
@@ -130,38 +131,24 @@ namespace Ejdb.DB
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(this, "Error when trying to sync db");
+			throw EJDBException.FromDatabase(this, "Failed to synchronize database");
 		}
 
 
-		///// <summary>
-		///// Gets info of EJDB database itself and its collections.
-		///// </summary>
-		///// <value>The DB meta.</value>
-		//public BSONDocument DatabaseMetadata
-		//{
-		//	get
-		//	{
-		//		//internal static extern IntPtr _ejdbmeta([In] IntPtr db);
-		//		IntPtr bsptr = _getMetadata(_databaseHandle);
-		//		if (bsptr == IntPtr.Zero)
-		//		{
-		//			throw new EJDBException(this);
-		//		}
-		//		try
-		//		{
-		//			int size;
-		//			IntPtr bsdataptr = _bson_data2(bsptr, out size);
-		//			byte[] bsdata = new byte[size];
-		//			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
-		//			return new BSONDocument(bsdata);
-		//		}
-		//		finally
-		//		{
-		//			_bson_del(bsptr);
-		//		}
-		//	}
-		//}
+		/// <summary>
+		/// Gets info of EJDB database itself and its collections.
+		/// </summary>
+		/// <value>The DB meta.</value>
+		public BSONDocument DatabaseMetadata
+		{
+			get
+			{
+				using (var bson = new BsonHandle(this, () => _getMetadata(DatabaseHandle), Library.FreeBson))
+				{
+					return Library.ConvertToBsonDocument(bson);
+				}
+			}
+		}
 
 		///// <summary>
 		///// Executes EJDB command.

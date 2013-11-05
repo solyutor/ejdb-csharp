@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -19,7 +20,19 @@ namespace Ejdb.DB
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdberrmsg")]
 		private delegate IntPtr GetErrorMessage(int errorCode);
 
-		private readonly GetVersion _getVersion;
+
+		//EJDB_EXPORT void bson_del(bson *b);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_del", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern void _bson_del([In] IntPtr bsptr);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_del")]
+		private delegate void FreeBsonDelegate(IntPtr bson);
+
+		//		//EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
+		//		[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
+		//		internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_data2")]
+		private delegate IntPtr BsonToStringDelegate(BsonHandle bson, out int size);
+
 
 		/// <summary>
 		/// The EJDB library version hex code.
@@ -32,15 +45,22 @@ namespace Ejdb.DB
 		private readonly string _version;
 
 		private readonly GetErrorMessage _getErrorMessage;
+		private readonly FreeBsonDelegate _freeBson;
+		private readonly BsonToStringDelegate _bsonToSTring;
 
 		private Library(LibraryHandle libraryHandle)
 		{
 			LibraryHandle = libraryHandle;
 			
-			_getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
-			_getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 			
-			IntPtr version = _getVersion(LibraryHandle);
+			_getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
+
+			_freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
+			_bsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
+
+			var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
+
+			IntPtr version = getVersion(LibraryHandle);
 			
 			if (version == IntPtr.Zero)
 			{
@@ -89,6 +109,20 @@ namespace Ejdb.DB
 		public string GetLastErrorMessage(int errorCode)
 		{
 			return Native.StringFromNativeUtf8(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
+		}
+
+		internal void FreeBson(IntPtr bson)
+		{
+			_freeBson(bson);
+		}
+
+		internal BSONDocument ConvertToBsonDocument(BsonHandle bson)
+		{
+			int size;
+			IntPtr bsdataptr = _bsonToSTring(bson, out size);
+			byte[] bsdata = new byte[size];
+			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
+			return new BSONDocument(bsdata);
 		}
 
 		public void Dispose()

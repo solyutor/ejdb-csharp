@@ -32,15 +32,13 @@
 //		#region NativeRefs
 		
 		
-//		//EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
-//		[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
-//		internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
-//		//EJDB_EXPORT void bson_del(bson *b);
-//		[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_del", CallingConvention = CallingConvention.Cdecl)]
-//		internal static extern void _bson_del([In] IntPtr bsptr);
+
+
+
+
 //		//EJDB_EXPORT bool ejdbrmbson(EJCOLL *coll, bson_oid_t *oid);
 //		[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
-//		internal static extern bool _ejdbrmbson([In] IntPtr cptr, [In] byte[] oid);
+//		internal static extern bool _ejdbrmbson([In] IntPtr coll, [In] byte[] oid);
 		
 		
 //		//EJDB_EXPORT bson* json2bson(const char *jsonstr);
