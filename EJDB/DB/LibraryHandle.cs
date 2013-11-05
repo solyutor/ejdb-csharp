@@ -5,17 +5,17 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Ejdb.DB
 {
-	internal class SafeLibraryHandle : SafeHandleZeroOrMinusOneIsInvalid
+	internal class LibraryHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
 		private string _libraryPath;
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern SafeLibraryHandle LoadLibrary(string dllToLoad);
+		private static extern LibraryHandle LoadLibrary(string dllToLoad);
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool FreeLibrary(IntPtr hModule);
 
-		public SafeLibraryHandle() : base(true)
+		public LibraryHandle() : base(true)
 		{
 
 		}
@@ -23,7 +23,7 @@ namespace Ejdb.DB
 		protected override bool ReleaseHandle()
 		{
 			
-			SafeLibraryHandle.FreeLibrary(this.handle);
+			LibraryHandle.FreeLibrary(this.handle);
 
 			if (File.Exists(_libraryPath))
 			{
@@ -33,7 +33,7 @@ namespace Ejdb.DB
 			return true;
 		}
 
-		public static SafeLibraryHandle Load()
+		public static LibraryHandle Load()
 		{
 			var libraryPath = ResourceHelper.ExportLibrary();
 			var result = LoadLibrary(libraryPath);

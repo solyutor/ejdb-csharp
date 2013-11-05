@@ -46,9 +46,9 @@ namespace Ejdb.Utils {
 		}
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern SafeMethodHandle GetProcAddress(SafeLibraryHandle library, string procedureName);
+		private static extern MethodHandle GetProcAddress(LibraryHandle library, string procedureName);
 
-		internal static TDelegate GetUnmanagedDelegate<TDelegate>(this SafeLibraryHandle library) where TDelegate : class
+		internal static TDelegate GetUnmanagedDelegate<TDelegate>(this LibraryHandle library) where TDelegate : class
 		{
 			var delegateType = typeof (TDelegate);
 			var attributeType = typeof (UnmanagedProcedure);

@@ -2,9 +2,9 @@
 
 namespace Ejdb.DB
 {
-	public class SafeMethodHandle : SafeHandleZeroOrMinusOneIsInvalid
+	public class MethodHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
-		public SafeMethodHandle() : base(false)
+		public MethodHandle() : base(false)
 		{
 		}
 

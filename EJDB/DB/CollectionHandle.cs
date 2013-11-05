@@ -9,7 +9,7 @@ namespace Ejdb.DB
 	{
 		private Database _database;
 		
-		private SafeDatabaseHandle DatabaseHandle
+		private DatabaseHandle DatabaseHandle
 		{
 			get { return _database.DatabaseHandle; }
 		}
@@ -17,7 +17,7 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbgetcoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbgetcoll([In] IntPtr db, [In] IntPtr name);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbgetcoll")]
-		private delegate IntPtr GetCollectionDelegate([In] SafeDatabaseHandle database, [In] IntPtr collectionName);
+		private delegate IntPtr GetCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName);
 
 		//will use the only method for simplicity
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
@@ -25,7 +25,7 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr name, ref EJDBCollectionOptionsN opts);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcreatecoll")]
-		private delegate IntPtr CreateCollectionDelegate([In] SafeDatabaseHandle database, [In] IntPtr collectionName, ref CollectionOptions options);
+		private delegate IntPtr CreateCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, ref CollectionOptions options);
 
 
 		//Creates collection with specified name
@@ -54,7 +54,7 @@ namespace Ejdb.DB
 		}
 
 		//gets collection with specified name
-		public CollectionHandle(Database database, string name) : base(true)
+		public CollectionHandle(Database database, string name) : base(false)
 		{
 			_database = database;
 
@@ -80,9 +80,13 @@ namespace Ejdb.DB
 
 		protected override bool ReleaseHandle()
 		{
-			_database = null;
-			//No need to free collection 
 			return true;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			_database = null;
+			base.Dispose(disposing);
 		}
 	}
 }

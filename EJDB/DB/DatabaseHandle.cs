@@ -5,10 +5,10 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Ejdb.DB
 {
-	internal class SafeDatabaseHandle : SafeHandleZeroOrMinusOneIsInvalid
+	internal class DatabaseHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
 		//Prevents out of order garbage collector
-		internal readonly SafeLibraryHandle LibraryHandle;
+		internal readonly LibraryHandle LibraryHandle;
 
 		private NewInstanceDelegate _newInstance;
 		private DeleteInstanceDelegate _deleteInstance;
@@ -17,14 +17,14 @@ namespace Ejdb.DB
 		//internal static extern IntPtr _ejdbnew();
 		//Creates new instance of ejdb. Don't know what' is it, but it looks it should be done before opening database
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbnew")]
-		private delegate IntPtr NewInstanceDelegate(SafeLibraryHandle handle);
+		private delegate IntPtr NewInstanceDelegate(LibraryHandle handle);
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbdel", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbdel([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbdel")]
 		private delegate void DeleteInstanceDelegate([In]IntPtr database);
 
-		public SafeDatabaseHandle(SafeLibraryHandle libraryHandle)
+		public DatabaseHandle(LibraryHandle libraryHandle)
 			: base(true)
 		{
 			LibraryHandle = libraryHandle;

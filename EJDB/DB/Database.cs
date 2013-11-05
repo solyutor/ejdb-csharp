@@ -14,7 +14,7 @@ namespace Ejdb.DB
 
 		internal readonly Library Library;
 
-		internal SafeDatabaseHandle DatabaseHandle;
+		internal DatabaseHandle DatabaseHandle;
 
 		private OpenDatabaseDelegate _openDatabase;
 		private CloseDatabaseDelegate _closeDatabase;
@@ -30,45 +30,45 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbopen([In] IntPtr db, [In] IntPtr path, int mode);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbopen")]
-		private delegate bool OpenDatabaseDelegate([In] SafeDatabaseHandle database, [In] IntPtr path, [MarshalAs(UnmanagedType.I4)]OpenMode openMode);
+		private delegate bool OpenDatabaseDelegate([In] DatabaseHandle database, [In] IntPtr path, [MarshalAs(UnmanagedType.I4)]OpenMode openMode);
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbclose", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbclose([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbclose")]
-		private delegate bool CloseDatabaseDelegate([In] SafeDatabaseHandle database);
+		private delegate bool CloseDatabaseDelegate([In] DatabaseHandle database);
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbisopen", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbisopen([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbisopen")]
-		private delegate bool IsOpenDelegate([In] SafeDatabaseHandle database);
+		private delegate bool IsOpenDelegate([In] DatabaseHandle database);
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbecode", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern int _ejdbecode([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbecode")]
-		private delegate int GetErrorCodeDelegate([In] SafeDatabaseHandle database);
+		private delegate int GetErrorCodeDelegate([In] DatabaseHandle database);
 
 		////EJDB_EXPORT bson* ejdbmeta(EJDB *jb)
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbmeta", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbmeta([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbmeta")]
-		private delegate IntPtr GetMetaDelegate([In] SafeDatabaseHandle database);
+		private delegate IntPtr GetMetaDelegate([In] DatabaseHandle database);
 
 		////EJDB_EXPORT bson* ejdbcommand2(EJDB *jb, void *cmdbsondata);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcommand2", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcommand2")]
-		private delegate IntPtr CommandDelegate([In] SafeDatabaseHandle database, [In] byte[] command);
+		private delegate IntPtr CommandDelegate([In] DatabaseHandle database, [In] byte[] command);
 
 		////EJDB_EXPORT bool ejdbsyncdb(EJDB *jb)
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsyncdb", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsyncdb([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncdb")]
-		private delegate bool SyncDelegate([In] SafeDatabaseHandle database);
+		private delegate bool SyncDelegate([In] DatabaseHandle database);
 
 		public Database(Library library)
 		{
 			var libraryHandle = library.LibraryHandle;
-			DatabaseHandle = new SafeDatabaseHandle(libraryHandle);
+			DatabaseHandle = new DatabaseHandle(libraryHandle);
 
 			Library = library;
 

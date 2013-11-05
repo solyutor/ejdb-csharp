@@ -6,13 +6,13 @@ namespace Ejdb.DB
 {
 	public class Library : IDisposable
 	{
-		internal readonly SafeLibraryHandle LibraryHandle;
+		internal readonly LibraryHandle LibraryHandle;
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbversion", CallingConvention = CallingConvention.Cdecl)]
 		//EJDB_EXPORT const char *ejdbversion();
 		//internal static extern IntPtr _ejdbversion();
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbversion")]
-		private delegate IntPtr GetVersion(SafeLibraryHandle handle);
+		private delegate IntPtr GetVersion(LibraryHandle handle);
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdberrmsg", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdberrmsg(int ecode)
@@ -33,7 +33,7 @@ namespace Ejdb.DB
 
 		private readonly GetErrorMessage _getErrorMessage;
 
-		private Library(SafeLibraryHandle libraryHandle)
+		private Library(LibraryHandle libraryHandle)
 		{
 			LibraryHandle = libraryHandle;
 			
@@ -74,7 +74,7 @@ namespace Ejdb.DB
 
 		public static Library Create()
 		{
-			var libraryHandle = SafeLibraryHandle.Load();
+			var libraryHandle = LibraryHandle.Load();
 
 			var result = new Library(libraryHandle);
 
