@@ -11,6 +11,10 @@ namespace Ejdb.DB
 		private readonly string _name;
 		private CollectionHandle _collectionHandle;
 		private RemoveCollectionDelegate _remove;
+		private BeginTransactionDelegate _beginTransaction;
+		private CommitTransactionDelegate _commitTransaction;
+		private RollbackTransactionDelegate _rollbackTransaction;
+		private TransactionStatusDelegate _transactionStatus;
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbrmcoll([In] IntPtr db, [In] IntPtr cname, bool unlink);
@@ -26,22 +30,31 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
 
+		
+		
 		//EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
-
 		//internal static extern bool _ejdbtranbegin([In] IntPtr coll);
-		//EJDB_EXPORT bool ejdbtrancommit(EJCOLL *coll);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranbegin")]
+		private delegate bool BeginTransactionDelegate([In] CollectionHandle collection);
 
+		//EJDB_EXPORT bool ejdbtrancommit(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtrancommit", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbtrancommit([In] IntPtr coll);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtrancommit")]
+		private delegate bool CommitTransactionDelegate([In] CollectionHandle collection);
 
 		////EJDB_EXPORT bool ejdbtranabort(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranabort", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbtranabort([In] IntPtr coll);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranabort")]
+		private delegate bool RollbackTransactionDelegate([In] CollectionHandle collection);
 
 		////EJDB_EXPORT bool ejdbtranstatus(EJCOLL *jcoll, bool *txactive);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranstatus", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbtranstatus([In] IntPtr coll, out bool txactive);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranstatus")]
+		private delegate bool TransactionStatusDelegate([In] CollectionHandle collection, out bool isActive);
 
 		////EJDB_EXPORT bool ejdbsyncoll(EJDB *jb)
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsyncoll", CallingConvention = CallingConvention.Cdecl)]
@@ -51,23 +64,13 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsetindex", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsetindex([In] IntPtr coll, [In] IntPtr ipathptr, int flags);
 
-		//internal static bool _ejdbrmcoll(IntPtr db, string cname, bool unlink)
-		//{
-		//	IntPtr cptr = Native.NativeUtf8FromString(cname);//UnixMarshal.StringToHeap(cname, Encoding.UTF8);
-		//	try
-		//	{
-		//		return _ejdbrmcoll(db, cptr, unlink);
-		//	}
-		//	finally
-		//	{
-		//		Marshal.FreeHGlobal(cptr); //UnixMarshal.FreeHeap(cptr);
-		//	}
-		//}
-
-
+		private LibraryHandle LibraryHandle
+		{
+			get { return _database.DatabaseHandle.LibraryHandle; }
+		}
 
 		//opens existed
-		public Collection(Database database, string name)
+		internal Collection(Database database, string name)
 		{
 			_database = database;
 			_name = name;
@@ -76,7 +79,7 @@ namespace Ejdb.DB
 		}
 
 		//Creates new;
-		public Collection(Database database, string name, CollectionOptions options)
+		internal Collection(Database database, string name, CollectionOptions options)
 		{
 			_database = database;
 			_name = name;
@@ -86,8 +89,57 @@ namespace Ejdb.DB
 
 		private void MapMethods()
 		{
-			_remove = _database.DatabaseHandle.LibraryHandle.GetUnmanagedDelegate<RemoveCollectionDelegate>();
+			_remove = LibraryHandle.GetUnmanagedDelegate<RemoveCollectionDelegate>();
+			
+			_beginTransaction = LibraryHandle.GetUnmanagedDelegate<BeginTransactionDelegate>();
+			_commitTransaction = LibraryHandle.GetUnmanagedDelegate<CommitTransactionDelegate>();
+			_rollbackTransaction = LibraryHandle.GetUnmanagedDelegate<RollbackTransactionDelegate>();
+			_transactionStatus = LibraryHandle.GetUnmanagedDelegate<TransactionStatusDelegate>();
 		}
+
+
+		public void BeginTransaction()
+		{
+			if (_beginTransaction(_collectionHandle))
+			{
+				return;
+			}
+
+			throw EJDBException.FromDatabase(_database, "Failed to begin transaction");
+		}
+
+		public void CommitTransaction()
+		{
+			if (_commitTransaction(_collectionHandle))
+			{
+				return;
+			}
+			throw EJDBException.FromDatabase(_database, "Failed to commit transaction");
+		}
+
+		public void RollbackTransaction()
+		{
+			if (_rollbackTransaction(_collectionHandle))
+			{
+				return;
+			}
+			throw EJDBException.FromDatabase(_database, "Failed to rollback transaction");
+		}
+
+		public bool TransactionActive
+		{
+			get
+			{
+				bool isActive;
+				if (_transactionStatus(_collectionHandle, out isActive))
+				{
+					return isActive;
+				}
+
+				throw EJDBException.FromDatabase(_database, "Failed to get transaction status");
+			}
+		}
+
 
 		/// <summary>
 		/// Drops collection and wipes out all data

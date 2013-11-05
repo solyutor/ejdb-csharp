@@ -68,9 +68,45 @@ namespace Ejdb.Tests
 		{
 			_dataBase.Open(DbName);
 
-			var collection2 = _dataBase.GetCollection("TheFirst");
+			Assert.Throws<EJDBException>(() =>  _dataBase.GetCollection("TheFirst"));
+		}
 
-			//TODO: Assert using metadata
+		[Test]
+		public void Can_begin_and_commit_transaction()
+		{
+			_dataBase.Open(DbName);
+
+			var collection = _dataBase.CreateCollection("Test", new CollectionOptions());
+
+			collection.BeginTransaction();
+
+			var isActive = collection.TransactionActive;
+
+			collection.CommitTransaction();
+
+			var notActiveTransaction = !collection.TransactionActive;
+
+			Assert.That(isActive, Is.True, "Transaction should be active after begin");
+			Assert.That(notActiveTransaction, Is.True, "Transaction should be active after commit");
+		}
+
+		[Test]
+		public void Can_begin_and_rollback_transaction()
+		{
+			_dataBase.Open(DbName);
+
+			var collection = _dataBase.CreateCollection("Test", new CollectionOptions());
+
+			collection.BeginTransaction();
+
+			var isActive = collection.TransactionActive;
+
+			collection.RollbackTransaction();
+
+			var notActiveTransaction = !collection.TransactionActive;
+
+			Assert.That(isActive, Is.True, "Transaction should be active after begin");
+			Assert.That(notActiveTransaction, Is.True, "Transaction should be active after commit");
 		}
 	}
 }
