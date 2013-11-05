@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Ejdb.Utils
+namespace Ejdb.DB
 {
 	internal class SafeLibraryHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{

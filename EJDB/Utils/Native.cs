@@ -16,6 +16,7 @@
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using Ejdb.DB;
 
 namespace Ejdb.Utils {
 
@@ -45,7 +46,7 @@ namespace Ejdb.Utils {
 		}
 
 		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern SafeMethodHandle GetProcAddress(IntPtr library, string procedureName);
+		private static extern SafeMethodHandle GetProcAddress(SafeLibraryHandle library, string procedureName);
 
 		internal static TDelegate GetUnmanagedDelegate<TDelegate>(this SafeLibraryHandle library) where TDelegate : class
 		{
@@ -58,7 +59,7 @@ namespace Ejdb.Utils {
 			}
 
 			var procedureName = ((UnmanagedProcedure)customAttributes[0]).Name;
-			var methodHandle = GetProcAddress(library.DangerousGetHandle(), procedureName);
+			var methodHandle = GetProcAddress(library, procedureName);
 			if (methodHandle.IsInvalid)
 			{
 				var error = Marshal.GetLastWin32Error();

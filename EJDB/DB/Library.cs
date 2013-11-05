@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.DB;
+using Ejdb.Utils;
 
-namespace Ejdb.Utils
+namespace Ejdb.DB
 {
 	public class Library : IDisposable
 	{

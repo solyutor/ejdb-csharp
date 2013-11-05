@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
-using Ejdb.DB;
-using Microsoft.Win32.SafeHandles;
+using Ejdb.Utils;
 
-namespace Ejdb.Utils
+namespace Ejdb.DB
 {
 	public class Database 
 	{

@@ -1,11 +1,11 @@
 ﻿using System.IO;
-using Ejdb.Utils;
+using Ejdb.DB;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
 {
 	[TestFixture]
-	public class LibraryTest
+	public class DatabaseTests
 	{
 		private const string DbName = "test.db";
 
@@ -16,14 +16,6 @@ namespace Ejdb.Tests
 			{
 				File.Delete(DbName);
 			}
-		}
-
-		[Test]
-		public void Can_create_library()
-		{
-			var library = Library.Create();
-
-			library.Dispose();
 		}
 
 		[Test]

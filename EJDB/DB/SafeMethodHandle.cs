@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 
-namespace Ejdb.Utils
+namespace Ejdb.DB
 {
 	public class SafeMethodHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
