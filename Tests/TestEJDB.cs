@@ -38,9 +38,9 @@
 //		[Test]
 //		public void Test2EnsureCollection() {
 //			EJDB jb = new EJDB("testdb1", Database.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
-//			EjdbCollectionOptionsN co = new EjdbCollectionOptionsN();
-//			co.large = true;
-//			co.compressed = false;
+//			CollectionOptions co = new CollectionOptions();
+//			co.Large = true;
+//			co.Compressed = false;
 //			co.records = 50000;
 //			Assert.IsTrue(jb.EnsureCollection("mycoll2", co));
 //			jb.Dispose(); 
@@ -180,7 +180,7 @@
 
 //			//Console.WriteLine(jb.DBMeta);
 //			//[BSONDocument: [BSONValue: BSONType=STRING, Key=file, Value=testdb1], 
-//			//[BSONValue: BSONType=ARRAY, Key=collections, Value=[BSONArray: [BSONValue: BSONType=OBJECT, Key=0, Value=[BSONDocument: [BSONValue: BSONType=STRING, Key=name, Value=parrots], [BSONValue: BSONType=STRING, Key=file, Value=testdb1_parrots], [BSONValue: BSONType=LONG, Key=records, Value=2], [BSONValue: BSONType=OBJECT, Key=options, Value=[BSONDocument: [BSONValue: BSONType=LONG, Key=buckets, Value=131071], [BSONValue: BSONType=LONG, Key=cachedrecords, Value=0], [BSONValue: BSONType=BOOL, Key=large, Value=False], [BSONValue: BSONType=BOOL, Key=compressed, Value=False]]], [BSONValue: BSONType=ARRAY, Key=indexes, Value=[BSONArray: ]]]]]]]
+//			//[BSONValue: BSONType=ARRAY, Key=collections, Value=[BSONArray: [BSONValue: BSONType=OBJECT, Key=0, Value=[BSONDocument: [BSONValue: BSONType=STRING, Key=name, Value=parrots], [BSONValue: BSONType=STRING, Key=file, Value=testdb1_parrots], [BSONValue: BSONType=LONG, Key=records, Value=2], [BSONValue: BSONType=OBJECT, Key=options, Value=[BSONDocument: [BSONValue: BSONType=LONG, Key=buckets, Value=131071], [BSONValue: BSONType=LONG, Key=CachedRecords, Value=0], [BSONValue: BSONType=BOOL, Key=large, Value=False], [BSONValue: BSONType=BOOL, Key=compressed, Value=False]]], [BSONValue: BSONType=ARRAY, Key=indexes, Value=[BSONArray: ]]]]]]]
 
 //			q.Dispose();
 

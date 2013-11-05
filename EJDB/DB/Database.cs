@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
 {
-	public class Database 
+	public class Database
 	{
 		/// <summary>
 		/// The default open mode (OpenMode.Writer | OpenMode.CreateIfNotExists) <c>(JBOWRITER | JBOCREAT)</c>
 		/// </summary>
 		public const OpenMode DefaultOpenMode = (OpenMode.Writer | OpenMode.CreateIfNotExists);
 
-		private readonly Library _library;
-		
-		private OpenDatabaseDelegate _openDatabaseDelegate;
+		internal readonly Library Library;
+
+		internal SafeDatabaseHandle DatabaseHandle;
+
+		private OpenDatabaseDelegate _openDatabase;
 		private CloseDatabaseDelegate _closeDatabase;
 		private IsOpenDelegate _isOpen;
-		private GetErrorCodeDelegate _getErrorCodeDelegate;
-		private GetMetaDelegate _getMetaDelegate;
-		private CreateCollectionDelegate _createCollectionDelegate;
-		private GetCollectionDelegate _getCollectionDelegate;
+		private GetErrorCodeDelegate _getErrorCode;
+		private GetMetaDelegate _getMetadata;
+		
 		private SyncDelegate _syncDelegate;
-		private CommandDelegate _commandDelegate;
-		private SafeDatabaseHandle _databaseHandle;
+		private CommandDelegate _command;
+		
 
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
@@ -51,19 +53,6 @@ namespace Ejdb.DB
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbmeta")]
 		private delegate IntPtr GetMetaDelegate([In] SafeDatabaseHandle database);
 
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbgetcoll", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _ejdbgetcoll([In] IntPtr db, [In] IntPtr cname);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbgetcoll")]
-		private delegate IntPtr GetCollectionDelegate([In] SafeDatabaseHandle database, [In] IntPtr collectionName);
-
-		//will use the only method for simplicity
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr cname, IntPtr opts);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr cname, ref EJDBCollectionOptionsN opts);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcreatecoll")]
-		private delegate IntPtr CreateCollectionDelegate([In] SafeDatabaseHandle database, [In] IntPtr collectionName, IntPtr options);
-
 		////EJDB_EXPORT bson* ejdbcommand2(EJDB *jb, void *cmdbsondata);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcommand2", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
@@ -79,20 +68,19 @@ namespace Ejdb.DB
 		public Database(Library library)
 		{
 			var libraryHandle = library.LibraryHandle;
-			_databaseHandle = new SafeDatabaseHandle(libraryHandle);
+			DatabaseHandle = new SafeDatabaseHandle(libraryHandle);
 
-			_library = library;
-			
-			_openDatabaseDelegate = libraryHandle.GetUnmanagedDelegate<OpenDatabaseDelegate>();
+			Library = library;
+
+			_openDatabase = libraryHandle.GetUnmanagedDelegate<OpenDatabaseDelegate>();
 			_closeDatabase = libraryHandle.GetUnmanagedDelegate<CloseDatabaseDelegate>();
 			_isOpen = libraryHandle.GetUnmanagedDelegate<IsOpenDelegate>();
 
-			_getErrorCodeDelegate = libraryHandle.GetUnmanagedDelegate<GetErrorCodeDelegate>();
-			_getMetaDelegate = libraryHandle.GetUnmanagedDelegate<GetMetaDelegate>();
+			_getErrorCode = libraryHandle.GetUnmanagedDelegate<GetErrorCodeDelegate>();
+			_getMetadata = libraryHandle.GetUnmanagedDelegate<GetMetaDelegate>();
 
-			_createCollectionDelegate = libraryHandle.GetUnmanagedDelegate<CreateCollectionDelegate>();
-			_getCollectionDelegate = libraryHandle.GetUnmanagedDelegate<GetCollectionDelegate>();
-			_commandDelegate = libraryHandle.GetUnmanagedDelegate<CommandDelegate>();
+			
+			_command = libraryHandle.GetUnmanagedDelegate<CommandDelegate>();
 			_syncDelegate = libraryHandle.GetUnmanagedDelegate<SyncDelegate>();
 		}
 
@@ -100,9 +88,9 @@ namespace Ejdb.DB
 		/// Gets the last DB error code or <c>null</c> if underlying native database object does not exist.
 		/// </summary>
 		/// <value>The last DB error code.</value>
-		public int? LastErrorCode
+		public int LastErrorCode
 		{
-			get { return _getErrorCodeDelegate(_databaseHandle); }
+			get { return _getErrorCode(DatabaseHandle); }
 		}
 
 		/// <summary>
@@ -111,20 +99,53 @@ namespace Ejdb.DB
 		/// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
 		public bool IsOpen
 		{
-			get { return _isOpen(_databaseHandle); }
+			get { return _isOpen(DatabaseHandle); }
 		}
+
+		/// <summary>
+		/// Automatically creates new collection if it does't exists.
+		/// </summary>
+		/// <remarks>
+		/// Collection options <c>options</c> are applied only for newly created collection.
+		/// For existing collections <c>options</c> has no effect.
+		/// </remarks>
+		/// <returns><c>false</c> error ocurried.</returns>
+		/// <param name="name">Name of collection.</param>
+		/// <param name="options">Collection options.</param>
+		public Collection CreateCollection(string name, CollectionOptions options)
+		{
+			return new Collection(this, name, options);
+		}
+
+		public Collection GetCollection(string name)
+		{
+			return new Collection(this, name);
+		}
+
+
+		//internal IntPtr _ejdbgetcoll(IntPtr db, string cname)
+		//{
+		//	IntPtr cptr = Native.NativeUtf8FromString(name); //UnixMarshal.StringToHeap(name, Encoding.UTF8);
+		//	try
+		//	{
+		//		return _getCollection(DatabaseHandle, cptr);
+		//	}
+		//	finally
+		//	{
+		//		Marshal.FreeHGlobal(cptr); //UnixMarshal.FreeHeap(cptr);
+		//	}
+		//}
 
 		///// <summary>
 		///// Gets info of EJDB database itself and its collections.
 		///// </summary>
 		///// <value>The DB meta.</value>
-		//public BSONDocument DBMeta
+		//public BSONDocument DatabaseMetadata
 		//{
 		//	get
 		//	{
-		//		CheckDisposed(true);
 		//		//internal static extern IntPtr _ejdbmeta([In] IntPtr db);
-		//		IntPtr bsptr = _getMetaDelegate(this);
+		//		IntPtr bsptr = _getMetadata(_databaseHandle);
 		//		if (bsptr == IntPtr.Zero)
 		//		{
 		//			throw new EJDBException(this);
@@ -144,111 +165,77 @@ namespace Ejdb.DB
 		//	}
 		//}
 
-		/// <summary>
-		/// Executes EJDB command.
-		/// </summary>
-		/// <remarks>
-		/// Supported commands:
-		///
-		/// 1) Exports database collections data. See ejdbexport() method.
-		/// 
-		/// 	"export" : {
-		/// 	"path" : string,                    //Exports database collections data
-		/// 	"cnames" : [string array]|null,     //List of collection names to export
-		/// 	"mode" : int|null                   //Values: null|`JBJSONEXPORT` See ejdb.h#ejdbexport() method
-		/// }
-		/// 
-		/// Command response:
-		/// {
-		/// 	"log" : string,        //Diagnostic log about executing this command
-		/// 	"error" : string|null, //ejdb error message
-		/// 	"errorCode" : int|0,   //ejdb error code
-		/// }
-		/// 
-		/// 2) Imports previously exported collections data into ejdb.
-		/// 
-		/// 	"import" : {
-		/// 	"path" : string                     //The directory path in which data resides
-		/// 		"cnames" : [string array]|null,     //List of collection names to import
-		/// 		"mode" : int|null                //Values: null|`JBIMPORTUPDATE`|`JBIMPORTREPLACE` See ejdb.h#ejdbimport() method
-		/// }
-		/// 
-		/// Command response:
-		/// {
-		/// 	"log" : string,        //Diagnostic log about executing this command
-		/// 	"error" : string|null, //ejdb error message
-		/// 	"errorCode" : int|0,   //ejdb error code
-		/// }
-		/// </remarks>
-		/// <param name="cmd">Command object</param>
-		/// <returns>Command response.</returns>
-		//public BSONDocument Command(BSONDocument cmd)
-		//{
-		//	CheckDisposed();
-		//	byte[] cmdata = cmd.ToByteArray();
-		//	//internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
-		//	IntPtr cmdret = _commandDelegate(this, cmdata);
-		//	if (cmdret == IntPtr.Zero)
-		//	{
-		//		return null;
-		//	}
-		//	byte[] bsdata = BsonPtrIntoByteArray(cmdret);
-		//	if (bsdata.Length == 0)
-		//	{
-		//		return null;
-		//	}
-		//	BSONIterator it = new BSONIterator(bsdata);
-		//	return it.ToBSONDocument();
-		//}
+		///// <summary>
+		///// Executes EJDB command.
+		///// </summary>
+		///// <remarks>
+		///// Supported commands:
+		/////
+		///// 1) Exports database collections data. See ejdbexport() method.
+		///// 
+		///// 	"export" : {
+		///// 	"path" : string,                    //Exports database collections data
+		///// 	"cnames" : [string array]|null,     //List of collection names to export
+		///// 	"mode" : int|null                   //Values: null|`JBJSONEXPORT` See ejdb.h#ejdbexport() method
+		///// }
+		///// 
+		///// Command response:
+		///// {
+		///// 	"log" : string,        //Diagnostic log about executing this command
+		///// 	"error" : string|null, //ejdb error message
+		///// 	"errorCode" : int|0,   //ejdb error code
+		///// }
+		///// 
+		///// 2) Imports previously exported collections data into ejdb.
+		///// 
+		///// 	"import" : {
+		///// 	"path" : string                     //The directory path in which data resides
+		///// 		"cnames" : [string array]|null,     //List of collection names to import
+		///// 		"mode" : int|null                //Values: null|`JBIMPORTUPDATE`|`JBIMPORTREPLACE` See ejdb.h#ejdbimport() method
+		///// }
+		///// 
+		///// Command response:
+		///// {
+		///// 	"log" : string,        //Diagnostic log about executing this command
+		///// 	"error" : string|null, //ejdb error message
+		///// 	"errorCode" : int|0,   //ejdb error code
+		///// }
+		///// </remarks>
+		///// <param name="cmd">Command object</param>
+		///// <returns>Command response.</returns>
+		////public BSONDocument Command(BSONDocument cmd)
+		////{
+		////	CheckDisposed();
+		////	byte[] cmdata = cmd.ToByteArray();
+		////	//internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
+		////	IntPtr cmdret = _command(this, cmdata);
+		////	if (cmdret == IntPtr.Zero)
+		////	{
+		////		return null;
+		////	}
+		////	byte[] bsdata = BsonPtrIntoByteArray(cmdret);
+		////	if (bsdata.Length == 0)
+		////	{
+		////		return null;
+		////	}
+		////	BSONIterator it = new BSONIterator(bsdata);
+		////	return it.ToBSONDocument();
+		////}
 
-		internal  IntPtr _ejdbgetcoll(IntPtr db, string cname)
-		{
-			IntPtr cptr = Native.NativeUtf8FromString(cname); //UnixMarshal.StringToHeap(cname, Encoding.UTF8);
-			try
-			{
-				return _getCollectionDelegate(_databaseHandle, cptr);
-			}
-			finally
-			{
-				Marshal.FreeHGlobal(cptr); //UnixMarshal.FreeHeap(cptr);
-			}
-		}
 
-		//internal IntPtr _ejdbcreatecoll(IntPtr db, String cname, EjdbCollectionOptionsN? opts)
-		//{
-		//	IntPtr cptr = Native.NativeUtf8FromString(cname);//UnixMarshal.StringToHeap(cname, Encoding.UTF8);
-		//	try
-		//	{
-		//		if (opts == null)
-		//		{
-		//			return _createCollectionDelegate (this, cptr, IntPtr.Zero);
-		//		}
-		//		else
-		//		{
-		//			EjdbCollectionOptionsN nopts = (EjdbCollectionOptionsN)opts;
-		//			return _createCollectionDelegate(this, cptr, ref nopts);
-		//		}
-		//	}
-		//	finally
-		//	{
-		//		Marshal.FreeHGlobal(cptr); //UnixMarshal.FreeHeap(cptr);
-		//	}
-		//}
 
 
 		public void Open(string dbFilePath, OpenMode openMode = DefaultOpenMode)
 		{
 			IntPtr pathPointer = Native.NativeUtf8FromString(dbFilePath); //UnixMarshal.StringToHeap(path, Encoding.UTF8);
-			
+
 			try
 			{
-				bool result = _openDatabaseDelegate(_databaseHandle, pathPointer, openMode);
+				bool result = _openDatabase(DatabaseHandle, pathPointer, openMode);
 				if (!result)
 				{
-					var errorCode = LastErrorCode;
-					var errorMessage = errorCode.HasValue ? _library.GetLastErrorMessage(errorCode.Value) : "no error message provided";
-					throw new EJDBException(errorMessage);
-				}	
+					throw EJDBException.FromDatabase(this, "Error on open database");
+				}
 			}
 			catch (Exception)
 			{
@@ -260,18 +247,29 @@ namespace Ejdb.DB
 				Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(pptr);
 			}
 		}
+		//EJCOLL* ejdbcreatecoll(EJDB *jb, const char *colname, EJCOLLOPTS *opts) 
+
 
 		public void Dispose()
 		{
 			Close();
-			_databaseHandle.Dispose();
+			DatabaseHandle.Dispose();
+
+			_openDatabase = null;
+			_closeDatabase = null;
+			_isOpen = null;
+			_getErrorCode = null;
+			_getMetadata = null;
+			_syncDelegate = null;
+			_command = null;
+			DatabaseHandle = null;
 		}
 
 		public void Close()
 		{
-			if (_isOpen(_databaseHandle))
+			if (_isOpen(DatabaseHandle))
 			{
-				_closeDatabase(_databaseHandle);
+				_closeDatabase(DatabaseHandle);
 			}
 		}
 	}

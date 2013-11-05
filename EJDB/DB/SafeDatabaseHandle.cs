@@ -8,7 +8,7 @@ namespace Ejdb.DB
 	internal class SafeDatabaseHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
 		//Prevents out of order garbage collector
-		private readonly SafeLibraryHandle _libraryHandle;
+		internal readonly SafeLibraryHandle LibraryHandle;
 
 		private NewInstanceDelegate _newInstance;
 		private DeleteInstanceDelegate _deleteInstance;
@@ -27,11 +27,11 @@ namespace Ejdb.DB
 		public SafeDatabaseHandle(SafeLibraryHandle libraryHandle)
 			: base(true)
 		{
-			_libraryHandle = libraryHandle;
+			LibraryHandle = libraryHandle;
 			_newInstance = libraryHandle.GetUnmanagedDelegate<NewInstanceDelegate>();
 			_deleteInstance = libraryHandle.GetUnmanagedDelegate<DeleteInstanceDelegate>();
 
-			this.handle = _newInstance(_libraryHandle);
+			this.handle = _newInstance(LibraryHandle);
 
 			if (IsInvalid)
 			{

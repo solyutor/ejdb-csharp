@@ -58,8 +58,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="DB\Collection.cs" />
+    <Compile Include="DB\CollectionHandle.cs" />
     <Compile Include="DB\EJDB.cs" />
-    <Compile Include="DB\EJDBCollectionOptionsN.cs" />
+    <Compile Include="DB\CollectionOptions.cs" />
     <Compile Include="DB\IndexOperations.cs" />
     <Compile Include="DB\OpenMode.cs" />
     <Compile Include="DB\SafeDatabaseHandle.cs" />

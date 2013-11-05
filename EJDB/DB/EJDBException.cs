@@ -15,22 +15,26 @@
 // ============================================================================================
 using System;
 
-namespace Ejdb.DB {
+namespace Ejdb.DB
+{
 
-	public class EJDBException : Exception {
+	public class EJDBException : Exception
+	{
 
-		public int? Code {
+		public int? Code
+		{
 			get;
 			private set;
 		}
 
-		public EJDBException() {
+		public EJDBException(string message)
+			: base(message)
+		{
 		}
 
-		public EJDBException(string msg) : base(msg) {
-		}
-
-		public EJDBException(int code, string msg) : base(msg) {
+		public EJDBException(int code, string msg)
+			: base(msg)
+		{
 			this.Code = code;
 		}
 
@@ -38,8 +42,20 @@ namespace Ejdb.DB {
 		//	this.Code = db.LastDBErrorCode;
 		//}
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			return string.Format("[EJDBException: Code={0}, Msg={1}]", Code, Message);
+		}
+
+		public static EJDBException FromDatabase(Database database, string defaultMessage)
+		{
+			var code = database.LastErrorCode;
+
+			var message = code == 0
+				? defaultMessage
+				: database.Library.GetLastErrorMessage(code);
+
+			return new EJDBException(code, message);
 		}
 	}
 }
