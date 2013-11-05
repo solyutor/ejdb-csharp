@@ -3,7 +3,7 @@ using System;
 namespace Ejdb.DB
 {
 	[Flags]
-	public enum IndexOperations
+	public enum IndexOperations : int
 	{
 		//.//////////////////////////////////////////////////////////////////
 		// 				 Native index operations & types (ejdb.h)

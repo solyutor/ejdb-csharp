@@ -19,6 +19,7 @@ namespace Ejdb.DB
 		private SaveBsonDelegate _saveBson;
 		private LoadBsonDelegate _loadBson;
 		private DeleteBsonDelegate _deleteBson;
+		private SetIndexDelegate _setIndex;
 
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
@@ -33,7 +34,7 @@ namespace Ejdb.DB
 		//TODO: Possible save methods: bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid) 
 		//TODO: Possible save methods: bool ejdbsavebson2(EJCOLL *coll, bson *bs, bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
-		private delegate bool SaveBsonDelegate([In] CollectionHandle collection,[In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
+		private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
 
 
 		//EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
@@ -46,7 +47,7 @@ namespace Ejdb.DB
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbrmbson([In] IntPtr coll, [In] byte[] oid);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
-		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] byte[]  objectId);
+		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] byte[] objectId);
 
 		//EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
@@ -81,6 +82,8 @@ namespace Ejdb.DB
 		////EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsetindex", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsetindex([In] IntPtr coll, [In] IntPtr ipathptr, int flags);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsetindex")]
+		private delegate bool SetIndexDelegate([In] CollectionHandle collection, [In] IntPtr indexPath, [In] int operation);
 
 		private LibraryHandle LibraryHandle
 		{
@@ -108,17 +111,19 @@ namespace Ejdb.DB
 		private void MapMethods()
 		{
 			_remove = LibraryHandle.GetUnmanagedDelegate<RemoveCollectionDelegate>();
-			
+
 			_beginTransaction = LibraryHandle.GetUnmanagedDelegate<BeginTransactionDelegate>();
 			_commitTransaction = LibraryHandle.GetUnmanagedDelegate<CommitTransactionDelegate>();
 			_rollbackTransaction = LibraryHandle.GetUnmanagedDelegate<RollbackTransactionDelegate>();
 			_transactionStatus = LibraryHandle.GetUnmanagedDelegate<TransactionStatusDelegate>();
-			
+
 			_syncCollection = LibraryHandle.GetUnmanagedDelegate<SyncDelegate>();
 
 			_saveBson = LibraryHandle.GetUnmanagedDelegate<SaveBsonDelegate>();
 			_loadBson = LibraryHandle.GetUnmanagedDelegate<LoadBsonDelegate>();
 			_deleteBson = LibraryHandle.GetUnmanagedDelegate<DeleteBsonDelegate>();
+
+			_setIndex = LibraryHandle.GetUnmanagedDelegate<SetIndexDelegate>();
 		}
 
 
@@ -198,16 +203,24 @@ namespace Ejdb.DB
 		/// <param name="merge"></param>
 		public void Save(BSONDocument doc, bool merge)
 		{
-			BSONValue bv = doc.GetBSONValue("_id");
+			BSONValue id = doc.GetBSONValue("_id");
+
 			byte[] bsdata = doc.ToByteArray();
 			byte[] oiddata = new byte[12];
+			
+			if (id != null)
+			{
+				oiddata = doc.ToByteArray();
+			}
+
 			var saveOk = _saveBson(_collectionHandle, bsdata, oiddata, merge);
 
-			if (saveOk && bv == null)
+			if (saveOk && id == null)
 			{
 				doc.SetOID("_id", new BSONOid(oiddata));
 			}
-			else
+
+			if(!saveOk)
 			{
 				throw EJDBException.FromDatabase(_database, "Failed to save bson");
 			}
@@ -242,6 +255,23 @@ namespace Ejdb.DB
 				return;
 			}
 			throw EJDBException.FromDatabase(_database, "Failed to save bson");
+		}
+
+		public void Index(string path, IndexOperations flags)
+		{
+			IntPtr pathPointer = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(ipath, Encoding.UTF8);
+			try
+			{
+				if (_setIndex(_collectionHandle, pathPointer, (int) flags))
+				{
+					return;
+				}
+				throw EJDBException.FromDatabase(_database, "Failed to perform index operation");
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(ipathptr);
+			}
 		}
 
 		public void Dispose()

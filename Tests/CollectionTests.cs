@@ -26,7 +26,7 @@ namespace Ejdb.Tests
 
 			_dataBase = _library.CreateDatabase();
 
-			_dataBase.Open(DbName);
+			_dataBase.Open(DbName, Database.DefaultOpenMode | OpenMode.TruncateOnOpen);
 
 			_collection = _dataBase.CreateCollection("default", new CollectionOptions());
 
@@ -78,7 +78,7 @@ namespace Ejdb.Tests
 			_collection.Save(_origin, false);
 
 			var id = _origin.GetBSONValue("_id");
-
+			
 			var reloaded = _collection.Load((BSONOid)id.Value);
 			//TODO: made more string assertion
 			Assert.That(reloaded, Is.Not.Null);
@@ -97,6 +97,19 @@ namespace Ejdb.Tests
 			var reloaded = _collection.Load(bsonOid);
 			
 			Assert.That(reloaded, Is.Not.Null);
+		}
+
+		[Test]
+		public void Can_create_index()
+		{
+			_collection.Index("name", IndexOperations.String);
+
+			var meta = _dataBase.DatabaseMetadata;
+
+			var metaAsString = meta.ToString();
+			const string indexEvidence = "test.db_default.idx.sname.lex";
+			
+			StringAssert.Contains(indexEvidence, metaAsString);
 		}
 	}
 }

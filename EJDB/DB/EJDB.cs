@@ -260,102 +260,6 @@
 //			return rv;
 //		}
 
-//		public bool Save(string cname, params object[] docs) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbcreatecoll(_db, cname, null);
-//			if (cptr == IntPtr.Zero) {
-//				if (_throwonfail) {
-//					throw new EJDBException(this);
-//				} else {
-//					return false;
-//				}
-//			}
-//			foreach (var doc in docs) {
-//				if (!Save(cptr, BSONDocument.ValueOf(doc), false)) {
-//					if (_throwonfail) {
-//						throw new EJDBException(this);
-//					} else {
-//						return false;
-//					}
-//				}
-//			}
-//			return true;
-//		}
-
-
-
-//		/// <summary>
-//		/// Save the BSON document doc into the collection.
-//		/// </summary>
-//		/// <param name="cname">Name of collection.</param>
-//		/// <param name="docs">BSON documents to save.</param>
-//		/// <returns>True on success.</returns>
-//		public bool Save(string cname, params BSONDocument[] docs) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbcreatecoll(_db, cname, null);
-//			if (cptr == IntPtr.Zero) {
-//				if (_throwonfail) {
-//					throw new EJDBException(this);
-//				} else {
-//					return false;
-//				}
-//			}
-//			foreach (var doc in docs) {
-//				if (!Save(cptr, doc, false)) {
-//					if (_throwonfail) {
-//						throw new EJDBException(this);
-//					} else {
-//						return false;
-//					}
-//				}
-//			}
-//			return true;
-//		}
-
-
-
-//		bool Save(IntPtr cptr, BSONDocument doc, bool merge) {
-//			bool rv;
-//			BSONValue bv = doc.GetBSONValue("_id");
-//			byte[] bsdata = doc.ToByteArray();
-//			byte[] oiddata = new byte[12];
-//			//static extern bool _ejdbsavebson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, bool merge);
-//			rv = _ejdbsavebson(cptr, bsdata, oiddata, merge);
-//			if (rv && bv == null) {
-//				doc.SetOID("_id", new BSONOid(oiddata));
-//			}
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return  rv;
-//		}
-
-
-
-//		/// <summary>
-//		/// Removes stored objects from the collection.
-//		/// </summary>
-//		/// <param name="cname">Name of collection.</param>
-//		/// <param name="oids">Object identifiers.</param>
-//		public bool Remove(string cname, params BSONOid[] oids) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static extern bool _ejdbrmbson([In] IntPtr cptr, [In] byte[] oid);
-//			foreach (var oid in oids) {
-//				if (!_ejdbrmbson(cptr, oid.ToBytes())) {
-//					if (_throwonfail) {
-//						throw new EJDBException(this);
-//					} else {
-//						return false;
-//					}
-//				}
-//			}
-//			return true;
-//		}
-
 //		/// <summary>
 //		/// Creates the query.
 //		/// </summary>
@@ -393,15 +297,7 @@
 
 
 
-//		bool IndexOperation(string cname, string ipath, int flags) {
-//			CheckDisposed(true);
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static bool _ejdbsetindex(IntPtr coll, string ipath, int flags)
-//			return _ejdbsetindex(cptr, ipath, flags);
-//		}
+
 
 //		internal void CheckDisposed(bool checkopen = false) {
 //			if (_db == IntPtr.Zero) {
