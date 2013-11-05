@@ -27,9 +27,9 @@ namespace Ejdb.DB
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_del")]
 		private delegate void FreeBsonDelegate(IntPtr bson);
 
-		//		//EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
-		//		[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
-		//		internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
+		//EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_data2")]
 		private delegate IntPtr BsonToStringDelegate(BsonHandle bson, out int size);
 

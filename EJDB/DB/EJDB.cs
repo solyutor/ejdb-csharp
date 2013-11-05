@@ -63,92 +63,6 @@
 //			}
 //		}
 
-//		#endregion
-
-//		/// <summary>
-//		/// If true <see cref="Ejdb.DB.EJDBException"/> will be thrown in the case of failed operation 
-//		/// otherwise method will return boolean status flag. Default value: <c>true</c> 
-//		/// </summary>
-//		/// <value><c>true</c> if throw exception on fail; otherwise, <c>false</c>.</value>
-//		public bool ThrowExceptionOnFail {
-//			get {
-//				return _throwonfail;
-//			}
-//			set {
-//				_throwonfail = value;
-//			}
-//		}
-
-
-//		/// <summary>
-//		/// Automatically creates new collection if it does't exists.
-//		/// </summary>
-//		/// <remarks>
-//		/// Collection options <c>copts</c> are applied only for newly created collection.
-//		/// For existing collections <c>copts</c> has no effect.
-//		/// </remarks>
-//		/// <returns><c>false</c> error ocurried.</returns>
-//		/// <param name="cname">Name of collection.</param>
-//		/// <param name="copts">Collection options.</param>
-//		public bool EnsureCollection(string cname, EJDBCollectionOptionsN? copts = null) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbcreatecoll(_db, cname, copts);		
-//			bool rv = (cptr != IntPtr.Zero);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Removes collection indetified by <c>cname</c>.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		/// <param name="cname">Name of the collection.</param>
-//		/// <param name="unlink">If set to <c>true</c> then the collection data file will be removed.</param>
-//		public bool DropCollection(string cname, bool unlink = false) {
-//			CheckDisposed();
-//			bool rv = _ejdbrmcoll(_db, cname, unlink);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Synchronize entire EJDB database and
-//		/// all of its collections with storage.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		public bool Sync() {
-//			CheckDisposed();
-//			//internal static extern bool _ejdbsyncdb([In] IntPtr db);
-//			bool rv = _ejdbsyncdb(_db);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Synchronize content of a EJDB collection database with the file on device.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		/// <param name="cname">Name of collection.</param>
-//		public bool SyncCollection(string cname) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static extern bool _ejdbsyncoll([In] IntPtr coll);
-//			bool rv = _ejdbsyncoll(cptr);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
 //		/// <summary>
 //		/// DROP indexes of all types for JSON field path.
 //		/// </summary>
@@ -348,81 +262,6 @@
 //			return rv;
 //		}
 
-//		/// <summary>
-//		/// Begin transaction for EJDB collection.
-//		/// </summary>
-//		/// <returns><c>true</c>, if begin was transactioned, <c>false</c> otherwise.</returns>
-//		/// <param name="cname">Cname.</param>
-//		public bool TransactionBegin(string cname) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static extern bool _ejdbtranbegin([In] IntPtr coll);
-//			bool rv = _ejdbtranbegin(cptr);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Commit the transaction.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		public bool TransactionCommit(string cname) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static extern bool _ejdbtrancommit([In] IntPtr coll);
-//			bool rv = _ejdbtrancommit(cptr);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Abort the transaction.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		public bool AbortTransaction(string cname) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return true;
-//			}
-//			//internal static extern bool _ejdbtranabort([In] IntPtr coll);
-//			bool rv = _ejdbtranabort(cptr);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
-//		/// <summary>
-//		/// Get the transaction status.
-//		/// </summary>
-//		/// <returns><c>false</c>, if error occurred.</returns>
-//		/// <param name="cname">Name of collection.</param>
-//		/// <param name="active">Out parameter. It <c>true</c> transaction is active.</param>
-//		public bool TransactionStatus(string cname, out bool active) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				active = false;
-//				return true;
-//			}
-//			bool rv = _ejdbtranstatus(cptr, out active);
-//			if (_throwonfail && !rv) {
-//				throw new EJDBException(this);
-//			}
-//			return rv;
-//		}
-
 //		public bool Save(string cname, params object[] docs) {
 //			CheckDisposed();
 //			IntPtr cptr = _ejdbcreatecoll(_db, cname, null);
@@ -475,34 +314,7 @@
 //			return true;
 //		}
 
-//		/// <summary>
-//		/// Save the BSON document doc into the collection.
-//		/// And merge each doc object identified by <c>_id</c> with doc stored in DB.
-//		/// </summary>
-//		/// <param name="cname">Name of collection.</param>
-//		/// <param name="docs">BSON documents to save.</param>
-//		/// <returns>True on success.</returns>
-//		public bool SaveMerge(string cname, params BSONDocument[] docs) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbcreatecoll(_db, cname, null);
-//			if (cptr == IntPtr.Zero) {
-//				if (_throwonfail) {
-//					throw new EJDBException(this);
-//				} else {
-//					return false;
-//				}
-//			}
-//			foreach (var doc in docs) {
-//				if (!Save(cptr, doc, true)) {
-//					if (_throwonfail) {
-//						throw new EJDBException(this);
-//					} else {
-//						return false;
-//					}
-//				}
-//			}
-//			return true;
-//		}
+
 
 //		bool Save(IntPtr cptr, BSONDocument doc, bool merge) {
 //			bool rv;
@@ -520,27 +332,7 @@
 //			return  rv;
 //		}
 
-//		/// <summary>
-//		/// Loads JSON object identified by OID from the collection.
-//		/// </summary>
-//		/// <remarks>
-//		/// Returns <c>null</c> if object is not found.
-//		/// </remarks>
-//		/// <param name="cname">Cname.</param>
-//		/// <param name="oid">Oid.</param>
-//		public BSONIterator Load(string cname, BSONOid oid) {
-//			CheckDisposed();
-//			IntPtr cptr = _ejdbgetcoll(_db, cname);
-//			if (cptr == IntPtr.Zero) {
-//				return null;
-//			}
-//			//static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
-//			byte[] bsdata = BsonPtrIntoByteArray(_ejdbloadbson(cptr, oid.ToBytes()));
-//			if (bsdata.Length == 0) {
-//				return null;
-//			}
-//			return new BSONIterator(bsdata);
-//		}
+
 
 //		/// <summary>
 //		/// Removes stored objects from the collection.
@@ -601,23 +393,7 @@
 //			return it.ToBSONDocument();
 //		}
 
-//		//.//////////////////////////////////////////////////////////////////
-//		// 						 Private staff							   //
-//		//.//////////////////////////////////////////////////////////////////
 
-//		byte[] BsonPtrIntoByteArray(IntPtr bsptr, bool deletebsptr = true) {
-//			if (bsptr == IntPtr.Zero) {
-//				return new byte[0];
-//			}
-//			int size;
-//			IntPtr bsdataptr = _bson_data2(bsptr, out size);
-//			byte[] bsdata = new byte[size];
-//			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
-//			if (deletebsptr) {
-//				_bson_del(bsptr);
-//			}
-//			return bsdata;
-//		}
 
 //		bool IndexOperation(string cname, string ipath, int flags) {
 //			CheckDisposed(true);

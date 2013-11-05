@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Ejdb.BSON;
 using Ejdb.DB;
 using NUnit.Framework;
 
@@ -143,6 +145,33 @@ namespace Ejdb.Tests
 			var collection = _dataBase.CreateCollection("Test", new CollectionOptions());
 
 			collection.Synchronize();
+		}
+
+		[Test]
+		public void Can_save_and_load_document()
+		{
+			_dataBase.Open(DbName);
+
+			var collection = _dataBase.CreateCollection("Test", new CollectionOptions());
+
+			var origin = BSONDocument.ValueOf(new
+			{
+				name = "Grenny",
+				type = "African Grey",
+				male = true,
+				age = 1,
+				birthdate = DateTime.Now,
+				likes = new[] { "green color", "night", "toys" },
+				extra = BSONull.VALUE
+			});
+
+			collection.Save(origin, false);
+
+			var id = origin.GetBSONValue("_id");
+
+			var reloaded = collection.Load((BSONOid)id.Value);
+			//TODO: made more string assertion
+			Assert.That(reloaded, Is.Not.Null);
 		}
 	}
 }

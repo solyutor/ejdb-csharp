@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Ejdb.BSON;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -15,6 +16,9 @@ namespace Ejdb.DB
 		private RollbackTransactionDelegate _rollbackTransaction;
 		private TransactionStatusDelegate _transactionStatus;
 		private SyncDelegate _syncCollection;
+		private SaveBsonDelegate _saveBson;
+		private LoadBsonDelegate _loadBson;
+
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbrmcoll([In] IntPtr db, [In] IntPtr cname, bool unlink);
@@ -25,12 +29,17 @@ namespace Ejdb.DB
 		//EJDB_EXPORT bool ejdbsavebson3(EJCOLL *jcoll, void *bsdata, bson_oid_t *oid, bool merge);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsavebson3", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbsavebson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
+		
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
+		private delegate bool SaveBsonDelegate([In] CollectionHandle collection,[In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
+		//TODO: Possible save methods: bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid) 
+		//TODO: Possible save methods: bool ejdbsavebson2(EJCOLL *coll, bson *bs, bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 
 
 		//EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
-
-		
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
+		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [Out] byte[] oid);
 		
 		//EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
@@ -98,7 +107,11 @@ namespace Ejdb.DB
 			_commitTransaction = LibraryHandle.GetUnmanagedDelegate<CommitTransactionDelegate>();
 			_rollbackTransaction = LibraryHandle.GetUnmanagedDelegate<RollbackTransactionDelegate>();
 			_transactionStatus = LibraryHandle.GetUnmanagedDelegate<TransactionStatusDelegate>();
+			
 			_syncCollection = LibraryHandle.GetUnmanagedDelegate<SyncDelegate>();
+
+			_saveBson = LibraryHandle.GetUnmanagedDelegate<SaveBsonDelegate>();
+			_loadBson = LibraryHandle.GetUnmanagedDelegate<LoadBsonDelegate>();
 		}
 
 
@@ -169,6 +182,43 @@ namespace Ejdb.DB
 			finally
 			{
 				Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
+			}
+		}
+
+		/// <summary>
+		/// Saves document to collection
+		/// </summary>
+		/// <param name="doc"></param>
+		/// <param name="merge"></param>
+		public void Save(BSONDocument doc, bool merge)
+		{
+			BSONValue bv = doc.GetBSONValue("_id");
+			byte[] bsdata = doc.ToByteArray();
+			byte[] oiddata = new byte[12];
+			var saveOk = _saveBson(_collectionHandle, bsdata, oiddata, merge);
+
+			if (saveOk && bv == null)
+			{
+				doc.SetOID("_id", new BSONOid(oiddata));
+			}
+			else
+			{
+				throw EJDBException.FromDatabase(_database, "Failed to save bson");
+			}
+		}
+
+		/// <summary>
+		/// Loads JSON object identified by OID from the collection.
+		/// </summary>
+		/// <remarks>
+		/// Returns <c>null</c> if object is not found.
+		/// </remarks>
+		/// <param name="oid">Id of an object</param>
+		public BSONDocument Load(BSONOid oid)
+		{
+			using (var bson = new BsonHandle(_database, () => _loadBson(_collectionHandle, oid.ToBytes()), _database.Library.FreeBson))
+			{
+				return _database.Library.ConvertToBsonDocument(bson);
 			}
 		}
 
