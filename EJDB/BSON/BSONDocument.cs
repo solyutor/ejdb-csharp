@@ -30,7 +30,11 @@ namespace Ejdb.BSON {
 	/// BSON document deserialized data wrapper.
 	/// </summary>
 	[Serializable]
-	public class BSONDocument : IBSONValue, IEnumerable<BSONValue>, ICloneable {
+	public class BSONDocument : IBSONValue, IEnumerable<BSONValue>, ICloneable 
+	{
+		public static readonly BSONDocument Empty = new BSONDocument();
+
+
 		static Dictionary<Type, Action<BSONDocument, string, object>> TYPE_SETTERS = 
 		new Dictionary<Type, Action<BSONDocument, string, object>> {
 			{typeof(bool), (d, k, v) => d.SetBool(k, (bool) v)},

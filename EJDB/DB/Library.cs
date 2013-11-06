@@ -39,7 +39,7 @@ namespace Ejdb.DB
 		//internal static extern IntPtr _json2bson([In] IntPtr jsonstr);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2bson")]
-		private delegate BsonHandle JsonToBsonDelegate([In]IntPtr json);
+		private delegate IntPtr JsonToBsonDelegate([In]IntPtr json);
 
 		/// <summary>
 		/// The EJDB library version hex code.
@@ -65,7 +65,7 @@ namespace Ejdb.DB
 
 			_freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
 			_bsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
-			_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
+			//_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
 
 			var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
 
@@ -134,28 +134,29 @@ namespace Ejdb.DB
 			return new BSONDocument(bsdata);
 		}
 
-		/// <summary>
-		/// Convert JSON string into BSONDocument.
-		/// Returns `null` if conversion failed.
-		/// </summary>
-		/// <returns>The BSONDocument instance on success.</returns>
-		/// <param name="json">JSON string</param>
-		public BSONDocument Json2Bson(string json)
-		{
-			IntPtr jsonptr = Native.NativeUtf8FromString(json);
+		///// <summary>
+		///// Convert JSON string into BSONDocument.
+		///// Returns `null` if conversion failed.
+		///// </summary>
+		///// <returns>The BSONDocument instance on success.</returns>
+		///// <param name="json">JSON string</param>
+		//public BSONDocument Json2Bson(string json)
+		//{
+		//	IntPtr jsonptr = Native.NativeUtf8FromString(json);
 
-			try
-			{
-				using (var bson = _jsonToBson(jsonptr))
-				{
-					return ConvertToBsonDocument(bson);
-				}
-			}
-			finally
-			{
-				Marshal.FreeHGlobal(jsonptr); //UnixMarshal.FreeHeap(jsonptr);
-			}
-		}
+		//	try
+		//	{
+				
+		//		using (var bson = new BsonHandle())_jsonToBson(jsonptr))
+		//		{
+		//			return ConvertToBsonDocument(bson);
+		//		}
+		//	}
+		//	finally
+		//	{
+		//		Marshal.FreeHGlobal(jsonptr); //UnixMarshal.FreeHeap(jsonptr);
+		//	}
+		//}
 
 		public void Dispose()
 		{

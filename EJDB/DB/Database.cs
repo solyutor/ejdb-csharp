@@ -199,7 +199,7 @@ namespace Ejdb.DB
 		////		return null;
 		////	}
 		////	byte[] bsdata = BsonPtrIntoByteArray(cmdret);
-		////	if (bsdata.Length == 0)
+		////	if (bsdata.Count == 0)
 		////	{
 		////		return null;
 		////	}
@@ -255,6 +255,16 @@ namespace Ejdb.DB
 			if (_isOpen(DatabaseHandle))
 			{
 				_closeDatabase(DatabaseHandle);
+			}
+		}
+
+		public void ThrowIfError()
+		{
+			var errorCode = LastErrorCode;
+
+			if (errorCode != 0)
+			{
+				EJDBException.FromDatabase(this, string.Empty);
 			}
 		}
 	}

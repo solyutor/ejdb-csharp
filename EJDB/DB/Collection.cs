@@ -7,9 +7,10 @@ namespace Ejdb.DB
 {
 	public class Collection : IDisposable
 	{
-		private readonly Database _database;
+		public readonly Database Database;
+		internal CollectionHandle CollectionHandle;
+
 		private readonly string _name;
-		private CollectionHandle _collectionHandle;
 		private RemoveCollectionDelegate _remove;
 		private BeginTransactionDelegate _beginTransaction;
 		private CommitTransactionDelegate _commitTransaction;
@@ -87,24 +88,24 @@ namespace Ejdb.DB
 
 		private LibraryHandle LibraryHandle
 		{
-			get { return _database.DatabaseHandle.LibraryHandle; }
+			get { return Database.DatabaseHandle.LibraryHandle; }
 		}
 
 		//opens existed
 		internal Collection(Database database, string name)
 		{
-			_database = database;
+			Database = database;
 			_name = name;
-			_collectionHandle = new CollectionHandle(database, name);
+			CollectionHandle = new CollectionHandle(database, name);
 			MapMethods();
 		}
 
 		//Creates new;
 		internal Collection(Database database, string name, CollectionOptions options)
 		{
-			_database = database;
+			Database = database;
 			_name = name;
-			_collectionHandle = new CollectionHandle(database, name, options);
+			CollectionHandle = new CollectionHandle(database, name, options);
 			MapMethods();
 		}
 
@@ -129,30 +130,30 @@ namespace Ejdb.DB
 
 		public void BeginTransaction()
 		{
-			if (_beginTransaction(_collectionHandle))
+			if (_beginTransaction(CollectionHandle))
 			{
 				return;
 			}
 
-			throw EJDBException.FromDatabase(_database, "Failed to begin transaction");
+			throw EJDBException.FromDatabase(Database, "Failed to begin transaction");
 		}
 
 		public void CommitTransaction()
 		{
-			if (_commitTransaction(_collectionHandle))
+			if (_commitTransaction(CollectionHandle))
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(_database, "Failed to commit transaction");
+			throw EJDBException.FromDatabase(Database, "Failed to commit transaction");
 		}
 
 		public void RollbackTransaction()
 		{
-			if (_rollbackTransaction(_collectionHandle))
+			if (_rollbackTransaction(CollectionHandle))
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(_database, "Failed to rollback transaction");
+			throw EJDBException.FromDatabase(Database, "Failed to rollback transaction");
 		}
 
 		public bool TransactionActive
@@ -160,21 +161,21 @@ namespace Ejdb.DB
 			get
 			{
 				bool isActive;
-				if (_transactionStatus(_collectionHandle, out isActive))
+				if (_transactionStatus(CollectionHandle, out isActive))
 				{
 					return isActive;
 				}
-				throw EJDBException.FromDatabase(_database, "Failed to get transaction status");
+				throw EJDBException.FromDatabase(Database, "Failed to get transaction status");
 			}
 		}
 
 		public void Synchronize()
 		{
-			if (_syncCollection(_collectionHandle))
+			if (_syncCollection(CollectionHandle))
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(_database, "Failed to sync collection");
+			throw EJDBException.FromDatabase(Database, "Failed to sync collection");
 		}
 
 
@@ -188,7 +189,7 @@ namespace Ejdb.DB
 			IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
 			try
 			{
-				_remove(_database.DatabaseHandle, unmanagedName, deleteData);
+				_remove(Database.DatabaseHandle, unmanagedName, deleteData);
 			}
 			finally
 			{
@@ -213,7 +214,7 @@ namespace Ejdb.DB
 				oiddata = doc.ToByteArray();
 			}
 
-			var saveOk = _saveBson(_collectionHandle, bsdata, oiddata, merge);
+			var saveOk = _saveBson(CollectionHandle, bsdata, oiddata, merge);
 
 			if (saveOk && id == null)
 			{
@@ -222,7 +223,7 @@ namespace Ejdb.DB
 
 			if(!saveOk)
 			{
-				throw EJDBException.FromDatabase(_database, "Failed to save bson");
+				throw EJDBException.FromDatabase(Database, "Failed to save bson");
 			}
 		}
 
@@ -235,9 +236,9 @@ namespace Ejdb.DB
 		/// <param name="oid">Id of an object</param>
 		public BSONDocument Load(BSONOid oid)
 		{
-			using (var bson = new BsonHandle(_database, () => _loadBson(_collectionHandle, oid.ToBytes()), _database.Library.FreeBson))
+			using (var bson = new BsonHandle(Database, () => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
 			{
-				return _database.Library.ConvertToBsonDocument(bson);
+				return Database.Library.ConvertToBsonDocument(bson);
 			}
 		}
 
@@ -250,23 +251,29 @@ namespace Ejdb.DB
 		/// <param name="oid">Id of an object</param>
 		public void Delete(BSONOid oid)
 		{
-			if (_deleteBson(_collectionHandle, oid.ToBytes()))
+			if (_deleteBson(CollectionHandle, oid.ToBytes()))
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(_database, "Failed to save bson");
+			throw EJDBException.FromDatabase(Database, "Failed to save bson");
 		}
 
+
+		/// <summary>
+		/// Performs provided operations on collection indexes.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="flags"></param>
 		public void Index(string path, IndexOperations flags)
 		{
 			IntPtr pathPointer = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(ipath, Encoding.UTF8);
 			try
 			{
-				if (_setIndex(_collectionHandle, pathPointer, (int) flags))
+				if (_setIndex(CollectionHandle, pathPointer, (int) flags))
 				{
 					return;
 				}
-				throw EJDBException.FromDatabase(_database, "Failed to perform index operation");
+				throw EJDBException.FromDatabase(Database, "Failed to perform index operation");
 			}
 			finally
 			{
@@ -274,12 +281,18 @@ namespace Ejdb.DB
 			}
 		}
 
+
+		public Query CreateQuery()
+		{
+			return new Query(this);
+		}
+
 		public void Dispose()
 		{
-			if (_collectionHandle != null)
+			if (CollectionHandle != null)
 			{
-				_collectionHandle.Dispose();
-				_collectionHandle = null;
+				CollectionHandle.Dispose();
+				CollectionHandle = null;
 			}
 		}
 	}
