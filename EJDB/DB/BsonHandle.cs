@@ -3,7 +3,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Ejdb.DB
 {
-	public class BsonHandle : SafeHandleZeroOrMinusOneIsInvalid
+	internal class BsonHandle : SafeHandleZeroOrMinusOneIsInvalid
 	{
 		private readonly Action<IntPtr> _delete;
 
@@ -17,7 +17,6 @@ namespace Ejdb.DB
 
 			_delete = delete;
 		}
-
 
 		protected override bool ReleaseHandle()
 		{

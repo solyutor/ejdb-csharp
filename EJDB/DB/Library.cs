@@ -34,6 +34,13 @@ namespace Ejdb.DB
 		private delegate IntPtr BsonToStringDelegate(BsonHandle bson, out int size);
 
 
+		//EJDB_EXPORT bson* json2bson(const char *jsonstr);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "json2bson", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern IntPtr _json2bson([In] IntPtr jsonstr);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2bson")]
+		private delegate BsonHandle JsonToBsonDelegate([In]IntPtr json);
+
 		/// <summary>
 		/// The EJDB library version hex code.
 		/// </summary>
@@ -47,6 +54,7 @@ namespace Ejdb.DB
 		private readonly GetErrorMessage _getErrorMessage;
 		private readonly FreeBsonDelegate _freeBson;
 		private readonly BsonToStringDelegate _bsonToSTring;
+		private JsonToBsonDelegate _jsonToBson;
 
 		private Library(LibraryHandle libraryHandle)
 		{
@@ -57,6 +65,7 @@ namespace Ejdb.DB
 
 			_freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
 			_bsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
+			_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
 
 			var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
 
@@ -110,7 +119,7 @@ namespace Ejdb.DB
 		{
 			return Native.StringFromNativeUtf8(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
 		}
-
+		//Used internally by BsonHandle
 		internal void FreeBson(IntPtr bson)
 		{
 			_freeBson(bson);
@@ -123,6 +132,29 @@ namespace Ejdb.DB
 			byte[] bsdata = new byte[size];
 			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
 			return new BSONDocument(bsdata);
+		}
+
+		/// <summary>
+		/// Convert JSON string into BSONDocument.
+		/// Returns `null` if conversion failed.
+		/// </summary>
+		/// <returns>The BSONDocument instance on success.</returns>
+		/// <param name="json">JSON string</param>
+		public BSONDocument Json2Bson(string json)
+		{
+			IntPtr jsonptr = Native.NativeUtf8FromString(json);
+
+			try
+			{
+				using (var bson = _jsonToBson(jsonptr))
+				{
+					return ConvertToBsonDocument(bson);
+				}
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(jsonptr); //UnixMarshal.FreeHeap(jsonptr);
+			}
 		}
 
 		public void Dispose()
