@@ -6,8 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sample", "sample\sample.csproj", "{93049FBC-650E-432C-9F1D-156E621DB96C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nejdb", "EJDB\nejdb.csproj", "{A24C964C-771F-4359-8C93-4BFCBE451D8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{BD84EF62-803F-4713-8128-384DED46353C}"
@@ -22,18 +20,6 @@ Global
 		ReleaseWindows|Any CPU = ReleaseWindows|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.Debug|Any CPU.ActiveCfg = DebugWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.Debug|Any CPU.Build.0 = DebugWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.DebugUnix|Any CPU.ActiveCfg = DebugUnix|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.DebugUnix|Any CPU.Build.0 = DebugUnix|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.DebugWindows|Any CPU.ActiveCfg = DebugWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.DebugWindows|Any CPU.Build.0 = DebugWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.Release|Any CPU.ActiveCfg = ReleaseWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.Release|Any CPU.Build.0 = ReleaseWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.ReleaseUnix|Any CPU.ActiveCfg = ReleaseUnix|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.ReleaseUnix|Any CPU.Build.0 = ReleaseUnix|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.ReleaseWindows|Any CPU.ActiveCfg = ReleaseWindows|Any CPU
-		{93049FBC-650E-432C-9F1D-156E621DB96C}.ReleaseWindows|Any CPU.Build.0 = ReleaseWindows|Any CPU
 		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.ActiveCfg = DebugWindows|Any CPU
 		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.Build.0 = DebugWindows|Any CPU
 		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugUnix|Any CPU.ActiveCfg = DebugUnix|Any CPU

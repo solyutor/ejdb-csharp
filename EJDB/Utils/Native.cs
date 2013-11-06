@@ -51,14 +51,14 @@ namespace Ejdb.Utils {
 		internal static TDelegate GetUnmanagedDelegate<TDelegate>(this LibraryHandle library) where TDelegate : class
 		{
 			var delegateType = typeof (TDelegate);
-			var attributeType = typeof (UnmanagedProcedure);
+			var attributeType = typeof (UnmanagedProcedureAttribute);
 			var customAttributes = delegateType.GetCustomAttributes(attributeType, false);
 			if (customAttributes.Length != 1)
 			{
 				throw new InvalidOperationException("Delegate " + delegateType.FullName + "should be marked with " + attributeType.FullName);
 			}
 
-			var procedureName = ((UnmanagedProcedure)customAttributes[0]).Name;
+			var procedureName = ((UnmanagedProcedureAttribute)customAttributes[0]).Name;
 			var methodHandle = GetProcAddress(library, procedureName);
 			if (methodHandle.IsInvalid)
 			{

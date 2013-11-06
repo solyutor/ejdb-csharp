@@ -3,11 +3,11 @@
 namespace Ejdb
 {
 	[AttributeUsage(AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
-	public class UnmanagedProcedure : Attribute
+	public class UnmanagedProcedureAttribute : Attribute
 	{
 		public readonly string Name;
 
-		public UnmanagedProcedure(string name)
+		public UnmanagedProcedureAttribute(string name)
 		{
 			if (string.IsNullOrWhiteSpace(name))
 			{
