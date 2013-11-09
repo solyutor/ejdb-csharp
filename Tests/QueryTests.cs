@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.DB;
 using NUnit.Framework;
 
@@ -12,7 +12,7 @@ namespace Ejdb.Tests
 		private Library _library;
 		private Database _dataBase;
 		private Collection _collection;
-		private BSONDocument _origin;
+		private BsonDocument _origin;
 		private const string DbName = "test.db";
 
 		[SetUp]
@@ -30,7 +30,7 @@ namespace Ejdb.Tests
 
 			_collection = _dataBase.CreateCollection("default", new CollectionOptions());
 
-			_origin = BSONDocument.ValueOf(new
+			_origin = BsonDocument.ValueOf(new
 			{
 				name = "Grenny",
 				type = "African Grey",
@@ -38,7 +38,7 @@ namespace Ejdb.Tests
 				age = 1,
 				birthdate = DateTime.Now,
 				likes = new[] { "green color", "night", "toys" },
-				extra = BSONull.VALUE
+				extra = Bsonull.VALUE
 			});
 		}
 

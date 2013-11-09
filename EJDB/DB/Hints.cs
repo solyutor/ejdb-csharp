@@ -1,15 +1,15 @@
 ﻿using System;
-using Ejdb.BSON;
+using Ejdb.Bson;
 
 namespace Ejdb.DB
 {
 	public class Hints
 	{
-		private BSONDocument _hints;
+		private BsonDocument _hints;
 
 		public Hints()
 		{
-			_hints = new BSONDocument();
+			_hints = new BsonDocument();
 		}
 		public Hints Max(int max)
 		{
@@ -30,7 +30,7 @@ namespace Ejdb.DB
 			}
 			if (_hints == null)
 			{
-				_hints = new BSONDocument();
+				_hints = new BsonDocument();
 			}
 			_hints["$skip"] = skip;
 			return this;
@@ -40,12 +40,12 @@ namespace Ejdb.DB
 		{
 			if (_hints == null)
 			{
-				_hints = new BSONDocument();
+				_hints = new BsonDocument();
 			}
-			BSONDocument oby = _hints["$orderby"] as BSONDocument;
+			BsonDocument oby = _hints["$orderby"] as BsonDocument;
 			if (oby == null)
 			{
-				oby = new BSONDocument();
+				oby = new BsonDocument();
 				_hints["$orderby"] = oby;
 			}
 			oby[field] = (asc) ? 1 : -1;
@@ -77,12 +77,12 @@ namespace Ejdb.DB
 		{
 			if (_hints == null)
 			{
-				_hints = new BSONDocument();
+				_hints = new BsonDocument();
 			}
-			BSONDocument fdoc = _hints["$fields"] as BSONDocument;
+			BsonDocument fdoc = _hints["$fields"] as BsonDocument;
 			if (fdoc == null)
 			{
-				fdoc = new BSONDocument();
+				fdoc = new BsonDocument();
 				_hints["$fields"] = fdoc;
 			}
 			foreach (var fn in fields)

@@ -16,14 +16,14 @@
 using System;
 using System.IO;
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
 	[Serializable]
-	public class BSONArray : BSONDocument {
+	public class BsonArray : BsonDocument {
 
-		public override BSONType BSONType {
+		public override BsonType BsonType {
 			get {
-				return BSONType.ARRAY;
+				return BsonType.ARRAY;
 			}
 		}
 
@@ -33,217 +33,217 @@ namespace Ejdb.BSON {
 			}
 		}
 
-		public BSONArray() {
+		public BsonArray() {
 		}
 
-		public BSONArray(BSONUndefined[] arr) {
+		public BsonArray(BsonUndefined[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetUndefined(i);
 			}
 		}
 
-		public BSONArray(BSONull[] arr) {
+		public BsonArray(Bsonull[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNull(i);
 			}
 		}
 
-		public BSONArray(ushort[] arr) {
+		public BsonArray(ushort[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, (int) arr[i]);
 			}
 		}
 
-		public BSONArray(uint[] arr) {
+		public BsonArray(uint[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, (long) arr[i]);
 			}
 		}
 
-		public BSONArray(ulong[] arr) {
+		public BsonArray(ulong[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, (long) arr[i]);
 			}
 		}
 
-		public BSONArray(short[] arr) {
+		public BsonArray(short[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, (int) arr[i]);
 			}
 		}
 
-		public BSONArray(string[] arr) {
+		public BsonArray(string[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetString(i, arr[i]);
 			}
 		}
 
-		public BSONArray(int[] arr) {
+		public BsonArray(int[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, arr[i]);
 			}
 		}
 
-		public BSONArray(long[] arr) {
+		public BsonArray(long[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, arr[i]);
 			}
 		}
 
-		public BSONArray(float[] arr) {
+		public BsonArray(float[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, arr[i]);
 			}
 		}
 
-		public BSONArray(double[] arr) {
+		public BsonArray(double[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNumber(i, arr[i]);
 			}
 		}
 
-		public BSONArray(bool[] arr) {
+		public BsonArray(bool[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetBool(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONOid[] arr) {
+		public BsonArray(BsonOid[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetOID(i, arr[i]);
 			}
 		}
 
-		public BSONArray(DateTime[] arr) {
+		public BsonArray(DateTime[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetDate(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONDocument[] arr) {
+		public BsonArray(BsonDocument[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetObject(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONArray[] arr) {
+		public BsonArray(BsonArray[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetArray(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONRegexp[] arr) {
+		public BsonArray(BsonRegexp[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetRegexp(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONTimestamp[] arr) {
+		public BsonArray(BsonTimestamp[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetTimestamp(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONCodeWScope[] arr) {
+		public BsonArray(BsonCodeWScope[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetCodeWScope(i, arr[i]);
 			}
 		}
 
-		public BSONArray(BSONBinData[] arr) {
+		public BsonArray(BsonBinData[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetBinData(i, arr[i]);
 			}
 		}
 
-		public BSONDocument SetNull(int idx) {
+		public BsonDocument SetNull(int idx) {
 			return base.SetNull(idx.ToString());
 		}
 
-		public BSONDocument SetUndefined(int idx) {
+		public BsonDocument SetUndefined(int idx) {
 			return base.SetUndefined(idx.ToString());
 		}
 
-		public BSONDocument SetMaxKey(int idx) {
+		public BsonDocument SetMaxKey(int idx) {
 			return base.SetMaxKey(idx.ToString());
 		}
 
-		public BSONDocument SetMinKey(int idx) {
+		public BsonDocument SetMinKey(int idx) {
 			return base.SetMinKey(idx.ToString());
 		}
 
-		public BSONDocument SetOID(int idx, string oid) {
+		public BsonDocument SetOID(int idx, string oid) {
 			return base.SetOID(idx.ToString(), oid);
 		}
 
-		public BSONDocument SetOID(int idx, BSONOid oid) {
+		public BsonDocument SetOID(int idx, BsonOid oid) {
 			return base.SetOID(idx.ToString(), oid); 
 		}
 
-		public BSONDocument SetBool(int idx, bool val) {
+		public BsonDocument SetBool(int idx, bool val) {
 			return base.SetBool(idx.ToString(), val);
 		}
 
-		public BSONDocument SetNumber(int idx, int val) {
+		public BsonDocument SetNumber(int idx, int val) {
 			return base.SetNumber(idx.ToString(), val);
 		}
 
-		public BSONDocument SetNumber(int idx, long val) {
+		public BsonDocument SetNumber(int idx, long val) {
 			return base.SetNumber(idx.ToString(), val);
 		}
 
-		public BSONDocument SetNumber(int idx, double val) {
+		public BsonDocument SetNumber(int idx, double val) {
 			return base.SetNumber(idx.ToString(), val); 
 		}
 
-		public BSONDocument SetNumber(int idx, float val) {
+		public BsonDocument SetNumber(int idx, float val) {
 			return base.SetNumber(idx.ToString(), val); 
 		}
 
-		public BSONDocument SetString(int idx, string val) {
+		public BsonDocument SetString(int idx, string val) {
 			return base.SetString(idx.ToString(), val); 
 		}
 
-		public BSONDocument SetCode(int idx, string val) {
+		public BsonDocument SetCode(int idx, string val) {
 			return base.SetCode(idx.ToString(), val);
 		}
 
-		public BSONDocument SetSymbol(int idx, string val) {
+		public BsonDocument SetSymbol(int idx, string val) {
 			return base.SetSymbol(idx.ToString(), val);
 		}
 
-		public BSONDocument SetDate(int idx, DateTime val) {
+		public BsonDocument SetDate(int idx, DateTime val) {
 			return base.SetDate(idx.ToString(), val);
 		}
 
-		public BSONDocument SetRegexp(int idx, BSONRegexp val) {
+		public BsonDocument SetRegexp(int idx, BsonRegexp val) {
 			return base.SetRegexp(idx.ToString(), val);
 		}
 
-		public BSONDocument SetBinData(int idx, BSONBinData val) {
+		public BsonDocument SetBinData(int idx, BsonBinData val) {
 			return base.SetBinData(idx.ToString(), val);
 		}
 
-		public BSONDocument SetObject(int idx, BSONDocument val) {
+		public BsonDocument SetObject(int idx, BsonDocument val) {
 			return base.SetDocument(idx.ToString(), val);
 		}
 
-		public BSONDocument SetArray(int idx, BSONArray val) {
+		public BsonDocument SetArray(int idx, BsonArray val) {
 			return base.SetArray(idx.ToString(), val);
 		}
 
-		public BSONDocument SetTimestamp(int idx, BSONTimestamp val) {
+		public BsonDocument SetTimestamp(int idx, BsonTimestamp val) {
 			return base.SetTimestamp(idx.ToString(), val);
 		}
 
-		public BSONDocument SetCodeWScope(int idx, BSONCodeWScope val) {
+		public BsonDocument SetCodeWScope(int idx, BsonCodeWScope val) {
 			return base.SetCodeWScope(idx.ToString(), val);
 		}
 
 		protected override void CheckKey(string key) {
 			int idx;
 			if (key == null || !int.TryParse(key, out idx) || idx < 0) {
-				throw new InvalidBSONDataException(string.Format("Invalid array key: {0}", key));
+				throw new InvalidBsonDataException(string.Format("Invalid array key: {0}", key));
 			}
 		}
 	}

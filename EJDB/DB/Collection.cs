@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -29,24 +29,24 @@ namespace Ejdb.DB
 		private delegate bool RemoveCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, bool unlink);
 
 
-		//EJDB_EXPORT bool ejdbsavebson3(EJCOLL *jcoll, void *bsdata, bson_oid_t *oid, bool merge);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsavebson3", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern bool _ejdbsavebson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
-		//TODO: Possible save methods: bool ejdbsavebson(EJCOLL *coll, bson *bs, bson_oid_t *oid) 
-		//TODO: Possible save methods: bool ejdbsavebson2(EJCOLL *coll, bson *bs, bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
+		//EJDB_EXPORT bool ejdbsaveBson3(EJCOLL *jcoll, void *bsdata, Bson_oid_t *oid, bool merge);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsaveBson3", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern bool _ejdbsaveBson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
+		//TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *oid) 
+		//TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsaveBson3")]
 		private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
 
 
-		//EJDB_EXPORT bson* ejdbloadbson(EJCOLL *coll, const bson_oid_t *oid);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
+		//EJDB_EXPORT Bson* ejdbloadBson(EJCOLL *coll, const Bson_oid_t *oid);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadBson", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern IntPtr _ejdbloadBson([In] IntPtr coll, [In] byte[] oid);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadBson")]
 		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [Out] byte[] oid);
 
-		//EJDB_EXPORT bool ejdbrmbson(EJCOLL *coll, bson_oid_t *oid);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern bool _ejdbrmbson([In] IntPtr coll, [In] byte[] oid);
+		//EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *oid);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmBson", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] oid);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
 		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] byte[] objectId);
 
@@ -202,9 +202,9 @@ namespace Ejdb.DB
 		/// </summary>
 		/// <param name="doc"></param>
 		/// <param name="merge"></param>
-		public void Save(BSONDocument doc, bool merge)
+		public void Save(BsonDocument doc, bool merge)
 		{
-			BSONValue id = doc.GetBSONValue("_id");
+			BsonValue id = doc.GetBsonValue("_id");
 
 			byte[] bsdata = doc.ToByteArray();
 			byte[] oiddata = new byte[12];
@@ -218,12 +218,12 @@ namespace Ejdb.DB
 
 			if (saveOk && id == null)
 			{
-				doc.SetOID("_id", new BSONOid(oiddata));
+				doc.SetOID("_id", new BsonOid(oiddata));
 			}
 
 			if(!saveOk)
 			{
-				throw EJDBException.FromDatabase(Database, "Failed to save bson");
+				throw EJDBException.FromDatabase(Database, "Failed to save Bson");
 			}
 		}
 
@@ -234,11 +234,11 @@ namespace Ejdb.DB
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
 		/// <param name="oid">Id of an object</param>
-		public BSONDocument Load(BSONOid oid)
+		public BsonDocument Load(BsonOid oid)
 		{
-			using (var bson = new BsonHandle(Database, () => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
+			using (var Bson = new BsonHandle(Database, () => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
 			{
-				return Database.Library.ConvertToBsonDocument(bson);
+				return Database.Library.ConvertToBsonDocument(Bson);
 			}
 		}
 
@@ -249,13 +249,13 @@ namespace Ejdb.DB
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
 		/// <param name="oid">Id of an object</param>
-		public void Delete(BSONOid oid)
+		public void Delete(BsonOid oid)
 		{
 			if (_deleteBson(CollectionHandle, oid.ToBytes()))
 			{
 				return;
 			}
-			throw EJDBException.FromDatabase(Database, "Failed to save bson");
+			throw EJDBException.FromDatabase(Database, "Failed to save Bson");
 		}
 
 

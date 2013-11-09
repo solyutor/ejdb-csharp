@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -21,24 +21,24 @@ namespace Ejdb.DB
 		private delegate IntPtr GetErrorMessage(int errorCode);
 
 
-		//EJDB_EXPORT void bson_del(bson *b);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_del", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern void _bson_del([In] IntPtr bsptr);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_del")]
-		private delegate void FreeBsonDelegate(IntPtr bson);
+		//EJDB_EXPORT void Bson_del(Bson *b);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "Bson_del", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern void _Bson_del([In] IntPtr bsptr);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("Bson_del")]
+		private delegate void FreeBsonDelegate(IntPtr Bson);
 
-		//EJDB_EXPORT const char* bson_data2(const bson *b, int *bsize);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_data2")]
-		private delegate IntPtr BsonToStringDelegate(BsonHandle bson, out int size);
+		//EJDB_EXPORT const char* Bson_data2(const Bson *b, int *bsize);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "Bson_data2", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern IntPtr _Bson_data2([In] IntPtr bsptr, out int size);
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("Bson_data2")]
+		private delegate IntPtr BsonToStringDelegate(BsonHandle Bson, out int size);
 
 
-		//EJDB_EXPORT bson* json2bson(const char *jsonstr);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "json2bson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _json2bson([In] IntPtr jsonstr);
+		//EJDB_EXPORT Bson* json2Bson(const char *jsonstr);
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "json2Bson", CallingConvention = CallingConvention.Cdecl)]
+		//internal static extern IntPtr _json2Bson([In] IntPtr jsonstr);
 
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2bson")]
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2Bson")]
 		private delegate IntPtr JsonToBsonDelegate([In]IntPtr json);
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Ejdb.DB
 
 		private readonly GetErrorMessage _getErrorMessage;
 		private readonly FreeBsonDelegate _freeBson;
-		private readonly BsonToStringDelegate _bsonToSTring;
+		private readonly BsonToStringDelegate _BsonToSTring;
 		private JsonToBsonDelegate _jsonToBson;
 
 		private Library(LibraryHandle libraryHandle)
@@ -64,7 +64,7 @@ namespace Ejdb.DB
 			_getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 
 			_freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
-			_bsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
+			_BsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
 			//_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
 
 			var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
@@ -120,36 +120,36 @@ namespace Ejdb.DB
 			return Native.StringFromNativeUtf8(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
 		}
 		//Used internally by BsonHandle
-		internal void FreeBson(IntPtr bson)
+		internal void FreeBson(IntPtr Bson)
 		{
-			_freeBson(bson);
+			_freeBson(Bson);
 		}
 
-		internal BSONDocument ConvertToBsonDocument(BsonHandle bson)
+		internal BsonDocument ConvertToBsonDocument(BsonHandle Bson)
 		{
 			int size;
-			IntPtr bsdataptr = _bsonToSTring(bson, out size);
+			IntPtr bsdataptr = _BsonToSTring(Bson, out size);
 			byte[] bsdata = new byte[size];
 			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
-			return new BSONDocument(bsdata);
+			return new BsonDocument(bsdata);
 		}
 
 		///// <summary>
-		///// Convert JSON string into BSONDocument.
+		///// Convert JSON string into BsonDocument.
 		///// Returns `null` if conversion failed.
 		///// </summary>
-		///// <returns>The BSONDocument instance on success.</returns>
+		///// <returns>The BsonDocument instance on success.</returns>
 		///// <param name="json">JSON string</param>
-		//public BSONDocument Json2Bson(string json)
+		//public BsonDocument Json2Bson(string json)
 		//{
 		//	IntPtr jsonptr = Native.NativeUtf8FromString(json);
 
 		//	try
 		//	{
 				
-		//		using (var bson = new BsonHandle())_jsonToBson(jsonptr))
+		//		using (var Bson = new BsonHandle())_jsonToBson(jsonptr))
 		//		{
-		//			return ConvertToBsonDocument(bson);
+		//			return ConvertToBsonDocument(Bson);
 		//		}
 		//	}
 		//	finally

@@ -15,36 +15,36 @@
 // ============================================================================================
 using System;
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
 	/// <summary>
-	/// BSON field value.
+	/// Bson field value.
 	/// </summary>
 	[Serializable]
-	public sealed class BSONValue : IBSONValue, ICloneable {	
+	public sealed class BsonValue : IBsonValue, ICloneable {	
 
 		/// <summary>
-		/// BSON.Type
+		/// Bson.Type
 		/// </summary>
-		public BSONType BSONType { get; internal set; }
+		public BsonType BsonType { get; internal set; }
 
 		/// <summary>
-		/// BSON field key.
+		/// Bson field key.
 		/// </summary>
 		public string Key { get; internal set; }
 
 		/// <summary>
-		/// Deserialized BSON field value.
+		/// Deserialized Bson field value.
 		/// </summary>
 		public object Value { get; internal set; }
 
-		public BSONValue(BSONType type, string key, object value) {
-			this.BSONType = type;
+		public BsonValue(BsonType type, string key, object value) {
+			this.BsonType = type;
 			this.Key = key;
 			this.Value = value;
 		}
 
-		public BSONValue(BSONType type, string key) : this(type, key, null) {
+		public BsonValue(BsonType type, string key) : this(type, key, null) {
 		}
 
 		public override bool Equals(object obj) {
@@ -54,11 +54,11 @@ namespace Ejdb.BSON {
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			if (obj.GetType() != typeof(BSONValue)) {
+			if (obj.GetType() != typeof(BsonValue)) {
 				return false;
 			}
-			BSONValue other = (BSONValue) obj;
-			if (BSONType != other.BSONType || Key != other.Key) {
+			BsonValue other = (BsonValue) obj;
+			if (BsonType != other.BsonType || Key != other.Key) {
 				return false;
 			}
 			if (Value != null) {
@@ -68,7 +68,7 @@ namespace Ejdb.BSON {
 			}
 		}
 
-		public static bool operator ==(BSONValue v1, BSONValue v2) {
+		public static bool operator ==(BsonValue v1, BsonValue v2) {
 			if (ReferenceEquals(v1, v2)) {
 				return true;
 			}
@@ -78,22 +78,22 @@ namespace Ejdb.BSON {
 			return v1.Equals(v2);
 		}
 
-		public static bool operator !=(BSONValue v1, BSONValue v2) {
+		public static bool operator !=(BsonValue v1, BsonValue v2) {
 			return !(v1 == v2);
 		}
 
 		public override int GetHashCode() {
 			unchecked {
-				return BSONType.GetHashCode() ^ (Value != null ? Value.GetHashCode() : 0);
+				return BsonType.GetHashCode() ^ (Value != null ? Value.GetHashCode() : 0);
 			}
 		}
 
 		public override string ToString() {
-			return string.Format("[BSONValue: BSONType={0}, Key={1}, Value={2}]", BSONType, Key, Value);
+			return string.Format("[BsonValue: BsonType={0}, Key={1}, Value={2}]", BsonType, Key, Value);
 		}
 
 		public object Clone() {
-			return new BSONValue(this.BSONType, this.Key, this.Value);
+			return new BsonValue(this.BsonType, this.Key, this.Value);
 		}
 	}
 }

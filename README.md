@@ -51,7 +51,7 @@ One snippet intro
 ```c#
 using System;
 using Ejdb.DB;
-using Ejdb.BSON;
+using Ejdb.Bson;
 
 namespace sample {
 
@@ -61,17 +61,17 @@ namespace sample {
 			var jb = new EJDB("zoo", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
 			jb.ThrowExceptionOnFail = true;
 
-			var parrot1 = BSONDocument.ValueOf(new {
+			var parrot1 = BsonDocument.ValueOf(new {
 				name = "Grenny",
 				type = "African Grey",
 				male = true,
 				age = 1,
 				birthdate = DateTime.Now,
 				likes = new string[] { "green color", "night", "toys" },
-				extra = BSONull.VALUE
+				extra = Bsonull.VALUE
 			});
 
-			var parrot2 = BSONDocument.ValueOf(new {
+			var parrot2 = BsonDocument.ValueOf(new {
 				name = "Bounty",
 				type = "Cockatoo",
 				male = false,
@@ -92,9 +92,9 @@ namespace sample {
 			using (var cur = q.Find()) {
 				Console.WriteLine("Found " + cur.Length + " parrots");
 				foreach (var e in cur) {
-					//fetch the `name` and the first element of likes array from the current BSON iterator.
-					//alternatively you can fetch whole document from the iterator: `e.ToBSONDocument()`
-					BSONDocument rdoc = e.ToBSONDocument("name", "likes.0");
+					//fetch the `name` and the first element of likes array from the current Bson iterator.
+					//alternatively you can fetch whole document from the iterator: `e.ToBsonDocument()`
+					BsonDocument rdoc = e.ToBsonDocument("name", "likes.0");
 					Console.WriteLine(string.Format("{0} likes the '{1}'", rdoc["name"], rdoc["likes.0"]));
 				}
 			}

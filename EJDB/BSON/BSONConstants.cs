@@ -15,14 +15,14 @@
 // ============================================================================================
 using System;
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
 	/// <summary>
-	/// Various BSON processing constants and shared values.
+	/// Various Bson processing constants and shared values.
 	/// </summary>
-	public static class BSONConstants {
+	public static class BsonConstants {
 
-		static BSONConstants() {
+		static BsonConstants() {
 			Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		}
 

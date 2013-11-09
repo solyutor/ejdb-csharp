@@ -13,11 +13,11 @@
 //   if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
-	/** <summary> BSON types according to the bsonspec (http://bsonspec.org/)</summary> */ 
+	/** <summary> Bson types according to the Bsonspec (http://Bsonspec.org/)</summary> */ 
 
-	public enum BSONType : byte {
+	public enum BsonType : byte {
 		UNKNOWN = 0xfe,
 		EOO = 0x00,
 		DOUBLE = 0x01,

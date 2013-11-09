@@ -47,7 +47,7 @@ namespace Ejdb.IO {
 			base.Dispose(!_leaveopen);
 		}
 
-		public void WriteBSONString(string val) {
+		public void WriteBsonString(string val) {
 			byte[] buf = _encoding.GetBytes(val);
 			Write(buf.Length + 1);
 			Write(buf);

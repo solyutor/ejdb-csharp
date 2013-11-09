@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 using Microsoft.Win32.SafeHandles;
 
@@ -27,7 +27,7 @@ namespace Ejdb.DB
 			
 			var createQuery = libraryHandle.GetUnmanagedDelegate<CreateQueryDelegate>();
 
-			handle = createQuery(database.DatabaseHandle, BSONDocument.Empty.ToByteArray());
+			handle = createQuery(database.DatabaseHandle, BsonDocument.Empty.ToByteArray());
 
 			if (IsInvalid)
 			{

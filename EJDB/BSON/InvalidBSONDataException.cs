@@ -15,15 +15,15 @@
 // ============================================================================================
 using System;
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
-	/** Invalid BSON binary data. */
+	/** Invalid Bson binary data. */
 
-	public class InvalidBSONDataException : Exception {
-		public InvalidBSONDataException() {
+	public class InvalidBsonDataException : Exception {
+		public InvalidBsonDataException() {
 		}
 
-		public InvalidBSONDataException(string msg) : base(msg) {
+		public InvalidBsonDataException(string msg) : base(msg) {
 		}
 	}
 }

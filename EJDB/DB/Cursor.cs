@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
 {
-	public class Cursor : IDisposable, IEnumerable<BSONIterator>
+	public class Cursor : IDisposable, IEnumerable<BsonIterator>
 	{
-		////const void* ejdbqresultbsondata(EJQRESULT qr, int pos, int *size)
-		//[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqresultbsondata", CallingConvention = CallingConvention.Cdecl)]
-		//static extern IntPtr _ejdbqresultbsondata([In] IntPtr qres, [In] int pos, out int size);
+		////const void* ejdbqresultBsondata(EJQRESULT qr, int pos, int *size)
+		//[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqresultBsondata", CallingConvention = CallingConvention.Cdecl)]
+		//static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int pos, out int size);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqueryhints")]
 		private delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
 		
@@ -29,7 +29,7 @@ namespace Ejdb.DB
 			_cursorResult = libraryHandle.GetUnmanagedDelegate<CursorResultDelegate>();
 		}
 
-		public BSONIterator this[int index]
+		public BsonIterator this[int index]
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Ejdb.DB
 				{
 					return null;
 				}
-				//static extern IntPtr _ejdbqresultbsondata([In] IntPtr qres, [In] int index, out int size)
+				//static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int index, out int size)
 				int size;
 
 				IntPtr bsdataptr = _cursorResult(_cursorHandle, index, out size);
@@ -47,7 +47,7 @@ namespace Ejdb.DB
 				}
 				byte[] bsdata = new byte[size];
 				Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
-				return new BSONIterator(bsdata);
+				return new BsonIterator(bsdata);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Ejdb.DB
 			}
 		}
 
-		public BSONIterator Next()
+		public BsonIterator Next()
 		{
 			if (_cursorHandle.IsInvalid || _position >= _count)
 			{
@@ -71,9 +71,9 @@ namespace Ejdb.DB
 			return this[_position++];
 		}
 
-		public IEnumerator<BSONIterator> GetEnumerator()
+		public IEnumerator<BsonIterator> GetEnumerator()
 		{
-			BSONIterator it;
+			BsonIterator it;
 			while ((it = Next()) != null)
 			{
 				yield return it;

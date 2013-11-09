@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -47,13 +47,13 @@ namespace Ejdb.DB
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbecode")]
 		private delegate int GetErrorCodeDelegate([In] DatabaseHandle database);
 
-		////EJDB_EXPORT bson* ejdbmeta(EJDB *jb)
+		////EJDB_EXPORT Bson* ejdbmeta(EJDB *jb)
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbmeta", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbmeta([In] IntPtr db);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbmeta")]
 		private delegate IntPtr GetMetaDelegate([In] DatabaseHandle database);
 
-		////EJDB_EXPORT bson* ejdbcommand2(EJDB *jb, void *cmdbsondata);
+		////EJDB_EXPORT Bson* ejdbcommand2(EJDB *jb, void *cmdBsondata);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcommand2", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcommand2")]
@@ -139,13 +139,13 @@ namespace Ejdb.DB
 		/// Gets info of EJDB database itself and its collections.
 		/// </summary>
 		/// <value>The DB meta.</value>
-		public BSONDocument DatabaseMetadata
+		public BsonDocument DatabaseMetadata
 		{
 			get
 			{
-				using (var bson = new BsonHandle(this, () => _getMetadata(DatabaseHandle), Library.FreeBson))
+				using (var Bson = new BsonHandle(this, () => _getMetadata(DatabaseHandle), Library.FreeBson))
 				{
-					return Library.ConvertToBsonDocument(bson);
+					return Library.ConvertToBsonDocument(Bson);
 				}
 			}
 		}
@@ -188,7 +188,7 @@ namespace Ejdb.DB
 		///// </remarks>
 		///// <param name="cmd">Command object</param>
 		///// <returns>Command response.</returns>
-		////public BSONDocument Command(BSONDocument cmd)
+		////public BsonDocument Command(BsonDocument cmd)
 		////{
 		////	CheckDisposed();
 		////	byte[] cmdata = cmd.ToByteArray();
@@ -203,8 +203,8 @@ namespace Ejdb.DB
 		////	{
 		////		return null;
 		////	}
-		////	BSONIterator it = new BSONIterator(bsdata);
-		////	return it.ToBSONDocument();
+		////	BsonIterator it = new BsonIterator(bsdata);
+		////	return it.ToBsonDocument();
 		////}
 
 

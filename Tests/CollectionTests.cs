@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.DB;
 using NUnit.Framework;
 
@@ -12,7 +12,7 @@ namespace Ejdb.Tests
 		private Library _library;
 		private Database _dataBase;
 		private Collection _collection;
-		private BSONDocument _origin;
+		private BsonDocument _origin;
 		private const string DbName = "test.db";
 
 		[SetUp]
@@ -30,7 +30,7 @@ namespace Ejdb.Tests
 
 			_collection = _dataBase.CreateCollection("default", new CollectionOptions());
 
-			_origin = BSONDocument.ValueOf(new
+			_origin = BsonDocument.ValueOf(new
 				{
 					name = "Grenny",
 					type = "African Grey",
@@ -38,7 +38,7 @@ namespace Ejdb.Tests
 					age = 1,
 					birthdate = DateTime.Now,
 					likes = new[] { "green color", "night", "toys" },
-					extra = BSONull.VALUE
+					extra = Bsonull.VALUE
 				});
 		}
 
@@ -77,9 +77,9 @@ namespace Ejdb.Tests
 		{
 			_collection.Save(_origin, false);
 
-			var id = _origin.GetBSONValue("_id");
+			var id = _origin.GetBsonValue("_id");
 			
-			var reloaded = _collection.Load((BSONOid)id.Value);
+			var reloaded = _collection.Load((BsonOid)id.Value);
 			//TODO: made more string assertion
 			Assert.That(reloaded, Is.Not.Null);
 		}
@@ -89,12 +89,12 @@ namespace Ejdb.Tests
 		public void Can_delete_document()
 		{
 			_collection.Save(_origin, false);
-			var id = _origin.GetBSONValue("_id");
-			var bsonOid = (BSONOid)id.Value;
+			var id = _origin.GetBsonValue("_id");
+			var BsonOid = (BsonOid)id.Value;
 			
-			_collection.Delete(bsonOid);
+			_collection.Delete(BsonOid);
 
-			var reloaded = _collection.Load(bsonOid);
+			var reloaded = _collection.Load(BsonOid);
 			
 			Assert.That(reloaded, Is.Not.Null);
 		}

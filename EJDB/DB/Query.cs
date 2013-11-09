@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Ejdb.BSON;
+using Ejdb.Bson;
 using Ejdb.Utils;
 
 namespace Ejdb.DB
@@ -67,7 +67,7 @@ namespace Ejdb.DB
 		/// <param name="docobj">Query document.</param>
 		public Query AppendOrRestriction(object docobj)
 		{
-			BSONDocument doc = BSONDocument.ValueOf(docobj);
+			BsonDocument doc = BsonDocument.ValueOf(docobj);
 			//static extern IntPtr _ejdbqueryaddor([In] IntPtr jb, [In] IntPtr qptr, [In] byte[] bsdata);
 			IntPtr qptr = _addOr(_collection.Database.DatabaseHandle, _handle, doc.ToByteArray());
 			if (qptr == IntPtr.Zero)
@@ -126,7 +126,7 @@ namespace Ejdb.DB
 			return cursor;
 		}
 
-		public BSONIterator FinOne()
+		public BsonIterator FinOne()
 		{
 			using (Cursor cur = Execute(QueryMode.FindOne))
 			{

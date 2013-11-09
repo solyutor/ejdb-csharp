@@ -14,17 +14,17 @@
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
 	/// <summary>
-	/// Base interface of any BSON complex values like Regexp or BSON Timestamp.
+	/// Base interface of any Bson complex values like Regexp or Bson Timestamp.
 	/// </summary>
-	public interface IBSONValue {
+	public interface IBsonValue {
 
 		/// <summary>
-		/// BSON Type of complex value.
+		/// Bson Type of complex value.
 		/// </summary>
-		/// <value>The type of the BSON.</value>
-		BSONType BSONType { get; }
+		/// <value>The type of the Bson.</value>
+		BsonType BsonType { get; }
 	}
 }

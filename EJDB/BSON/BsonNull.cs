@@ -15,16 +15,16 @@
 // ============================================================================================
 using System;
 
-namespace Ejdb.BSON {
+namespace Ejdb.Bson {
 
 	[Serializable]
-	public sealed class BSONull : IBSONValue {
+	public sealed class Bsonull : IBsonValue {
 
-		public static BSONull VALUE = new BSONull();
+		public static Bsonull VALUE = new Bsonull();
 
-		public BSONType BSONType {
+		public BsonType BsonType {
 			get {
-				return BSONType.NULL;
+				return BsonType.NULL;
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace Ejdb.BSON {
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			if (!(obj is BSONull)) {
+			if (!(obj is Bsonull)) {
 				return false;
 			}
 			return true;
@@ -46,7 +46,7 @@ namespace Ejdb.BSON {
 		}
 
 		public override string ToString() {
-			return "[BSONull]";
+			return "[Bsonull]";
 		}
 	}
 }
