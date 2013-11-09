@@ -51,9 +51,9 @@
     <Compile Include="TestEJDB.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EJDB\nejdb.csproj">
-      <Project>{a24c964c-771f-4359-8c93-4bfcbe451d8b}</Project>
-      <Name>nejdb</Name>
+    <ProjectReference Include="..\Nejdb\Nejdb.csproj">
+      <Project>{A24C964C-771F-4359-8C93-4BFCBE451D8B}</Project>
+      <Name>Nejdb</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

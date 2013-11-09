@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A24C964C-771F-4359-8C93-4BFCBE451D8B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Nejdb</RootNamespace>
+    <AssemblyName>Nejdb</AssemblyName>
+    <Description>EJDB .Net binding (http://ejdb.org)</Description>
+    <CodePage>65001</CodePage>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>
+    </DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Internals\BsonHandle.cs" />
+    <Compile Include="Collection.cs" />
+    <Compile Include="Internals\CollectionHandle.cs" />
+    <Compile Include="Cursor.cs" />
+    <Compile Include="Internals\CursorHandle.cs" />
+    <Compile Include="Internals\CollectionOptions.cs" />
+    <Compile Include="Hints.cs" />
+    <Compile Include="IndexOperations.cs" />
+    <Compile Include="OpenMode.cs" />
+    <Compile Include="Internals\DatabaseHandle.cs" />
+    <Compile Include="Internals\LibraryHandle.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="Internals\QueryHandle.cs" />
+    <Compile Include="Internals\QueryLogBuffer.cs" />
+    <Compile Include="QueryMode.cs" />
+    <Compile Include="Internals\ExtBinaryReader.cs" />
+    <Compile Include="Internals\ExtBinaryWriter.cs" />
+    <Compile Include="Internals\UnmanagedProcName.cs" />
+    <Compile Include="Internals\ResourceHelper.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Library.cs" />
+    <Compile Include="Internals\MethodHandle.cs" />
+    <Compile Include="Bson\BsonType.cs" />
+    <Compile Include="Bson\InvalidBsonDataException.cs" />
+    <Compile Include="Bson\BsonOid.cs" />
+    <Compile Include="Bson\BsonTimestamp.cs" />
+    <Compile Include="Bson\BsonRegexp.cs" />
+    <Compile Include="Bson\IBsonValue.cs" />
+    <Compile Include="Bson\BsonValue.cs" />
+    <Compile Include="Bson\BsonIterator.cs" />
+    <Compile Include="Bson\BsonArray.cs" />
+    <Compile Include="Bson\BsonCodeWScope.cs" />
+    <Compile Include="Bson\BsonBinData.cs" />
+    <Compile Include="Bson\BsonDocument.cs" />
+    <Compile Include="Bson\BsonConstants.cs" />
+    <Compile Include="EjdbException.cs" />
+    <Compile Include="EjdbQueryException.cs" />
+    <Compile Include="Bson\BsonNull.cs" />
+    <Compile Include="Bson\BsonUndefined.cs" />
+    <Compile Include="Internals\Native.cs" />
+    <Compile Include="Internals\TypeExtension.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <EmbeddedResource Include="tcejdb64.dll" />
+    <EmbeddedResource Include="tcejdb32.dll" />
+  </ItemGroup>
+  <ItemGroup />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="Flat" ResourceNamePolicy="FileFormatDefault" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

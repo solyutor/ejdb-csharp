@@ -6,9 +6,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nejdb", "EJDB\nejdb.csproj", "{A24C964C-771F-4359-8C93-4BFCBE451D8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{BD84EF62-803F-4713-8128-384DED46353C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nejdb", "Nejdb\Nejdb.csproj", "{A24C964C-771F-4359-8C93-4BFCBE451D8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,18 +20,6 @@ Global
 		ReleaseWindows|Any CPU = ReleaseWindows|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugUnix|Any CPU.ActiveCfg = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugUnix|Any CPU.Build.0 = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugWindows|Any CPU.ActiveCfg = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugWindows|Any CPU.Build.0 = Debug|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseUnix|Any CPU.ActiveCfg = Release|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseUnix|Any CPU.Build.0 = Release|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseWindows|Any CPU.ActiveCfg = Release|Any CPU
-		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseWindows|Any CPU.Build.0 = Release|Any CPU
 		{BD84EF62-803F-4713-8128-384DED46353C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD84EF62-803F-4713-8128-384DED46353C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD84EF62-803F-4713-8128-384DED46353C}.DebugUnix|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,6 +32,18 @@ Global
 		{BD84EF62-803F-4713-8128-384DED46353C}.ReleaseUnix|Any CPU.Build.0 = Release|Any CPU
 		{BD84EF62-803F-4713-8128-384DED46353C}.ReleaseWindows|Any CPU.ActiveCfg = Release|Any CPU
 		{BD84EF62-803F-4713-8128-384DED46353C}.ReleaseWindows|Any CPU.Build.0 = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugUnix|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugUnix|Any CPU.Build.0 = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugWindows|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.DebugWindows|Any CPU.Build.0 = Debug|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseUnix|Any CPU.ActiveCfg = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseUnix|Any CPU.Build.0 = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseWindows|Any CPU.ActiveCfg = Release|Any CPU
+		{A24C964C-771F-4359-8C93-4BFCBE451D8B}.ReleaseWindows|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

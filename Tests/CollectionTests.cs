@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
-using Ejdb.Bson;
-using Ejdb.DB;
+using Nejdb;
+using Nejdb.Bson;
+using Nejdb.Internals;
 using NUnit.Framework;
 
 namespace Ejdb.Tests

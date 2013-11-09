@@ -1,5 +1,6 @@
 ﻿using System.IO;
-using Ejdb.DB;
+using Nejdb;
+using Nejdb.Internals;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -94,7 +95,7 @@ namespace Ejdb.Tests
 		{
 			_dataBase.Open(DbName);
 
-			Assert.Throws<EJDBException>(() =>  _dataBase.GetCollection("TheFirst"));
+			Assert.Throws<EjdbException>(() =>  _dataBase.GetCollection("TheFirst"));
 		}
 
 		[Test]
