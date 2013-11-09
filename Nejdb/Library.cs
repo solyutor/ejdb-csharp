@@ -34,11 +34,11 @@ namespace Nejdb
 		private delegate IntPtr BsonToStringDelegate(BsonHandle Bson, out int size);
 
 
-		//EJDB_EXPORT Bson* json2Bson(const char *jsonstr);
+		//EJDB_EXPORT Bson* json2bson(const char *jsonstr);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "json2Bson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _json2Bson([In] IntPtr jsonstr);
+		//internal static extern IntPtr _json2bson([In] IntPtr jsonstr);
 
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2Bson")]
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("json2bson")]
 		private delegate IntPtr JsonToBsonDelegate([In]IntPtr json);
 
 		/// <summary>
