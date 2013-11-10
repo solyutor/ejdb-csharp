@@ -14,10 +14,10 @@ You can install it using nuget:
 **What's differences with official binding**
 
   0. tcejdbdll.dll is embedded in resource, and loaded at runtime for both x32/x64. 
-  1. API is close to .Net style, not C style.
+  1. API is closer to .Net style, not C style.
   2. Better unmanaged resource handling.
   3. Dropped support for Mono (I hope it's not hard to restore it).
-  4. Created nuget package for easy install.
+  4. Nuget package available.
 
 
 One snippet intro
