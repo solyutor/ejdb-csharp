@@ -39,7 +39,7 @@ namespace Ejdb.Tests
 				age = 1,
 				birthdate = DateTime.Now,
 				likes = new[] { "green color", "night", "toys" },
-				extra = Bsonull.VALUE
+				extra = BsonNull.VALUE
 			});
 		}
 

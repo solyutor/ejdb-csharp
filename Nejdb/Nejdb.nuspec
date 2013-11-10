@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Nejdb.Unofficial</id>
+    <version>0.0</version>
+    <authors>Jury Soldatenkov</authors>
+    <owners>Jury Soldatenkov</owners>
+    <licenseUrl>http://github.com/solyutor/ejdb-csharp/blob/master/LICENSE</licenseUrl>
+    <projectUrl>http://github.com/solyutor/ejdb-csharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Unofficial bindings for ejbd database (see ejdb.org for details). Supports x32/x64, EJDB lib 1.1.25 is embedded.</description>
+    <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
+    <tags>EJDB</tags>
+  </metadata>
+</package>

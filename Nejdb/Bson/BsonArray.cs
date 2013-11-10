@@ -42,7 +42,7 @@ namespace Nejdb.Bson {
 			}
 		}
 
-		public BsonArray(Bsonull[] arr) {
+		public BsonArray(BsonNull[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetNull(i);
 			}

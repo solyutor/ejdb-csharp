@@ -19,9 +19,9 @@ using System;
 namespace Nejdb.Bson {
 
 	[Serializable]
-	public sealed class Bsonull : IBsonValue {
+	public sealed class BsonNull : IBsonValue {
 
-		public static Bsonull VALUE = new Bsonull();
+		public static BsonNull VALUE = new BsonNull();
 
 		public BsonType BsonType {
 			get {
@@ -36,7 +36,7 @@ namespace Nejdb.Bson {
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			if (!(obj is Bsonull)) {
+			if (!(obj is BsonNull)) {
 				return false;
 			}
 			return true;
@@ -47,7 +47,7 @@ namespace Nejdb.Bson {
 		}
 
 		public override string ToString() {
-			return "[Bsonull]";
+			return "[BsonNull]";
 		}
 	}
 }

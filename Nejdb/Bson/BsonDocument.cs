@@ -78,8 +78,8 @@ namespace Nejdb.Bson {
 			{typeof(DateTime[]), (d, k, v) => d.SetArray(k, new BsonArray((DateTime[]) v))},
 			{typeof(BsonUndefined), (d, k, v) => d.SetUndefined(k)},
 			{typeof(BsonUndefined[]), (d, k, v) => d.SetArray(k, new BsonArray((BsonUndefined[]) v))},
-			{typeof(Bsonull), (d, k, v) => d.SetNull(k)},
-			{typeof(Bsonull[]), (d, k, v) => d.SetArray(k, new BsonArray((Bsonull[]) v))}
+			{typeof(BsonNull), (d, k, v) => d.SetNull(k)},
+			{typeof(BsonNull[]), (d, k, v) => d.SetArray(k, new BsonArray((BsonNull[]) v))}
 		};
 
 		readonly List<BsonValue> _fieldslist;

@@ -131,7 +131,7 @@
 //				age = 1,
 //				birthdate = DateTime.Now,
 //				likes = new string[] { "green color", "night", "toys" },
-//				extra1 = Bsonull.VALUE
+//				extra1 = BsonNull.VALUE
 //			});
 
 //			var parrot2 = BsonDocument.ValueOf(new{
@@ -141,7 +141,7 @@
 //				age = 15,
 //				birthdate = DateTime.Now,
 //				likes = new string[] { "sugar cane" },
-//				extra1 = Bsonull.VALUE
+//				extra1 = BsonNull.VALUE
 //			});
 //			Assert.IsTrue(jb.Save("parrots", parrot1, parrot2));
 //			Assert.AreEqual(2, jb.CreateQueryFor("parrots").Count()); 

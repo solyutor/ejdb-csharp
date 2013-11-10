@@ -1,48 +1,23 @@
-[EJDB](http://ejdb.org) .Net Binding
-===========================================
+Unofficial .Net Binding for [EJDB](http://ejdb.org) 
+===================================================
 
 
-**Note: The .Net EJDB binding designed for .Net 4.0/4.5 and tested on Mono3/MSVC for Unix and Windows.**
+**Note: This is early days, so .Net EJDB binding is not completely tested.**
 
 
-Windows
+You can install it using nuget:
 --------------------------------
 
-**Prerequisites**
-
- * EJDB C library >= v1.1.13
- * .Net >= 4.0 runtime
- * MSVS 2012 OR Xamarin studio (optional)
-
-Download appropriate [EJDB binary distribution](https://github.com/Softmotions/ejdb/blob/master/tcejdb/WIN32.md).
-Then add the directory containing the `tcejdbdll.dll` into search `PATH`.
-Use the following solution configs to debug and test: `DebugWindows`, `ReleaseWindows`
-
-If you have problems please follow this checklist:
-
-**Windows checklist**
-
-  0. Ensure .Net framework >= 4.0 installed
-  1. For x86 CPU download [tcejdb-1.x.x-mingw32-i686](https://github.com/Softmotions/ejdb/blob/master/tcejdb/WIN32.md)
-  2. For x64 CPU download [tcejdb-1.x.x-mingw32-x86_64](https://github.com/Softmotions/ejdb/blob/master/tcejdb/WIN32.md)
-  3. Ensure you have placed `tcejdbdll.dll` into the `%PATH%`
-  4. Open the sample `nejdb.sln` solution.
-  5. Ensure that the project configutation is either: `DebugWindows` OR `ReleaseWindows`
-  6. If a target platform CPU differs from current host CPU you have to use appropriated `tcejdbdll.dll` for target and
-    change the project's CPU platform configuration.
+ * install-package Nejdb.Unofficial
 
 
-Unix
----------------------------------
+**What's differences with official binding**
 
-**Prerequisites**
- * EJDB C library >= v1.1.13
- * Mono 3.0 runtime
- * Monodeveloper (optional)
-
-Install the tcejdb >= 1.1.13 as system-wide library.
-The `tcejdb.so` shared library should be visible to the system linker.
-Use the following solution configs to debug and test: `DebugUnix`, `ReleaseUnix`
+  0. tcejdbdll.dll is embedded in resource, and loaded at runtime for both x32/x64. 
+  1. API is close to .Net style, not C style.
+  2. Better unmanaged resource handling.
+  3. Dropped support for Mono (I hope it's not hard to restore it).
+  4. Created nuget package for easy install.
 
 
 One snippet intro
@@ -50,56 +25,34 @@ One snippet intro
 
 ```c#
 using System;
-using Ejdb.DB;
-using Ejdb.Bson;
+using System.IO;
+using Nejdb;
+using Nejdb.Bson;
+using Nejdb.Internals;
 
-namespace sample {
-
-	class MainClass {
-
-		public static void Main(string[] args) {
-			var jb = new EJDB("zoo", EJDB.DEFAULT_OPEN_MODE | EJDB.JBOTRUNC);
-			jb.ThrowExceptionOnFail = true;
-
-			var parrot1 = BsonDocument.ValueOf(new {
-				name = "Grenny",
-				type = "African Grey",
-				male = true,
-				age = 1,
-				birthdate = DateTime.Now,
-				likes = new string[] { "green color", "night", "toys" },
-				extra = Bsonull.VALUE
-			});
-
-			var parrot2 = BsonDocument.ValueOf(new {
-				name = "Bounty",
-				type = "Cockatoo",
-				male = false,
-				age = 15,
-				birthdate = DateTime.Now,
-				likes = new string[] { "sugar cane" }
-			});
-
-			jb.Save("parrots", parrot1, parrot2);
-
-			Console.WriteLine("Grenny OID: " + parrot1["_id"]);
-			Console.WriteLine("Bounty OID: " + parrot2["_id"]);
-
-			var q = jb.CreateQuery(new {
-				likes = "toys"
-			}, "parrots").OrderBy("name");
-
-			using (var cur = q.Find()) {
-				Console.WriteLine("Found " + cur.Length + " parrots");
-				foreach (var e in cur) {
-					//fetch the `name` and the first element of likes array from the current Bson iterator.
-					//alternatively you can fetch whole document from the iterator: `e.ToBsonDocument()`
-					BsonDocument rdoc = e.ToBsonDocument("name", "likes.0");
-					Console.WriteLine(string.Format("{0} likes the '{1}'", rdoc["name"], rdoc["likes.0"]));
+namespace sample 
+{
+	class MainClass 
+	{
+			using (var library = Library.Create())
+			using (var database = library.CreateDatabase())
+			{
+				database.Open("MyDB.db");
+				using (var collection = database.CreateCollection("Parrots", CollectionOptions.None))
+				{
+					var parrot = BsonDocument.ValueOf(new
+					{
+						name = "Grenny",
+						type = "African Grey",
+						male = true,
+						age = 1,
+						birthdate = DateTime.Now,
+						likes = new[] { "green color", "night", "toys" },
+						extra = BsonNull.VALUE
+					});
+					collection.Save(parrot, false);
 				}
 			}
-			q.Dispose();
-			jb.Dispose();
 		}
 	}
 }

@@ -91,7 +91,9 @@
     <EmbeddedResource Include="tcejdb64.dll" />
     <EmbeddedResource Include="tcejdb32.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Nejdb.nuspec" />
+  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>

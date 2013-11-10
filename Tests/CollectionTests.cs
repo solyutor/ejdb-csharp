@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Nejdb;
 using Nejdb.Bson;
 using Nejdb.Internals;
@@ -39,9 +40,34 @@ namespace Ejdb.Tests
 					age = 1,
 					birthdate = DateTime.Now,
 					likes = new[] { "green color", "night", "toys" },
-					extra = Bsonull.VALUE
+					extra = BsonNull.VALUE
 				});
 		}
+
+		[Test]
+		public void TEST()
+		{
+			using (var library = Library.Create())
+			using (var database = library.CreateDatabase())
+			{
+				database.Open("MyDB.db");
+				using (var collection = database.CreateCollection("Parrots", CollectionOptions.None))
+				{
+					var parrot = BsonDocument.ValueOf(new
+					{
+						name = "Grenny",
+						type = "African Grey",
+						male = true,
+						age = 1,
+						birthdate = DateTime.Now,
+						likes = new[] { "green color", "night", "toys" },
+						extra = BsonNull.VALUE
+					});
+					collection.Save(parrot, false);
+				}
+			}
+		}
+
 
 		[TearDown]
 		public void TearDown()
@@ -79,7 +105,7 @@ namespace Ejdb.Tests
 			_collection.Save(_origin, false);
 
 			var id = _origin.GetBsonValue("_id");
-			
+
 			var reloaded = _collection.Load((BsonOid)id.Value);
 			//TODO: made more string assertion
 			Assert.That(reloaded, Is.Not.Null);
@@ -92,11 +118,11 @@ namespace Ejdb.Tests
 			_collection.Save(_origin, false);
 			var id = _origin.GetBsonValue("_id");
 			var BsonOid = (BsonOid)id.Value;
-			
+
 			_collection.Delete(BsonOid);
 
 			var reloaded = _collection.Load(BsonOid);
-			
+
 			Assert.That(reloaded, Is.Not.Null);
 		}
 
@@ -109,7 +135,7 @@ namespace Ejdb.Tests
 
 			var metaAsString = meta.ToString();
 			const string indexEvidence = "test.db_default.idx.sname.lex";
-			
+
 			StringAssert.Contains(indexEvidence, metaAsString);
 		}
 	}

@@ -5,7 +5,7 @@ using Nejdb.Internals;
 
 namespace Nejdb
 {
-	public class Database
+	public class Database : IDisposable
 	{
 		/// <summary>
 		/// The default open mode (OpenMode.Writer | OpenMode.CreateIfNotExists) <c>(JBOWRITER | JBOCREAT)</c>
@@ -24,8 +24,6 @@ namespace Nejdb
 
 		private SyncDelegate _sync;
 		private CommandDelegate _command;
-
-
 
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbopen([In] IntPtr db, [In] IntPtr path, int mode);
