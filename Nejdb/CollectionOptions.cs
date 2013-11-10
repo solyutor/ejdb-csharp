@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Nejdb.Internals
+namespace Nejdb
 {
 	/// <summary>
 	/// Corresponds to <c>EJCOLLOPTS</c> in ejdb.h
@@ -38,6 +38,9 @@ namespace Nejdb.Internals
 		/// </summary>
 		public readonly int CachedRecords;
 
+		/// <summary>
+		/// Default options
+		/// </summary>
 		public static readonly CollectionOptions None = new CollectionOptions();
 	}
 }

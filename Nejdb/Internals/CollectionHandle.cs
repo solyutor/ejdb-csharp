@@ -23,9 +23,9 @@ namespace Nejdb.Internals
 		//internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr name, IntPtr opts);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr name, ref EJDBCollectionOptionsN opts);
+		//EJCOLL* ejdbcreatecoll(EJDB *jb, const char *colname, EJCOLLOPTS *opts) 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcreatecoll")]
 		private delegate IntPtr CreateCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, ref CollectionOptions options);
-
 
 		//Creates collection with specified name
 		public CollectionHandle(Database database, string name, CollectionOptions options) : base(false)

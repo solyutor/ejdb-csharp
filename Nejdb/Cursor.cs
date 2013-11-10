@@ -29,6 +29,9 @@ namespace Nejdb
 			_cursorResult = libraryHandle.GetUnmanagedDelegate<CursorResultDelegate>();
 		}
 
+		/// <summary>
+		/// Returns a result with specified index from results
+		/// </summary>
 		public BsonIterator this[int index]
 		{
 			get
@@ -54,14 +57,15 @@ namespace Nejdb
 		/// <summary>
 		/// Gets the number of result records stored in this cursor.
 		/// </summary>
-		public int Count
+		public int Count 
 		{
-			get
-			{
-				return _count;
-			}
+			get { return _count; }
 		}
 
+		/// <summary>
+		/// Returns next record in collection
+		/// </summary>
+		/// <returns></returns>
 		public BsonIterator Next()
 		{
 			if (_cursorHandle.IsInvalid || _position >= _count)
@@ -71,6 +75,9 @@ namespace Nejdb
 			return this[_position++];
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the result set.
+		/// </summary>
 		public IEnumerator<BsonIterator> GetEnumerator()
 		{
 			BsonIterator it;
@@ -92,7 +99,9 @@ namespace Nejdb
 		{
 			_position = 0;
 		}
-
+		/// <summary>
+		/// Closes cursor and frees all resources.
+		/// </summary>
 		public void Dispose()
 		{
 			_cursorHandle.Dispose();

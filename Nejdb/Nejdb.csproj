@@ -49,8 +49,8 @@
     <Compile Include="Internals\CollectionHandle.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Internals\CursorHandle.cs" />
-    <Compile Include="Internals\CollectionOptions.cs" />
-    <Compile Include="Hints.cs" />
+    <Compile Include="CollectionOptions.cs" />
+    <Compile Include="QueryHints.cs" />
     <Compile Include="IndexOperations.cs" />
     <Compile Include="OpenMode.cs" />
     <Compile Include="Internals\DatabaseHandle.cs" />

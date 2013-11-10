@@ -2,12 +2,12 @@ using System;
 
 namespace Nejdb
 {
+	/// <summary>
+	/// Represents possible index operations and types (ejdb.h)
+	/// </summary>
 	[Flags]
 	public enum IndexOperations : int
 	{
-		//.//////////////////////////////////////////////////////////////////
-		// 				 Native index operations & types (ejdb.h)
-		//.//////////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Drop index. (JBIDXDROP)
 		/// </summary>

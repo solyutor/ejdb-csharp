@@ -3,15 +3,21 @@ using Nejdb.Bson;
 
 namespace Nejdb
 {
-	public class Hints
+	/// <summary>
+	/// Hint for <see cref="Query"/>
+	/// </summary>
+	public class QueryHints
 	{
 		private BsonDocument _hints;
 
-		public Hints()
+		public QueryHints()
 		{
 			_hints = new BsonDocument();
 		}
-		public Hints Max(int max)
+		/// <summary>
+		/// Sets maximum number of documents to return 
+		/// </summary>
+		public QueryHints Max(int max)
 		{
 			if (max < 0)
 			{
@@ -22,26 +28,28 @@ namespace Nejdb
 			return this;
 		}
 
-		public Hints Skip(int skip)
+		/// <summary>
+		/// Sets number of documents to skip
+		/// </summary>
+		public QueryHints Skip(int skip)
 		{
 			if (skip < 0)
 			{
 				throw new ArgumentException("Skip value cannot be negative");
 			}
-			if (_hints == null)
-			{
-				_hints = new BsonDocument();
-			}
+			
 			_hints["$skip"] = skip;
 			return this;
 		}
 
-		public Hints OrderBy(string field, bool asc = true)
+		/// <summary>
+		/// Set sorted field
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="asc"></param>
+		/// <returns></returns>
+		public QueryHints OrderBy(string field, bool asc = true)
 		{
-			if (_hints == null)
-			{
-				_hints = new BsonDocument();
-			}
 			BsonDocument oby = _hints["$orderby"] as BsonDocument;
 			if (oby == null)
 			{
@@ -53,19 +61,20 @@ namespace Nejdb
 			return this;
 		}
 
-		public Hints IncludeFields(params string[] fields)
+		/// <summary>
+		/// Specifies fields to returned from documents
+		/// </summary>
+		public QueryHints IncludeFields(params string[] fields)
 		{
 			return IncExFields(fields, 1);
 		}
 
-		public Hints ExcludeFields(params string[] fields)
+		/// <summary>
+		/// Specifies fields the should be returned from documents
+		/// </summary>
+		public QueryHints ExcludeFields(params string[] fields)
 		{
 			return IncExFields(fields, 0);
-		}
-
-		public bool HasHints
-		{
-			get { return _hints.KeysCount > 0; }
 		}
 
 		public bool IsEmpty
@@ -73,12 +82,8 @@ namespace Nejdb
 			get { return _hints.KeysCount == 0; }
 		}
 
-		private Hints IncExFields(string[] fields, int inc)
+		private QueryHints IncExFields(string[] fields, int inc)
 		{
-			if (_hints == null)
-			{
-				_hints = new BsonDocument();
-			}
 			BsonDocument fdoc = _hints["$fields"] as BsonDocument;
 			if (fdoc == null)
 			{

@@ -2,6 +2,9 @@ using System;
 
 namespace Nejdb
 {
+	/// <summary>
+	/// Shows possible query modes
+	/// </summary>
 	[Flags]
 	public enum QueryMode : int
 	{

@@ -15,7 +15,9 @@
 // ============================================================================================
 namespace Nejdb.Bson {
 
-	/** <summary> Bson types according to the Bsonspec (http://Bsonspec.org/)</summary> */ 
+	/// <summary>
+	/// Bson types according to the bsonspec (http://bsonspec.org/)
+	/// </summary>
 
 	public enum BsonType : byte {
 		UNKNOWN = 0xfe,

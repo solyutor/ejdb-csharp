@@ -11,7 +11,7 @@ namespace Nejdb
 		private readonly Collection _collection;
 		private QueryHandle _handle;
 		private ExecuteQueryDelegate _execute;
-		private Hints _hints;
+		private QueryHints _queryHints;
 		private SetHintsDelegate _setHints;
 		private DeleteCursorDelegate _deleteCursor;
 		private AddOrDelegate _addOr;
@@ -52,12 +52,12 @@ namespace Nejdb
 			_setHints = libraryHandle.GetUnmanagedDelegate<SetHintsDelegate>();
 			_addOr = libraryHandle.GetUnmanagedDelegate<AddOrDelegate>();
 
-			_hints = new Hints();
+			_queryHints = new QueryHints();
 		}
 
-		public Hints Hints
+		public QueryHints QueryHints
 		{
-			get { return _hints; }
+			get { return _queryHints; }
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Nejdb
 					}
 				}
 			}
-			_collection.Database.ThrowIfError();
+			_collection.Database.ThrowOnError();
 			
 			return cursor;
 		}
@@ -154,12 +154,12 @@ namespace Nejdb
 
 		private void SetHints()
 		{
-			if (_hints.IsEmpty)
+			if (_queryHints.IsEmpty)
 			{
 				return;
 			}
 
-			IntPtr qptr = _setHints(_collection.Database.DatabaseHandle, _handle, _hints.ToByteArray());
+			IntPtr qptr = _setHints(_collection.Database.DatabaseHandle, _handle, _queryHints.ToByteArray());
 
 			if (qptr == IntPtr.Zero)
 			{

@@ -5,6 +5,9 @@ using Nejdb.Internals;
 
 namespace Nejdb
 {
+	/// <summary>
+	/// Provides operation over ejdb database.
+	/// </summary>
 	public class Database : IDisposable
 	{
 		/// <summary>
@@ -63,6 +66,10 @@ namespace Nejdb
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncdb")]
 		private delegate bool SyncDelegate([In] DatabaseHandle database);
 
+		/// <summary>
+		/// Creates instance of EJDB. 
+		/// </summary>
+		/// <param name="library"></param>
 		public Database(Library library)
 		{
 			var libraryHandle = library.LibraryHandle;
@@ -115,6 +122,11 @@ namespace Nejdb
 			return new Collection(this, name, options);
 		}
 
+		/// <summary>
+		/// Gets existing collection and throws if in does not exists
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		public Collection GetCollection(string name)
 		{
 			return new Collection(this, name);
@@ -141,9 +153,9 @@ namespace Nejdb
 		{
 			get
 			{
-				using (var Bson = new BsonHandle(this, () => _getMetadata(DatabaseHandle), Library.FreeBson))
+				using (var bson = new BsonHandle(this, () => _getMetadata(DatabaseHandle), Library.FreeBson))
 				{
-					return Library.ConvertToBsonDocument(Bson);
+					return Library.ConvertToBsonDocument(bson);
 				}
 			}
 		}
@@ -205,9 +217,11 @@ namespace Nejdb
 		////	return it.ToBsonDocument();
 		////}
 
-
-
-
+		/// <summary>
+		/// Opens or creates database file depending on <see cref="OpenMode"/>
+		/// </summary>
+		/// <param name="dbFilePath">Database filename</param>
+		/// <param name="openMode"></param>
 		public void Open(string dbFilePath, OpenMode openMode = DefaultOpenMode)
 		{
 			IntPtr pathPointer = Native.NativeUtf8FromString(dbFilePath); //UnixMarshal.StringToHeap(path, Encoding.UTF8);
@@ -230,9 +244,10 @@ namespace Nejdb
 				Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(pptr);
 			}
 		}
-		//EJCOLL* ejdbcreatecoll(EJDB *jb, const char *colname, EJCOLLOPTS *opts) 
-
-
+		
+		/// <summary>
+		/// Close database and free all resources
+		/// </summary>
 		public void Dispose()
 		{
 			Close();
@@ -247,7 +262,9 @@ namespace Nejdb
 			_command = null;
 			DatabaseHandle = null;
 		}
-
+		/// <summary>
+		/// Closes current database
+		/// </summary>
 		public void Close()
 		{
 			if (_isOpen(DatabaseHandle))
@@ -256,7 +273,7 @@ namespace Nejdb
 			}
 		}
 
-		public void ThrowIfError()
+		protected internal void ThrowOnError()
 		{
 			var errorCode = LastErrorCode;
 

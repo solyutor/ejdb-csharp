@@ -127,7 +127,9 @@ namespace Nejdb
 			_setIndex = LibraryHandle.GetUnmanagedDelegate<SetIndexDelegate>();
 		}
 
-
+		/// <summary>
+		/// Begins new transaction
+		/// </summary>
 		public void BeginTransaction()
 		{
 			if (_beginTransaction(CollectionHandle))
@@ -138,6 +140,9 @@ namespace Nejdb
 			throw EjdbException.FromDatabase(Database, "Failed to begin transaction");
 		}
 
+		/// <summary>
+		/// Commits current transaction
+		/// </summary>
 		public void CommitTransaction()
 		{
 			if (_commitTransaction(CollectionHandle))
@@ -147,6 +152,9 @@ namespace Nejdb
 			throw EjdbException.FromDatabase(Database, "Failed to commit transaction");
 		}
 
+		/// <summary>
+		/// Rollbacks current transaction
+		/// </summary>
 		public void RollbackTransaction()
 		{
 			if (_rollbackTransaction(CollectionHandle))
@@ -156,6 +164,9 @@ namespace Nejdb
 			throw EjdbException.FromDatabase(Database, "Failed to rollback transaction");
 		}
 
+		/// <summary>
+		/// Returns true if transaction is active, false otherwise
+		/// </summary>
 		public bool TransactionActive
 		{
 			get
@@ -168,7 +179,9 @@ namespace Nejdb
 				throw EjdbException.FromDatabase(Database, "Failed to get transaction status");
 			}
 		}
-
+		/// <summary>
+		/// Synchronize content of a EJDB collection database with the file on device
+		/// </summary>
 		public void Synchronize()
 		{
 			if (_syncCollection(CollectionHandle))
@@ -180,7 +193,7 @@ namespace Nejdb
 
 
 		/// <summary>
-		/// Drops collection and wipes out all data
+		/// Drops collection and wipes out all data and indexes
 		/// </summary>
 		public void Drop()
 		{
@@ -198,10 +211,28 @@ namespace Nejdb
 		}
 
 		/// <summary>
+		/// Removes collection from database, but keeps data on disk
+		/// </summary>
+		public void Unlink()
+		{
+			const bool deleteData = false;
+
+			IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
+			try
+			{
+				_remove(Database.DatabaseHandle, unmanagedName, deleteData);
+			}
+			finally
+			{
+				Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
+			}
+		}
+
+		/// <summary>
 		/// Saves document to collection
 		/// </summary>
-		/// <param name="doc"></param>
-		/// <param name="merge"></param>
+		/// <param name="doc">Document to save</param>
+		/// <param name="merge">If true the merge will be performed with old and new objects. Otherwise old object will be replaced</param>
 		public void Save(BsonDocument doc, bool merge)
 		{
 			BsonValue id = doc.GetBsonValue("_id");
@@ -281,12 +312,17 @@ namespace Nejdb
 			}
 		}
 
-
+		/// <summary>
+		/// Creates new query over the collections
+		/// </summary>
 		public Query CreateQuery()
 		{
 			return new Query(this);
 		}
 
+		/// <summary>
+		/// Closes collection and disposes all owned resources
+		/// </summary>
 		public void Dispose()
 		{
 			if (CollectionHandle != null)

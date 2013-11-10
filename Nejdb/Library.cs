@@ -5,6 +5,9 @@ using Nejdb.Internals;
 
 namespace Nejdb
 {
+	/// <summary>
+	/// Loads tcejdb.dll and 
+	/// </summary>
 	public class Library : IDisposable
 	{
 		internal readonly LibraryHandle LibraryHandle;
