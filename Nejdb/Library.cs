@@ -58,6 +58,21 @@ namespace Nejdb
 		private readonly FreeBsonDelegate _freeBson;
 		private readonly BsonToStringDelegate _BsonToSTring;
 		private JsonToBsonDelegate _jsonToBson;
+		
+		private static readonly Lazy<Library> _instance;
+
+		/// <summary>
+		/// Returns an instance of <see cref="Library"/> class.
+		/// </summary>
+		public static Library Instance
+		{
+			get { return _instance.Value; }
+		}
+
+		static Library()
+		{
+			_instance = new Lazy<Library>(Create);
+		}
 
 		private Library(LibraryHandle libraryHandle)
 		{
@@ -104,6 +119,11 @@ namespace Nejdb
 			get { return _version; }
 		}
 
+		/// <summary>
+		/// Creates new instance of a <see cref="Library"/> class.
+		/// <remarks>It's better to use the only instance of library for process. You can manage it yourself or use <see cref="Library#Instance"/> property.</remarks>
+		/// </summary>
+		/// <returns></returns>
 		public static Library Create()
 		{
 			var libraryHandle = LibraryHandle.Load();
@@ -113,6 +133,10 @@ namespace Nejdb
 			return result;
 		}
 
+		/// <summary>
+		/// Creates new EJDB database instance.
+		/// </summary>
+		/// <returns></returns>
 		public Database CreateDatabase()
 		{
 			return new Database(this);
@@ -122,6 +146,7 @@ namespace Nejdb
 		{
 			return Native.StringFromNativeUtf8(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
 		}
+
 		//Used internally by BsonHandle
 		internal void FreeBson(IntPtr Bson)
 		{

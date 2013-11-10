@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Nejdb;
 using Nejdb.Bson;
-using Nejdb.Internals;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -11,7 +9,6 @@ namespace Ejdb.Tests
 	[TestFixture]
 	public class CollectionTests
 	{
-		private Library _library;
 		private Database _dataBase;
 		private Collection _collection;
 		private BsonDocument _origin;
@@ -24,9 +21,7 @@ namespace Ejdb.Tests
 			{
 				File.Delete(DbName);
 			}
-			_library = Library.Create();
-
-			_dataBase = _library.CreateDatabase();
+			_dataBase = Library.Instance.CreateDatabase();
 
 			_dataBase.Open(DbName, Database.DefaultOpenMode | OpenMode.TruncateOnOpen);
 
@@ -73,7 +68,6 @@ namespace Ejdb.Tests
 		public void TearDown()
 		{
 			_dataBase.Dispose();
-			_library.Dispose();
 		}
 
 		[Test]
