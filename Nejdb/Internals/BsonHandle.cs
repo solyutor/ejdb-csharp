@@ -12,7 +12,7 @@ namespace Nejdb.Internals
 			handle = create();
 			if (IsInvalid)
 			{
-				throw EjdbException.FromDatabase(database, "Failed to get database metadata");
+				throw EjdbException.FromDatabase(database, "Failed to get bson handle");
 			}
 
 			_delete = delete;

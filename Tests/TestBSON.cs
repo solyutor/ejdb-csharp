@@ -68,15 +68,15 @@ namespace Ejdb.Tests {
 			//FF-FF-FF-7F
 			//00
 			Assert.AreEqual("13-00-00-00-10-30-00-02-00-00-00-10-31-00-FF-FF-FF-7F-00", 
-			                doc2.ToDebugDataString());
+							doc2.ToDebugDataString());
 
 			doc2 = new BsonDocument(doc2);
 			Assert.AreEqual("13-00-00-00-10-30-00-02-00-00-00-10-31-00-FF-FF-FF-7F-00", 
-			                doc2.ToDebugDataString());
+							doc2.ToDebugDataString());
 
 			doc2 = new BsonDocument(doc2.ToByteArray());
 			Assert.AreEqual("13-00-00-00-10-30-00-02-00-00-00-10-31-00-FF-FF-FF-7F-00", 
-			                doc2.ToDebugDataString());
+							doc2.ToDebugDataString());
 
 			doc = new BsonDocument();
 			doc["a"] = 1;
@@ -92,7 +92,7 @@ namespace Ejdb.Tests {
 			//62-00
 			//10-63-00-01-00-00-00-00
 			Assert.AreEqual("15-00-00-00-02-61-00-02-00-00-00-62-00-10-63-00-01-00-00-00-00", 
-			                doc.ToDebugDataString());
+							doc.ToDebugDataString());
 			doc["d"] = new{e=new BsonRegexp("r1", "o2")}; //subdocument
 			//26-00-00-00-02-61-00-02-00-00-00-62-00-10-63-00-01-00-00-00-
 			//03
@@ -103,7 +103,7 @@ namespace Ejdb.Tests {
 			//72-31-00-6F-32-00-00-00
 			Assert.AreEqual("26-00-00-00-02-61-00-02-00-00-00-62-00-10-63-00-01-00-00-00-" +
 				"03-64-00-0E-00-00-00-0B-65-00-72-31-00-6F-32-00-00-00", 
-			                doc.ToDebugDataString());
+							doc.ToDebugDataString());
 		}
 
 		[Test]
@@ -112,14 +112,14 @@ namespace Ejdb.Tests {
 			doc["a"] = "av";
 			doc["bb"] = 24;
 			//doc["ccc"] = BsonDocument.ValueOf(new{na1 = 1, nb = "2"});
-			//doc["d"] = new BsonOid("51b9f3af98195c4600000000");
+			//doc["d"] = new ObjectId("51b9f3af98195c4600000000");
 
 			//17-00-00-00 						+4
 			//02-61-00-03-00-00-00-61-76-00		+10
 			//10-62-62-00-18-00-00-00			+8
 			//00								+1
 			Assert.AreEqual("17-00-00-00-02-61-00-03-00-00-00-61-76-00-10-62-62-00-18-00-00-00-00", 
-			                doc.ToDebugDataString());
+							doc.ToDebugDataString());
 			BsonIterator it = new BsonIterator(doc);
 			Assert.AreEqual(doc.ToByteArray().Length, it.DocumentLength);
 			var c = "";
@@ -153,7 +153,9 @@ namespace Ejdb.Tests {
 			var doc = new BsonDocument();
 			doc["a"] = "av";
 			doc["b"] = BsonDocument.ValueOf(new{cc = 1});
-			doc["d"] = new BsonOid("51b9f3af98195c4600000000");
+			var bsonOid = new ObjectId("51b9f3af98195c4600000000");
+			Console.WriteLine(bsonOid);
+			doc["d"] = bsonOid;
 			Assert.AreEqual(3, doc.KeysCount);
 			//Console.WriteLine(doc.KeysCount);
 			//Console.WriteLine(doc.ToDebugDataString());
@@ -215,8 +217,8 @@ namespace Ejdb.Tests {
 				}
 				if (c == 2) {
 					Assert.AreEqual(BsonType.OID, bv.BsonType);
-					Assert.IsInstanceOf(typeof(BsonOid), bv.Value);
-					var oid = bv.Value as BsonOid;
+					Assert.IsInstanceOf(typeof(ObjectId), bv.Value);
+					var oid = bv.Value is ObjectId ? (ObjectId) bv.Value : new ObjectId();
 					Assert.AreEqual("51b9f3af98195c4600000000", oid.ToString());
 				}
 				c++;

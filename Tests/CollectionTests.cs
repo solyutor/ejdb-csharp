@@ -39,31 +39,6 @@ namespace Ejdb.Tests
 				});
 		}
 
-		[Test]
-		public void TEST()
-		{
-			using (var library = Library.Create())
-			using (var database = library.CreateDatabase())
-			{
-				database.Open("MyDB.db");
-				using (var collection = database.CreateCollection("Parrots", CollectionOptions.None))
-				{
-					var parrot = BsonDocument.ValueOf(new
-					{
-						name = "Grenny",
-						type = "African Grey",
-						male = true,
-						age = 1,
-						birthdate = DateTime.Now,
-						likes = new[] { "green color", "night", "toys" },
-						extra = BsonNull.VALUE
-					});
-					collection.Save(parrot, false);
-				}
-			}
-		}
-
-
 		[TearDown]
 		public void TearDown()
 		{
@@ -100,7 +75,7 @@ namespace Ejdb.Tests
 
 			var id = _origin.GetBsonValue("_id");
 
-			var reloaded = _collection.Load((BsonOid)id.Value);
+			var reloaded = _collection.Load((ObjectId)id.Value);
 			//TODO: made more string assertion
 			Assert.That(reloaded, Is.Not.Null);
 		}
@@ -111,7 +86,7 @@ namespace Ejdb.Tests
 		{
 			_collection.Save(_origin, false);
 			var id = _origin.GetBsonValue("_id");
-			var BsonOid = (BsonOid)id.Value;
+			var BsonOid = (ObjectId)id.Value;
 
 			_collection.Delete(BsonOid);
 

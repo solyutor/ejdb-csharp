@@ -108,7 +108,7 @@ namespace Nejdb.Bson {
 			}
 		}
 
-		public BsonArray(BsonOid[] arr) {
+		public BsonArray(ObjectId[] arr) {
 			for (var i = 0; i < arr.Length; ++i) {
 				SetOID(i, arr[i]);
 			}
@@ -176,7 +176,7 @@ namespace Nejdb.Bson {
 			return base.SetOID(idx.ToString(), oid);
 		}
 
-		public BsonDocument SetOID(int idx, BsonOid oid) {
+		public BsonDocument SetOID(int idx, ObjectId oid) {
 			return base.SetOID(idx.ToString(), oid); 
 		}
 

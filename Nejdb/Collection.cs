@@ -239,7 +239,7 @@ namespace Nejdb
 
 			byte[] bsdata = doc.ToByteArray();
 			byte[] oiddata = new byte[12];
-			
+
 			if (id != null)
 			{
 				oiddata = doc.ToByteArray();
@@ -249,10 +249,10 @@ namespace Nejdb
 
 			if (saveOk && id == null)
 			{
-				doc.SetOID("_id", new BsonOid(oiddata));
+				doc.SetOID("_id", new ObjectId(oiddata));
 			}
 
-			if(!saveOk)
+			if (!saveOk)
 			{
 				throw EjdbException.FromDatabase(Database, "Failed to save Bson");
 			}
@@ -265,7 +265,7 @@ namespace Nejdb
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
 		/// <param name="oid">Id of an object</param>
-		public BsonDocument Load(BsonOid oid)
+		public BsonDocument Load(ObjectId oid)
 		{
 			using (var Bson = new BsonHandle(Database, () => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
 			{
@@ -280,7 +280,7 @@ namespace Nejdb
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
 		/// <param name="oid">Id of an object</param>
-		public void Delete(BsonOid oid)
+		public void Delete(ObjectId oid)
 		{
 			if (_deleteBson(CollectionHandle, oid.ToBytes()))
 			{
@@ -300,7 +300,7 @@ namespace Nejdb
 			IntPtr pathPointer = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(ipath, Encoding.UTF8);
 			try
 			{
-				if (_setIndex(CollectionHandle, pathPointer, (int) flags))
+				if (_setIndex(CollectionHandle, pathPointer, (int)flags))
 				{
 					return;
 				}

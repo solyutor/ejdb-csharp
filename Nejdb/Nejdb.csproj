@@ -68,7 +68,7 @@
     <Compile Include="Internals\MethodHandle.cs" />
     <Compile Include="Bson\BsonType.cs" />
     <Compile Include="Bson\InvalidBsonDataException.cs" />
-    <Compile Include="Bson\BsonOid.cs" />
+    <Compile Include="Bson\ObjectId.cs" />
     <Compile Include="Bson\BsonTimestamp.cs" />
     <Compile Include="Bson\BsonRegexp.cs" />
     <Compile Include="Bson\IBsonValue.cs" />
