@@ -240,11 +240,6 @@ namespace Nejdb
 					throw EjdbException.FromDatabase(this, "Error on open database");
 				}
 			}
-			catch (Exception)
-			{
-				Dispose();
-				throw;
-			}
 			finally
 			{
 				Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(pptr);
