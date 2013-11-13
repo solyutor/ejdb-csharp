@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Internals;
@@ -35,7 +36,7 @@ namespace Nejdb
 		//TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *oid) 
 		//TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
-		private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [Out] out ObjectId oid, [In] bool merge);
+		private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [In, Out] ref ObjectId oid, [In] bool merge);
 
 
 		//EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *oid);
@@ -237,24 +238,28 @@ namespace Nejdb
 		{
 			BsonValue id = doc.GetBsonValue("_id");
 
-			byte[] bsdata = doc.ToByteArray();
-
 			ObjectId oiddata = new ObjectId();
+
 			if (id != null)
 			{
-				oiddata = (ObjectId) id.Value;
+				oiddata = (ObjectId)id.Value;
 			}
 
-			var saveOk = _saveBson(CollectionHandle, bsdata, out oiddata, merge);
-
-			if (saveOk && id == null)
+			using (var stream = new MemoryStream())
 			{
-				doc.SetOID("_id", oiddata);
-			}
+				doc.Serialize(stream);
+				var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(), ref oiddata, merge);
 
-			if (!saveOk)
-			{
-				throw EjdbException.FromDatabase(Database, "Failed to save Bson");
+				if (saveOk && id == null)
+				{
+					doc.SetOID("_id", oiddata);
+				}
+
+				if (!saveOk)
+				{
+					throw EjdbException.FromDatabase(Database, "Failed to save Bson");
+				}
+
 			}
 		}
 

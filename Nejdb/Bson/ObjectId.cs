@@ -16,12 +16,13 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Nejdb.Internals;
 
 namespace Nejdb.Bson
 {
 
-	[Serializable]
+	[Serializable, StructLayout(LayoutKind.Sequential)]
 	public struct ObjectId : IBsonValue
 	{
 		public readonly byte Byte01;
