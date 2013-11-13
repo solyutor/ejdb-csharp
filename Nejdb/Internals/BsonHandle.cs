@@ -7,14 +7,9 @@ namespace Nejdb.Internals
 	{
 		private readonly Action<IntPtr> _delete;
 
-		public BsonHandle(Database database, Func<IntPtr> create, Action<IntPtr> delete) : base(true)
+		public BsonHandle(Func<IntPtr> create, Action<IntPtr> delete) : base(true)
 		{
 			handle = create();
-			if (IsInvalid)
-			{
-				throw EjdbException.FromDatabase(database, "Failed to get bson handle");
-			}
-
 			_delete = delete;
 		}
 

@@ -86,13 +86,19 @@ namespace Ejdb.Tests
 		{
 			_collection.Save(_origin, false);
 			var id = _origin.GetBsonValue("_id");
+			
 			var BsonOid = (ObjectId)id.Value;
 
 			_collection.Delete(BsonOid);
-
+			
+			_collection.Synchronize();
 			var reloaded = _collection.Load(BsonOid);
 
-			Assert.That(reloaded, Is.Not.Null);
+			var meta = _dataBase.DatabaseMetadata;
+
+			Console.WriteLine(meta);
+
+			Assert.That(reloaded, Is.Null);
 		}
 
 		[Test]

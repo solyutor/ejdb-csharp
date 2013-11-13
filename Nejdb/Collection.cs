@@ -45,9 +45,9 @@ namespace Nejdb
 		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [Out] byte[] oid);
 
 		//EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *oid);
-		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmBson", CallingConvention = CallingConvention.Cdecl)]
+		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
 		//internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] oid);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmbson")]
 		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] byte[] objectId);
 
 		//EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
@@ -267,9 +267,14 @@ namespace Nejdb
 		/// <param name="oid">Id of an object</param>
 		public BsonDocument Load(ObjectId oid)
 		{
-			using (var Bson = new BsonHandle(Database, () => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
+			using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, oid.ToBytes()), Database.Library.FreeBson))
 			{
-				return Database.Library.ConvertToBsonDocument(Bson);
+				//document does not exists
+				if (bson.IsInvalid)
+				{
+					return null;
+				}
+				return Database.Library.ConvertToBsonDocument(bson);
 			}
 		}
 
