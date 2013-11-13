@@ -2,7 +2,7 @@ Unofficial .Net Binding for [EJDB](http://ejdb.org)
 ===================================================
 
 
-**Note: This is early days, so .Net EJDB binding is not completely tested.**
+**Note: This is early days, so this .Net EJDB binding is not completely tested. API is subject to change.**
 
 
 You can install it using nuget:
