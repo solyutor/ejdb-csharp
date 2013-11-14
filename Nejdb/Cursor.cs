@@ -11,7 +11,7 @@ namespace Nejdb
 		////const void* ejdbqresultBsondata(EJQRESULT qr, int pos, int *size)
 		//[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqresultBsondata", CallingConvention = CallingConvention.Cdecl)]
 		//static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int pos, out int size);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqueryhints")]
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqresultbsondata")]
 		private delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
 		
 		private readonly CursorHandle _cursorHandle;
