@@ -69,6 +69,18 @@ namespace Ejdb.Tests
 		}
 
 		[Test]
+		public void Can_save_and_load_strongly_typed_document()
+		{
+			var origin = new TestDocument { Name = "John Wayne" };
+			var id = _collection.Save(origin, false);
+
+			var reloaded = _collection.Load<TestDocument>(id);
+
+			Assert.That(reloaded.Id, Is.EqualTo(origin.Id));
+			Assert.That(reloaded.Name, Is.EqualTo(origin.Name));
+		}
+
+		[Test]
 		public void Can_save_and_load_document()
 		{
 			_collection.Save(_origin, false);
@@ -80,17 +92,16 @@ namespace Ejdb.Tests
 			Assert.That(reloaded, Is.Not.Null);
 		}
 
-
 		[Test]
 		public void Can_delete_document()
 		{
 			_collection.Save(_origin, false);
 			var id = _origin.GetBsonValue("_id");
-			
+
 			var BsonOid = (ObjectId)id.Value;
 
 			_collection.Delete(BsonOid);
-			
+
 			_collection.Synchronize();
 			var reloaded = _collection.Load(BsonOid);
 
@@ -113,5 +124,12 @@ namespace Ejdb.Tests
 
 			StringAssert.Contains(indexEvidence, metaAsString);
 		}
+	}
+
+	public class TestDocument
+	{
+		public ObjectId Id { get; private set; }
+
+		public string Name { get; set; }
 	}
 }

@@ -56,7 +56,7 @@ namespace Nejdb
 
 		private readonly GetErrorMessage _getErrorMessage;
 		private readonly FreeBsonDelegate _freeBson;
-		private readonly BsonToStringDelegate _BsonToSTring;
+		private readonly BsonToStringDelegate _bsonToString;
 		private JsonToBsonDelegate _jsonToBson;
 		
 		private static readonly Lazy<Library> _instance;
@@ -82,7 +82,7 @@ namespace Nejdb
 			_getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 
 			_freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
-			_BsonToSTring = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
+			_bsonToString = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
 			//_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
 
 			var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
@@ -153,13 +153,19 @@ namespace Nejdb
 			_freeBson(Bson);
 		}
 
-		internal BsonDocument ConvertToBsonDocument(BsonHandle Bson)
+		internal BsonDocument ConvertToBsonDocument(BsonHandle bson)
+		{
+			var bsdata = ConvertToBytes(bson);
+			return new BsonDocument(bsdata);
+		}
+
+		internal byte[] ConvertToBytes(BsonHandle bson)
 		{
 			int size;
-			IntPtr bsdataptr = _BsonToSTring(Bson, out size);
+			IntPtr bsonPointer = _bsonToString(bson, out size);
 			byte[] bsdata = new byte[size];
-			Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
-			return new BsonDocument(bsdata);
+			Marshal.Copy(bsonPointer, bsdata, 0, bsdata.Length);
+			return bsdata;
 		}
 
 		///// <summary>

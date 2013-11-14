@@ -10,6 +10,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded for both x32/x64 platforms.</description>
     <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
-    <tags>EJDB</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="5.0.8"/>
+    </dependencies>
+    <tags>EJDB NoSQL</tags>
   </metadata>
 </package>

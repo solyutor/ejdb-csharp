@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Internals;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 namespace Nejdb
 {
@@ -22,6 +25,7 @@ namespace Nejdb
 		private LoadBsonDelegate _loadBson;
 		private DeleteBsonDelegate _deleteBson;
 		private SetIndexDelegate _setIndex;
+		private JsonSerializer _serializer;
 
 		//EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
@@ -30,24 +34,24 @@ namespace Nejdb
 		private delegate bool RemoveCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, bool unlink);
 
 
-		//EJDB_EXPORT bool ejdbsaveBson3(EJCOLL *jcoll, void *bsdata, Bson_oid_t *oid, bool merge);
+		//EJDB_EXPORT bool ejdbsaveBson3(EJCOLL *jcoll, void *bsdata, Bson_oid_t *id, bool merge);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsaveBson3", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern bool _ejdbsaveBson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] oid, [In] bool merge);
-		//TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *oid) 
-		//TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *oid, bool merge) - this one is preferable. Other two calls it. 		
+		//internal static extern bool _ejdbsaveBson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] id, [In] bool merge);
+		//TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *id) 
+		//TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *id, bool merge) - this one is preferable. Other two calls it. 		
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
 		private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [In, Out] ref ObjectId oid, [In] bool merge);
 
 
-		//EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *oid);
+		//EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *id);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] oid);
+		//internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] id);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
-		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [Out] ObjectId oid);
+		private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [In] ObjectId oid);
 
-		//EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *oid);
+		//EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *id);
 		//[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
-		//internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] oid);
+		//internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] id);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmbson")]
 		private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] ObjectId objectId);
 
@@ -108,6 +112,11 @@ namespace Nejdb
 			_name = name;
 			CollectionHandle = new CollectionHandle(database, name, options);
 			MapMethods();
+			_serializer = new JsonSerializer
+						  {
+							  NullValueHandling = NullValueHandling.Ignore,
+							  ContractResolver = NoObjectIdContractResolver.Instance
+						  };
 		}
 
 		private void MapMethods()
@@ -234,7 +243,7 @@ namespace Nejdb
 		/// </summary>
 		/// <param name="doc">Document to save</param>
 		/// <param name="merge">If true the merge will be performed with old and new objects. Otherwise old object will be replaced</param>
-		public void Save(BsonDocument doc, bool merge)
+		public ObjectId Save(BsonDocument doc, bool merge)
 		{
 			BsonValue id = doc.GetBsonValue("_id");
 
@@ -259,7 +268,37 @@ namespace Nejdb
 				{
 					throw EjdbException.FromDatabase(Database, "Failed to save Bson");
 				}
+			}
+			return oiddata;
+		}
 
+		/// <summary>
+		/// Saves strongly typed document to collection. 
+		/// <remarks>If document has property of type <see cref="ObjectId"/> and named 'Id' - it will be set after save</remarks>
+		/// </summary>
+		/// <typeparam name="TDocument">Document type</typeparam>
+		/// <param name="document">Document to save</param>
+		/// <param name="merge">If true the merge will be performed with old and new objects. Otherwise old object will be replaced</param>
+		/// <returns>Id of saved document</returns>
+		public ObjectId Save<TDocument>(TDocument document, bool merge)
+		{
+			using (var stream = new MemoryStream())
+			using (var writer = new BsonWriter(stream))
+			{
+				_serializer.Serialize(writer, document);
+
+				ObjectId id = IdHelper<TDocument>.GetId(document);
+
+				var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(), ref id, merge);
+
+				if (!saveOk)
+				{
+					throw EjdbException.FromDatabase(Database, "Failed to save document");
+				}
+
+				IdHelper<TDocument>.SetId(document, id);
+
+				return id;
 			}
 		}
 
@@ -269,10 +308,10 @@ namespace Nejdb
 		/// <remarks>
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
-		/// <param name="oid">Id of an object</param>
-		public BsonDocument Load(ObjectId oid)
+		/// <param name="id">Id of an object</param>
+		public BsonDocument Load(ObjectId id)
 		{
-			using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, oid), Database.Library.FreeBson))
+			using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, id), Database.Library.FreeBson))
 			{
 				//document does not exists
 				if (bson.IsInvalid)
@@ -289,14 +328,44 @@ namespace Nejdb
 		/// <remarks>
 		/// Returns <c>null</c> if object is not found.
 		/// </remarks>
-		/// <param name="oid">Id of an object</param>
-		public void Delete(ObjectId oid)
+		/// <param name="id">Id of an object</param>
+		public TDocument Load<TDocument>(ObjectId id)
 		{
-			if (_deleteBson(CollectionHandle, oid))
+			using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, id), Database.Library.FreeBson))
+			{
+				//document does not exists
+				if (bson.IsInvalid)
+				{
+					return default(TDocument);
+				}
+				var bsonBuffer = Database.Library.ConvertToBytes(bson);
+
+				using (var stream = new MemoryStream(bsonBuffer))
+				using (var reader = new BsonReader(stream))
+				{
+					var document = _serializer.Deserialize<TDocument>(reader);
+					IdHelper<TDocument>.SetId(document, id);
+					return document;
+				}
+			}
+		}
+
+
+
+		/// <summary>
+		/// Loads JSON object identified by OID from the collection.
+		/// </summary>
+		/// <remarks>
+		/// Returns <c>null</c> if object is not found.
+		/// </remarks>
+		/// <param name="id">Id of an object</param>
+		public void Delete(ObjectId id)
+		{
+			if (_deleteBson(CollectionHandle, id))
 			{
 				return;
 			}
-			throw EjdbException.FromDatabase(Database, "Failed to save Bson");
+			throw EjdbException.FromDatabase(Database, "Failed to delete document");
 		}
 
 
