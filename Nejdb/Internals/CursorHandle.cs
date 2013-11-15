@@ -11,7 +11,6 @@ namespace Nejdb.Internals
         {
             this.handle = create();
             _release = release;
-
         }
 
         protected override bool ReleaseHandle()
