@@ -16,39 +16,45 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	[Serializable]
-	public sealed class BsonNull : IBsonValue {
+    [Serializable]
+    public sealed class BsonNull : IBsonValue
+    {
 
-		public static BsonNull VALUE = new BsonNull();
+        public static BsonNull VALUE = new BsonNull();
 
-		public BsonType BsonType {
-			get {
-				return BsonType.NULL;
-			}
-		}
+        public BsonType BsonType
+        {
+            get { return BsonType.NULL; }
+        }
 
-		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (!(obj is BsonNull)) {
-				return false;
-			}
-			return true;
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (!(obj is BsonNull))
+            {
+                return false;
+            }
+            return true;
+        }
 
-		public override int GetHashCode() {
-			return 0;
-		}
+        public override int GetHashCode()
+        {
+            return 0;
+        }
 
-		public override string ToString() {
-			return "[BsonNull]";
-		}
-	}
+        public override string ToString()
+        {
+            return "[BsonNull]";
+        }
+    }
 }
-

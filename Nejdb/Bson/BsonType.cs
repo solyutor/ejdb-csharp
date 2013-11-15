@@ -13,35 +13,36 @@
 //   if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/// <summary>
-	/// Bson types according to the bsonspec (http://bsonspec.org/)
-	/// </summary>
+    /// <summary>
+    /// Bson types according to the bsonspec (http://bsonspec.org/)
+    /// </summary>
 
-	public enum BsonType : byte {
-		UNKNOWN = 0xfe,
-		EOO = 0x00,
-		DOUBLE = 0x01,
-		STRING = 0x02,
-		OBJECT = 0x03,
-		ARRAY = 0x04,
-		BINDATA = 0x05,
-		UNDEFINED = 0x06,
-		OID = 0x07,
-		BOOL = 0x08,
-		DATE = 0x09,
-		NULL = 0x0A,
-		REGEX = 0x0B,
-		DBREF = 0x0C,
-		CODE = 0x0D,
-		SYMBOL = 0x0E,
-		CODEWSCOPE = 0x0F,
-		INT = 0x10,
-		TIMESTAMP = 0x11,
-		LONG = 0x12,
-		MAXKEY = 0xFF,
-		MINKEY = 0x7F
-	}
+    public enum BsonType : byte
+    {
+        UNKNOWN = 0xfe,
+        EOO = 0x00,
+        DOUBLE = 0x01,
+        STRING = 0x02,
+        OBJECT = 0x03,
+        ARRAY = 0x04,
+        BINDATA = 0x05,
+        UNDEFINED = 0x06,
+        OID = 0x07,
+        BOOL = 0x08,
+        DATE = 0x09,
+        NULL = 0x0A,
+        REGEX = 0x0B,
+        DBREF = 0x0C,
+        CODE = 0x0D,
+        SYMBOL = 0x0E,
+        CODEWSCOPE = 0x0F,
+        INT = 0x10,
+        TIMESTAMP = 0x11,
+        LONG = 0x12,
+        MAXKEY = 0xFF,
+        MINKEY = 0x7F
+    }
 }
-

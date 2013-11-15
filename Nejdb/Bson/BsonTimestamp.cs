@@ -16,66 +16,73 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/// <summary>
-	/// Bson Timestamp complex value.
-	/// </summary>
-	[Serializable]
-	public sealed class BsonTimestamp : IBsonValue {
+    /// <summary>
+    /// Bson Timestamp complex value.
+    /// </summary>
+    [Serializable]
+    public sealed class BsonTimestamp : IBsonValue
+    {
 
-		readonly int _inc;
-		readonly int _ts;
+        readonly int _inc;
+        readonly int _ts;
 
-		BsonTimestamp() {
-		}
+        BsonTimestamp()
+        {
+        }
 
-		public BsonTimestamp(int inc, int ts) {
-			this._inc = inc;
-			this._ts = ts;
-		}
+        public BsonTimestamp(int inc, int ts)
+        {
+            this._inc = inc;
+            this._ts = ts;
+        }
 
-		public BsonType BsonType {
-			get {
-				return BsonType.TIMESTAMP;
-			}
-		}
+        public BsonType BsonType
+        {
+            get { return BsonType.TIMESTAMP; }
+        }
 
-		public int Inc {
-			get {
-				return _inc;
-			}
-		}
+        public int Inc
+        {
+            get { return _inc; }
+        }
 
-		public int Ts {
-			get {
-				return _ts;
-			}
-		}
+        public int Ts
+        {
+            get { return _ts; }
+        }
 
-		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (!(obj is BsonTimestamp)) {
-				return false;
-			}
-			BsonTimestamp other = (BsonTimestamp) obj;
-			return (_inc == other._inc && _ts == other._ts);
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (!(obj is BsonTimestamp))
+            {
+                return false;
+            }
+            BsonTimestamp other = (BsonTimestamp)obj;
+            return (_inc == other._inc && _ts == other._ts);
+        }
 
-		public override int GetHashCode() {
-			unchecked {
-				return (_inc.GetHashCode() ^ _ts.GetHashCode());
-			}
-		}
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_inc.GetHashCode() ^ _ts.GetHashCode());
+            }
+        }
 
-		public override string ToString() {
-			return string.Format("[BsonTimestamp: inc={0}, ts={1}]", _inc, _ts);
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("[BsonTimestamp: inc={0}, ts={1}]", _inc, _ts);
+        }
+    }
 }
-

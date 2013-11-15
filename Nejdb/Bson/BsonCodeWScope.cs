@@ -16,55 +16,60 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	[Serializable]
-	public sealed class BsonCodeWScope : BsonDocument {
+    [Serializable]
+    public sealed class BsonCodeWScope : BsonDocument
+    {
+        readonly string _code;
 
-		readonly string _code;
+        public override BsonType BsonType
+        {
+            get { return BsonType.CODEWSCOPE; }
+        }
 
-		public override BsonType BsonType {
-			get {
-				return BsonType.CODEWSCOPE;
-			}
-		}
+        public string Code
+        {
+            get {  return _code; }
+        }
 
-		public string Code {
-			get {
-				return _code;
-			}
-		}
+        public BsonDocument Scope
+        {
+            get { return this; }
+        }
 
-		public BsonDocument Scope {
-			get {
-				return this;
-			}
-		}
+        public BsonCodeWScope(string code)
+        {
+            this._code = code;
+        }
 
-		public BsonCodeWScope(string code) {
-			this._code = code;
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (!(obj is BsonCodeWScope))
+            {
+                return false;
+            }
+            BsonCodeWScope cw = (BsonCodeWScope)obj;
+            if (_code != cw._code)
+            {
+                return false;
+            }
+            return base.Equals(obj);
+        }
 
-		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (!(obj is BsonCodeWScope)) {
-				return false;
-			}
-			BsonCodeWScope cw = (BsonCodeWScope) obj;
-			if (_code != cw._code) {
-				return false;
-			}
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode() {
-			return (_code != null ? _code.GetHashCode() : 0) ^ base.GetHashCode();
-		}
-	}
+        public override int GetHashCode()
+        {
+            return (_code != null ? _code.GetHashCode() : 0) ^ base.GetHashCode();
+        }
+    }
 }
 

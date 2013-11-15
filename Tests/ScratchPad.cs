@@ -2,13 +2,13 @@
 
 namespace Ejdb.Tests
 {
-	[TestFixture]
-	public class ScratchPad
-	{
-		[Test]
-		public void Experiment_goes_here()
-		{
+    [TestFixture]
+    public class ScratchPad
+    {
+        [Test]
+        public void Experiment_goes_here()
+        {
 
-		}
-	}
+        }
+    }
 }

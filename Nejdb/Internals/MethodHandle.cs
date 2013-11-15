@@ -2,15 +2,15 @@
 
 namespace Nejdb.Internals
 {
-	public class MethodHandle : SafeHandleZeroOrMinusOneIsInvalid
-	{
-		public MethodHandle() : base(false)
-		{
-		}
+    internal class MethodHandle : SafeHandleZeroOrMinusOneIsInvalid
+    {
+        public MethodHandle() : base(false)
+        {
+        }
 
-		protected override bool ReleaseHandle()
-		{
-			return false;
-		}
-	}
+        protected override bool ReleaseHandle()
+        {
+            return false;
+        }
+    }
 }

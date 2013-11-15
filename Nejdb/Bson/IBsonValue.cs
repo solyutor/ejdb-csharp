@@ -14,17 +14,19 @@
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/// <summary>
-	/// Base interface of any Bson complex values like Regexp or Bson Timestamp.
-	/// </summary>
-	public interface IBsonValue {
+    /// <summary>
+    /// Base interface of any Bson complex values like Regexp or Bson Timestamp.
+    /// </summary>
+    public interface IBsonValue
+    {
 
-		/// <summary>
-		/// Bson Type of complex value.
-		/// </summary>
-		/// <value>The type of the Bson.</value>
-		BsonType BsonType { get; }
-	}
+        /// <summary>
+        /// Bson Type of complex value.
+        /// </summary>
+        /// <value>The type of the Bson.</value>
+        BsonType BsonType { get; }
+    }
 }

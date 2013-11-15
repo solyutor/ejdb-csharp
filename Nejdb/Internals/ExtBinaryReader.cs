@@ -18,44 +18,52 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Nejdb.Internals {
+namespace Nejdb.Internals
+{
 
-	public class ExtBinaryReader : BinaryReader {
+    public class ExtBinaryReader : BinaryReader
+    {
 
-		public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
+        public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
 
-		bool _leaveopen;
+        bool _leaveopen;
 
-		public ExtBinaryReader(Stream input) : this(input, DEFAULT_ENCODING) {
-		}
+        public ExtBinaryReader(Stream input) : this(input, DEFAULT_ENCODING)
+        {
+        }
 
-		public ExtBinaryReader(Stream input, Encoding encoding) : this(input, encoding, false) {
-		}
+        public ExtBinaryReader(Stream input, Encoding encoding) : this(input, encoding, false)
+        {
+        }
 
-		public ExtBinaryReader(Stream input, bool leaveOpen) : this(input, DEFAULT_ENCODING, leaveOpen) {
-		}
+        public ExtBinaryReader(Stream input, bool leaveOpen) : this(input, DEFAULT_ENCODING, leaveOpen)
+        {
+        }
 
-		public ExtBinaryReader(Stream input, Encoding encoding, bool leaveopen) : base(input, encoding) {
-			this._leaveopen = leaveopen;
-		}
+        public ExtBinaryReader(Stream input, Encoding encoding, bool leaveopen) : base(input, encoding)
+        {
+            this._leaveopen = leaveopen;
+        }
 
-		protected override void Dispose(bool disposing) {
-			base.Dispose(!_leaveopen);
-		}
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(!_leaveopen);
+        }
 
-		public string ReadCString() {
-			List<byte> sb = new List<byte>(64);
-			byte bv;
-			while ((bv = ReadByte()) != 0x00) {
-				sb.Add(bv);
-			}
-			return Encoding.UTF8.GetString(sb.ToArray());
-		}
+        public string ReadCString()
+        {
+            List<byte> sb = new List<byte>(64);
+            byte bv;
+            while ((bv = ReadByte()) != 0x00)
+            {
+                sb.Add(bv);
+            }
+            return Encoding.UTF8.GetString(sb.ToArray());
+        }
 
-		public void SkipCString() {
-			while ((ReadByte()) != 0x00)
-				;
-		}
-	}
+        public void SkipCString()
+        {
+            while ((ReadByte()) != 0x00);
+        }
+    }
 }
-

@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0"?>
 <package>
-  <metadata>
-    <id>Nejdb.Unofficial</id>
-    <version>0.0</version>
-    <authors>Jury Soldatenkov</authors>
-    <owners>Jury Soldatenkov</owners>
-    <licenseUrl>http://github.com/solyutor/ejdb-csharp/blob/master/LICENSE</licenseUrl>
-    <projectUrl>http://github.com/solyutor/ejdb-csharp</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded for both x32/x64 platforms.</description>
-    <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="5.0.8"/>
-    </dependencies>
-    <tags>EJDB NoSQL</tags>
-  </metadata>
+    <metadata>
+        <id>Nejdb.Unofficial</id>
+        <version>0.0</version>
+        <authors>Jury Soldatenkov</authors>
+        <owners>Jury Soldatenkov</owners>
+        <licenseUrl>http://github.com/solyutor/ejdb-csharp/blob/master/LICENSE</licenseUrl>
+        <projectUrl>http://github.com/solyutor/ejdb-csharp</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded for both x32/x64 platforms.</description>
+        <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
+        <dependencies>
+            <dependency id="Newtonsoft.Json" version="5.0.8"/>
+        </dependencies>
+        <tags>EJDB NoSQL</tags>
+    </metadata>
 </package>

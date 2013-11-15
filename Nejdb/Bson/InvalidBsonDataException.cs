@@ -16,16 +16,19 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/** Invalid Bson binary data. */
+    /** Invalid Bson binary data. */
 
-	public class InvalidBsonDataException : Exception {
-		public InvalidBsonDataException() {
-		}
+    public class InvalidBsonDataException : Exception
+    {
+        public InvalidBsonDataException()
+        {
+        }
 
-		public InvalidBsonDataException(string msg) : base(msg) {
-		}
-	}
+        public InvalidBsonDataException(string msg) : base(msg)
+        {
+        }
+    }
 }
-

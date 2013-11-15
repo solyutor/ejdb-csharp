@@ -16,21 +16,23 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/// <summary>
-	/// Various Bson processing constants and shared values.
-	/// </summary>
-	public static class BsonConstants {
+    /// <summary>
+    /// Various Bson processing constants and shared values.
+    /// </summary>
+    public static class BsonConstants
+    {
 
-		static BsonConstants() {
-			Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		}
+        static BsonConstants()
+        {
+            Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
 
-		/// <summary>
-		/// Gets or sets the epoch.
-		/// </summary>
-		public static DateTime Epoch { get; private set; }
-	}
+        /// <summary>
+        /// Gets or sets the epoch.
+        /// </summary>
+        public static DateTime Epoch { get; private set; }
+    }
 }
-

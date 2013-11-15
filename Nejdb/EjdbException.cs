@@ -18,46 +18,38 @@ using System;
 
 namespace Nejdb
 {
+    public class EjdbException : Exception
+    {
+        public int? Code { get; private set;
+        }
 
-	public class EjdbException : Exception
-	{
+        public EjdbException(string message) : base(message)
+        {
+        }
 
-		public int? Code
-		{
-			get;
-			private set;
-		}
+        public EjdbException(int code, string msg) : base(msg)
+        {
+            this.Code = code;
+        }
 
-		public EjdbException(string message)
-			: base(message)
-		{
-		}
+        //public EjdbException(EJDB db) : base(db.LastDBErrorMsg) {
+        //	this.Code = db.LastDBErrorCode;
+        //}
 
-		public EjdbException(int code, string msg)
-			: base(msg)
-		{
-			this.Code = code;
-		}
+        public override string ToString()
+        {
+            return string.Format("[EjdbException: Code={0}, Msg={1}]", Code, Message);
+        }
 
-		//public EjdbException(EJDB db) : base(db.LastDBErrorMsg) {
-		//	this.Code = db.LastDBErrorCode;
-		//}
+        public static EjdbException FromDatabase(Database database, string defaultMessage)
+        {
+            var code = database.LastErrorCode;
 
-		public override string ToString()
-		{
-			return string.Format("[EjdbException: Code={0}, Msg={1}]", Code, Message);
-		}
+            var message = code == 0
+                ? defaultMessage
+                : database.Library.GetLastErrorMessage(code);
 
-		public static EjdbException FromDatabase(Database database, string defaultMessage)
-		{
-			var code = database.LastErrorCode;
-
-			var message = code == 0
-				? defaultMessage
-				: database.Library.GetLastErrorMessage(code);
-
-			return new EjdbException(code, message);
-		}
-	}
+            return new EjdbException(code, message);
+        }
+    }
 }
-

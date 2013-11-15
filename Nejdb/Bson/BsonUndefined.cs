@@ -14,38 +14,44 @@
 //   Boston, MA 02111-1307 USA.
 // ============================================================================================
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	public sealed class BsonUndefined : IBsonValue {
+    public sealed class BsonUndefined : IBsonValue
+    {
 
-		public static BsonUndefined VALUE = new BsonUndefined();
+        public static BsonUndefined VALUE = new BsonUndefined();
 
-		public BsonType BsonType {
-			get {
-				return BsonType.UNDEFINED;
-			}
-		}
+        public BsonType BsonType
+        {
+            get { return BsonType.UNDEFINED; }
+        }
 
-		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (!(obj is BsonUndefined)) {
-				return false;
-			}
-			return true;
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (!(obj is BsonUndefined))
+            {
+                return false;
+            }
+            return true;
+        }
 
-		public override int GetHashCode() {
-			return 0;
-		}
+        public override int GetHashCode()
+        {
+            return 0;
+        }
 
-		public override string ToString() {
-			return "[BsonUndefined]";
-		}
-	}
+        public override string ToString()
+        {
+            return "[BsonUndefined]";
+        }
+    }
 }
-

@@ -16,70 +16,78 @@
 
 using System;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	/// <summary>
-	/// Bson Regexp complex value.
-	/// </summary>
-	[Serializable]
-	public sealed class BsonRegexp : IBsonValue {
+    /// <summary>
+    /// Bson Regexp complex value.
+    /// </summary>
+    [Serializable]
+    public sealed class BsonRegexp : IBsonValue
+    {
 
-		readonly string _re;
+        readonly string _re;
 
-		readonly string _opts;
+        readonly string _opts;
 
-		public BsonType BsonType {
-			get {
-				return BsonType.REGEX;
-			}
-		}
+        public BsonType BsonType
+        {
+            get { return BsonType.REGEX; }
+        }
 
-		public string Re {
-			get {
-				return this._re;
-			}
-		}
+        public string Re
+        {
+            get { return this._re; }
+        }
 
-		public string Opts {
-			get {
-				return this._opts;
-			}
-		}
+        public string Opts
+        {
+            get { return this._opts; }
+        }
 
-		BsonRegexp() {
-		}
+        BsonRegexp()
+        {
+        }
 
-		public BsonRegexp(string re) : this(re, "") {
-		}
+        public BsonRegexp(string re) : this(re, "")
+        {
+        }
 
-		public BsonRegexp(string re, string opts) {
-			this._re = re;
-			this._opts = opts;
-		}
+        public BsonRegexp(string re, string opts)
+        {
+            this._re = re;
+            this._opts = opts;
+        }
 
-		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (!(obj is BsonRegexp)) {
-				return false;
-			}
-			BsonRegexp other = (BsonRegexp) obj;
-			return (_re == other._re && _opts == other._opts);
-		}
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (!(obj is BsonRegexp))
+            {
+                return false;
+            }
+            BsonRegexp other = (BsonRegexp)obj;
+            return (_re == other._re && _opts == other._opts);
+        }
 
-		public override int GetHashCode() {
-			unchecked {
-				return (_re != null ? _re.GetHashCode() : 0) ^ (_opts != null ? _opts.GetHashCode() : 0);
-			}
-		}
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_re != null ? _re.GetHashCode() : 0) ^ (_opts != null ? _opts.GetHashCode() : 0);
+            }
+        }
 
-		public override string ToString() {
-			return string.Format("[BsonRegexp: re={0}, opts={1}]", _re, _opts);
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("[BsonRegexp: re={0}, opts={1}]", _re, _opts);
+        }
+    }
 }
-

@@ -17,35 +17,37 @@
 using System;
 using System.IO;
 
-namespace Nejdb.Bson {
+namespace Nejdb.Bson
+{
 
-	[Serializable]
-	public sealed class BsonBinData {
-		readonly byte _subtype;
-		readonly byte[] _data;
+    [Serializable]
+    public sealed class BsonBinData
+    {
+        readonly byte _subtype;
+        readonly byte[] _data;
 
-		public byte Subtype {
-			get {
-				return _subtype;
-			}
-		}
+        public byte Subtype
+        {
+            get { return _subtype; }
+        }
 
-		public byte[] Data {
-			get {
-				return _data;
-			}
-		}
+        public byte[] Data
+        {
+            get {  return _data; }
+        }
 
-		public BsonBinData(byte subtype, byte[] data) {
-			_subtype = subtype;
-			_data = new byte[data.Length];
-			Array.Copy(data, _data, data.Length); 
-		}
+        public BsonBinData(byte subtype, byte[] data)
+        {
+            _subtype = subtype;
+            _data = new byte[data.Length];
+            Array.Copy(data, _data, data.Length);
+        }
 
-		internal BsonBinData(byte subtype, int len, BinaryReader input) {
-			_subtype = subtype;
-			_data = input.ReadBytes(len);
-		}
-	}
+        internal BsonBinData(byte subtype, int len, BinaryReader input)
+        {
+            _subtype = subtype;
+            _data = input.ReadBytes(len);
+        }
+    }
 }
 

@@ -17,15 +17,14 @@
 namespace Nejdb
 {
 
-	public class EjdbQueryException : EjdbException
-	{
-		public EjdbQueryException(string message) : base(message)
-		{
-		}
+    public class EjdbQueryException : EjdbException
+    {
+        public EjdbQueryException(string message) : base(message)
+        {
+        }
 
-		public EjdbQueryException(int code, string msg) : base(code, msg)
-		{
-		}
-	}
+        public EjdbQueryException(int code, string msg) : base(code, msg)
+        {
+        }
+    }
 }
-

@@ -17,49 +17,58 @@
 using System.IO;
 using System.Text;
 
-namespace Nejdb.Internals {
+namespace Nejdb.Internals
+{
 
-	public class ExtBinaryWriter : BinaryWriter {
+    public class ExtBinaryWriter : BinaryWriter
+    {
+        public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
+        Encoding _encoding;
+        bool _leaveopen;
 
-		public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
-		Encoding _encoding;
-		bool _leaveopen;
+        public ExtBinaryWriter()
+        {
+            _encoding = DEFAULT_ENCODING;
+        }
 
-		public ExtBinaryWriter() {
-			_encoding = DEFAULT_ENCODING;
-		}
+        public ExtBinaryWriter(Stream output) : this(output, DEFAULT_ENCODING, false)
+        {
+        }
 
-		public ExtBinaryWriter(Stream output) : this(output, DEFAULT_ENCODING, false) {
-		}
+        public ExtBinaryWriter(Stream output, Encoding encoding, bool leaveopen) : base(output, encoding)
+        {
+            _encoding = encoding;
+            _leaveopen = leaveopen;
+        }
 
-		public ExtBinaryWriter(Stream output, Encoding encoding, bool leaveopen) : base(output, encoding) {
-			_encoding = encoding;
-			_leaveopen = leaveopen;
-		}
+        public ExtBinaryWriter(Stream output, Encoding encoding) : this(output, encoding, false)
+        {
+        }
 
-		public ExtBinaryWriter(Stream output, Encoding encoding) : this(output, encoding, false) {
-		}
+        public ExtBinaryWriter(Stream output, bool leaveopen) : this(output, DEFAULT_ENCODING, leaveopen)
+        {
+        }
 
-		public ExtBinaryWriter(Stream output, bool leaveopen) : this(output, DEFAULT_ENCODING, leaveopen) {		
-		}
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(!_leaveopen);
+        }
 
-		protected override void Dispose(bool disposing) {
-			base.Dispose(!_leaveopen);
-		}
+        public void WriteBsonString(string val)
+        {
+            byte[] buf = _encoding.GetBytes(val);
+            Write(buf.Length + 1);
+            Write(buf);
+            Write((byte)0x00);
+        }
 
-		public void WriteBsonString(string val) {
-			byte[] buf = _encoding.GetBytes(val);
-			Write(buf.Length + 1);
-			Write(buf);
-			Write((byte) 0x00);
-		}
-
-		public void WriteCString(string val) {
-			if (val.Length > 0) {
-				Write(_encoding.GetBytes(val));
-			}
-			Write((byte) 0x00);
-		}
-	}
+        public void WriteCString(string val)
+        {
+            if (val.Length > 0)
+            {
+                Write(_encoding.GetBytes(val));
+            }
+            Write((byte)0x00);
+        }
+    }
 }
-
