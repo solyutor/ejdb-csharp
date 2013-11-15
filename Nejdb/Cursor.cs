@@ -6,27 +6,13 @@ using Nejdb.Internals;
 
 namespace Nejdb
 {
-    public class Cursor : IDisposable, IEnumerable<BsonIterator>
+    /// <summary>
+    /// Encapsulates operation with non typed cursor
+    /// </summary>
+    public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        ////const void* ejdbqresultBsondata(EJQRESULT qr, int pos, int *size)
-        //[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqresultBsondata", CallingConvention = CallingConvention.Cdecl)]
-        //static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int pos, out int size);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqresultbsondata")]
-        private delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
-
-        private readonly CursorHandle _cursorHandle;
-        private readonly CursorResultDelegate _cursorResult;
-
-        //current cursor position
-        private int _position;
-        //cursor Count
-        private readonly int _count;
-
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
+        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
         {
-            _cursorHandle = cursorHandle;
-            _count = count;
-            _cursorResult = libraryHandle.GetUnmanagedDelegate<CursorResultDelegate>();
         }
 
         /// <summary>
@@ -36,30 +22,21 @@ namespace Nejdb
         {
             get
             {
-                if (_cursorHandle.IsInvalid || index >= _count || index < 0)
+                if (IsInvalid || IsOutOfRange(index))
                 {
                     return null;
                 }
-                //static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int index, out int size)
-                int size;
 
-                IntPtr bsdataptr = _cursorResult(_cursorHandle, index, out size);
-                if (bsdataptr == IntPtr.Zero)
+                int size;
+                var resultPointer = CursorResult(index, out size);
+                if (resultPointer == IntPtr.Zero)
                 {
                     return null;
                 }
                 byte[] bsdata = new byte[size];
-                Marshal.Copy(bsdataptr, bsdata, 0, bsdata.Length);
+                Marshal.Copy(resultPointer, bsdata, 0, bsdata.Length);
                 return new BsonIterator(bsdata);
             }
-        }
-
-        /// <summary>
-        /// Gets the number of result records stored in this cursor.
-        /// </summary>
-        public int Count
-        {
-            get { return _count; }
         }
 
         /// <summary>
@@ -68,11 +45,12 @@ namespace Nejdb
         /// <returns></returns>
         public BsonIterator Next()
         {
-            if (_cursorHandle.IsInvalid || _position >= _count)
+            //check future position
+            if (IsInvalid || IsOutOfRange(Position+1))
             {
                 return null;
             }
-            return this[_position++];
+            return this[NextPosition()];
         }
 
         /// <summary>
@@ -90,21 +68,6 @@ namespace Nejdb
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        /// <summary>
-        /// Reset cursor position state to its initial value.
-        /// </summary>
-        public void Reset()
-        {
-            _position = 0;
-        }
-        /// <summary>
-        /// Closes cursor and frees all resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _cursorHandle.Dispose();
         }
     }
 }

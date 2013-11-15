@@ -3,6 +3,17 @@
 namespace Nejdb
 {
     /// <summary>
+    /// Encapsulates strongly typed query
+    /// </summary>
+    /// <typeparam name="TDocument"></typeparam>
+    public class Query<TDocument> : QueryBase
+    {
+        protected Query(Collection collection) : base(collection)
+        {
+        }
+    }
+
+    /// <summary>
     /// Encapsulates non typed query to EJDB database.
     /// </summary>
     public class Query : QueryBase

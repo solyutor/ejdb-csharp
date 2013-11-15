@@ -5,6 +5,9 @@ using Nejdb.Internals;
 
 namespace Nejdb
 {
+    /// <summary>
+    /// Encapsulates common fuctionality for all query objects
+    /// </summary>
     public class QueryBase : IDisposable
     {
         private QueryHints _hints;
@@ -39,8 +42,6 @@ namespace Nejdb
             BsonDocument doc = BsonDocument.ValueOf(docobj);
             _handle.AddOrAdd(doc.ToByteArray());
         }
-
-        
 
         /// <summary>
         /// Releases query handle;

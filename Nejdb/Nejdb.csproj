@@ -50,6 +50,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
     <Compile Include="NoObjectIdContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
