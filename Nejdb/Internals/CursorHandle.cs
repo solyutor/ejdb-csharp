@@ -13,6 +13,8 @@ namespace Nejdb.Internals
             _release = release;
         }
 
+        public string Log { get; internal set; }
+
         protected override bool ReleaseHandle()
         {
             _release(handle);

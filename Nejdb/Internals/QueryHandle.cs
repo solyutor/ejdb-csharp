@@ -135,7 +135,7 @@ namespace Nejdb.Internals
                             //static extern IntPtr _tcxstrptr([In] IntPtr strptr);
                             IntPtr sbptr = logsptr.AsString();
 
-                            Log = Native.StringFromNativeUtf8(sbptr); //UnixMarshal.PtrToString(sbptr, Encoding.UTF8);
+                            cursorHandle.Log = Native.StringFromNativeUtf8(sbptr); //UnixMarshal.PtrToString(sbptr, Encoding.UTF8);
                         }
                     }
                     finally
@@ -150,7 +150,7 @@ namespace Nejdb.Internals
             return cursorHandle;
         }
 
-        public string Log { get; private set; }
+        
 
         protected override bool ReleaseHandle()
         {

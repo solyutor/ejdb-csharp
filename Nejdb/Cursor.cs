@@ -26,19 +26,10 @@ namespace Nejdb
         {
             get
             {
-                //TODO: should throw exception if called with count only mode
-                if (IsInvalid || !IsInRange(index))
-                {
-                    return default(TDocument);
-                }
+                EnsureInRange(index);
 
                 int size;
                 var resultPointer = CursorResult(index, out size);
-
-                if (resultPointer == IntPtr.Zero)
-                {
-                    return default(TDocument);
-                }
 
                 byte[] bson = new byte[size];
 
@@ -66,32 +57,20 @@ namespace Nejdb
         /// <returns></returns>
         public TDocument Next()
         {
-            //TODO: should throw exception if called with count only mode
-            if (IsValid || !IsInRange(NextPosition()))
-            {
-                return this[Position];
-            }
-            return default(TDocument);
+            NextPosition();
+            return this[Position];
         }
 
+        /// <summary>
+        /// Returns document at current <see cref="CursorBase#Position"/>
+        /// </summary>
         public TDocument Current
         {
-            get
-            {
-                //TODO: should throw exception if called with count only mode
-                if (IsValid || IsInRange(Position))
-                {
-                    return this[Position];
-                }
-                return default(TDocument);
-            }
-           
+            get {  return this[Position]; }
         }
-
 
         public IEnumerator<TDocument> GetEnumerator()
         {
-            //TODO: should throw exception if called with count only mode
             while (IsInRange(Position))
             {
                 yield return Current;
@@ -110,8 +89,7 @@ namespace Nejdb
     /// </summary>
     public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
-            : base(libraryHandle, cursorHandle, count)
+        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
         {
         }
 
@@ -122,17 +100,11 @@ namespace Nejdb
         {
             get
             {
-                if (IsInvalid || !IsInRange(index))
-                {
-                    return null;
-                }
+                EnsureInRange(index);
 
                 int size;
                 var resultPointer = CursorResult(index, out size);
-                if (resultPointer == IntPtr.Zero)
-                {
-                    return null;
-                }
+
                 byte[] bsdata = new byte[size];
                 Marshal.Copy(resultPointer, bsdata, 0, bsdata.Length);
                 return new BsonIterator(bsdata);
@@ -145,23 +117,27 @@ namespace Nejdb
         /// <returns></returns>
         public BsonIterator Next()
         {
-            //check future position
-            if (IsValid || IsInRange(NextPosition()))
-            {
-                return this[Position];
-            }
-            return null;
+            NextPosition();
+            return this[Position];
         }
 
+
+        /// <summary>
+        /// Returns document at current <see cref="CursorBase#Position"/>
+        /// </summary>
+        public BsonIterator Current
+        {
+            get { return this[Position]; }
+        }
         /// <summary>
         /// Returns an enumerator that iterates through the result set.
         /// </summary>
         public IEnumerator<BsonIterator> GetEnumerator()
         {
-            BsonIterator it;
-            while ((it = Next()) != null)
+            while (IsInRange(Position))
             {
-                yield return it;
+                yield return Current;
+                NextPosition();
             }
         }
 

@@ -14,7 +14,7 @@ namespace Nejdb
         //static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int pos, out int size);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqresultbsondata")]
         private delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
-        
+
         private CursorHandle _cursorHandle;
         private CursorResultDelegate _cursorResult;
         private int _position;
@@ -29,9 +29,14 @@ namespace Nejdb
 
         internal IntPtr CursorResult(int index, out int size)
         {
-            IntPtr bsdataptr = _cursorResult(_cursorHandle, index, out size);
-            
-            return bsdataptr;
+            IntPtr resultPointer = _cursorResult(_cursorHandle, index, out size);
+
+            if (resultPointer == IntPtr.Zero)
+            {
+                throw new EjdbException("Cursor result returned invalid pointer.");
+            }
+
+            return resultPointer;
         }
 
         internal bool IsInvalid
@@ -88,11 +93,53 @@ namespace Nejdb
         }
 
         /// <summary>
+        /// Returns query log if query executed with <see cref="QueryMode#Explain"/>
+        /// </summary>
+        /// <returns></returns>
+        public string GetLog()
+        {
+            if (string.IsNullOrWhiteSpace(_cursorHandle.Log))
+            {
+                throw new InvalidOperationException("Query log available only with QueryMode.Explain hint.");
+            }
+            return _cursorHandle.Log;
+        }
+
+        /// <summary>
         /// Closes cursor and frees all resources.
         /// </summary>
         public void Dispose()
         {
             _cursorHandle.Dispose();
+        }
+
+        /// <summary>
+        /// Throws <see cref="EjdbException"/> if cursor does not contains data.
+        /// </summary>
+        protected void EnsureValid()
+        {
+            if (IsValid) return;
+
+            const string template = "This operation is not valid for current state of cursor. May by query executed with {0} hint?";
+            var errorMessage = string.Format(template, QueryMode.Count);
+            throw new EjdbException(errorMessage);
+        }
+
+        /// <summary>
+        /// Ensures that correct index supplied and cursor is in valid state.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Index argument is invalid.</exception>
+        /// /// <exception cref="EjdbException">Cursor state is invalid.</exception>
+        /// <param name="index"></param>
+        protected void EnsureInRange(int index)
+        {
+            EnsureValid();
+
+            if (IsInRange(index)) return;
+
+            const string template = "Expected index between 0 and {0}, but was {1}.";
+            var errorMessage = string.Format(template, Count - 1, index);
+            throw new ArgumentOutOfRangeException(errorMessage);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Nejdb
         {
             using (Cursor<TDocument> cursor = Execute(QueryMode.FindOne))
             {
-                return cursor.Next();
+                return cursor.Current;
             }
         }
 
@@ -81,7 +81,7 @@ namespace Nejdb
         {
             using (Cursor cur = Execute(QueryMode.FindOne))
             {
-                return cur.Next();
+                return cur.Current;
             }
         }
 
