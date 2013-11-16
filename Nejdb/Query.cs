@@ -5,7 +5,7 @@ namespace Nejdb
     /// <summary>
     /// Encapsulates strongly typed query
     /// </summary>
-    /// <typeparam name="TDocument"></typeparam>
+    /// <typeparam name="TDocument">Type of document in query</typeparam>
     public class Query<TDocument> : QueryBase
     {
         internal Query(Collection collection) : base(collection)
@@ -31,9 +31,9 @@ namespace Nejdb
         /// <returns></returns>
         public TDocument FinOne()
         {
-            using (Cursor<TDocument> cur = Execute(QueryMode.FindOne))
+            using (Cursor<TDocument> cursor = Execute(QueryMode.FindOne))
             {
-                return cur.Next();
+                return cursor.Next();
             }
         }
 
@@ -43,9 +43,9 @@ namespace Nejdb
         /// <returns></returns>
         public int Count()
         {
-            using (Cursor<TDocument> cur = Execute(QueryMode.Count))
+            using (Cursor<TDocument> cursor = Execute(QueryMode.Count))
             {
-                return cur.Count;
+                return cursor.Count;
             }
         }
     }

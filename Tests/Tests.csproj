@@ -57,6 +57,7 @@
     <Compile Include="QueryTests.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="TestBSON.cs" />
+    <Compile Include="Sample.cs" />
     <Compile Include="TestEJDB.cs" />
   </ItemGroup>
   <ItemGroup>

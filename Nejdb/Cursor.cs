@@ -10,6 +10,9 @@ using Newtonsoft.Json.Bson;
 
 namespace Nejdb
 {
+    /// <summary>
+    /// Encapsulates operation over non typed cursor
+    /// </summary>
     public class Cursor<TDocument> : CursorBase, IEnumerable<TDocument>
     {
         internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
@@ -23,52 +26,77 @@ namespace Nejdb
         {
             get
             {
-                if (IsInvalid || IsOutOfRange(index))
+                //TODO: should throw exception if called with count only mode
+                if (IsInvalid || !IsInRange(index))
                 {
                     return default(TDocument);
                 }
 
                 int size;
                 var resultPointer = CursorResult(index, out size);
-                
+
                 if (resultPointer == IntPtr.Zero)
                 {
                     return default(TDocument);
                 }
 
-                byte[] bsdata = new byte[size];
-                Marshal.Copy(resultPointer, bsdata, 0, bsdata.Length);
-                TDocument result;
-                using (var stream = new MemoryStream(bsdata))
+                byte[] bson = new byte[size];
+
+                Marshal.Copy(resultPointer, bson, 0, bson.Length);
+
+                using (var stream = new MemoryStream(bson))
                 using (var reader = new BsonReader(stream))
                 {
+                    var id = new ObjectId(new ArraySegment<byte>(bson, 9, 12));
+
                     var serialzer = new JsonSerializer();
                     serialzer.ContractResolver = NoObjectIdContractResolver.Instance;
-                    result = serialzer.Deserialize<TDocument>(reader);
-                    //TODO: Check the id property
-                    //IdHelper<TDocument>.SetId(result, );
+                    TDocument result = serialzer.Deserialize<TDocument>(reader);
 
+                    IdHelper<TDocument>.SetId(result, id);
+                    return result;
                 }
-                return result;
+
             }
         }
 
         /// <summary>
-        /// Returns next record in collection
+        /// Returns next document from cursor
         /// </summary>
         /// <returns></returns>
         public TDocument Next()
         {
-            if (IsInvalid || IsOutOfRange(Position + 1))
+            //TODO: should throw exception if called with count only mode
+            if (IsValid || !IsInRange(NextPosition()))
             {
+                return this[Position];
+            }
+            return default(TDocument);
+        }
+
+        public TDocument Current
+        {
+            get
+            {
+                //TODO: should throw exception if called with count only mode
+                if (IsValid || IsInRange(Position))
+                {
+                    return this[Position];
+                }
                 return default(TDocument);
             }
-            return this[NextPosition()];
+           
         }
+
 
         public IEnumerator<TDocument> GetEnumerator()
         {
-            throw new NotImplementedException();
+            //TODO: should throw exception if called with count only mode
+            while (IsInRange(Position))
+            {
+                yield return Current;
+                NextPosition();
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -78,11 +106,12 @@ namespace Nejdb
     }
 
     /// <summary>
-    /// Encapsulates operation with non typed cursor
+    /// Encapsulates operation over non typed cursor
     /// </summary>
     public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
+        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
+            : base(libraryHandle, cursorHandle, count)
         {
         }
 
@@ -93,7 +122,7 @@ namespace Nejdb
         {
             get
             {
-                if (IsInvalid || IsOutOfRange(index))
+                if (IsInvalid || !IsInRange(index))
                 {
                     return null;
                 }
@@ -117,11 +146,11 @@ namespace Nejdb
         public BsonIterator Next()
         {
             //check future position
-            if (IsInvalid || IsOutOfRange(Position+1))
+            if (IsValid || IsInRange(NextPosition()))
             {
-                return null;
+                return this[Position];
             }
-            return this[NextPosition()];
+            return null;
         }
 
         /// <summary>

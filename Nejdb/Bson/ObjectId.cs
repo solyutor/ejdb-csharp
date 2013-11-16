@@ -80,6 +80,23 @@ namespace Nejdb.Bson
             Byte12 = val[11];
         }
 
+        public ObjectId(ArraySegment<byte> segment)
+        {
+            var val = segment.Array;
+            Byte01 = val[segment.Offset + 0];
+            Byte02 = val[segment.Offset + 1];
+            Byte03 = val[segment.Offset + 2];
+            Byte04 = val[segment.Offset + 3];
+            Byte05 = val[segment.Offset + 4];
+            Byte06 = val[segment.Offset + 5];
+            Byte07 = val[segment.Offset + 6];
+            Byte08 = val[segment.Offset + 7];
+            Byte09 = val[segment.Offset + 8];
+            Byte10 = val[segment.Offset + 9];
+            Byte11 = val[segment.Offset + 10];
+            Byte12 = val[segment.Offset + 11];
+        }
+
         public ObjectId(BinaryReader reader)
         {
             Byte01 = reader.ReadByte();

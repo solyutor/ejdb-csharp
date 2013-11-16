@@ -71,10 +71,10 @@ namespace Ejdb.Tests
         [Test]
         public void Can_save_and_load_strongly_typed_document()
         {
-            var origin = new TestDocument { Name = "John Wayne" };
+            var origin = new Sample { Name = "John Wayne" };
             var id = _collection.Save(origin, false);
 
-            var reloaded = _collection.Load<TestDocument>(id);
+            var reloaded = _collection.Load<Sample>(id);
 
             Assert.That(reloaded.Id, Is.EqualTo(origin.Id));
             Assert.That(reloaded.Name, Is.EqualTo(origin.Name));
@@ -124,12 +124,5 @@ namespace Ejdb.Tests
 
             StringAssert.Contains(indexEvidence, metaAsString);
         }
-    }
-
-    public class TestDocument
-    {
-        public ObjectId Id { get; private set; }
-
-        public string Name { get; set; }
     }
 }

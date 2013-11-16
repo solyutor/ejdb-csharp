@@ -24,7 +24,7 @@ namespace Nejdb
         {
             _cursorHandle = cursorHandle;
             _count = count;
-            _cursorResult = libraryHandle.GetUnmanagedDelegate<Cursor.CursorResultDelegate>();
+            _cursorResult = libraryHandle.GetUnmanagedDelegate<CursorResultDelegate>();
         }
 
         internal IntPtr CursorResult(int index, out int size)
@@ -37,6 +37,11 @@ namespace Nejdb
         internal bool IsInvalid
         {
             get { return _cursorHandle.IsInvalid; }
+        }
+
+        internal bool IsValid
+        {
+            get { return !IsInvalid; }
         }
 
         /// <summary>
@@ -60,11 +65,10 @@ namespace Nejdb
         /// </summary>
         /// <param name="index">Index of a result in cursor</param>
         /// <returns></returns>
-        public bool IsOutOfRange(int index)
+        public bool IsInRange(int index)
         {
-            return index < 0  && index >= Count;
+            return 0 <= index && index < Count;
         }
-
 
         /// <summary>
         /// Increases current position and returns it's value
