@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
+    <Compile Include="ITransaction.cs" />
     <Compile Include="NoObjectIdContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\BsonHandle.cs" />

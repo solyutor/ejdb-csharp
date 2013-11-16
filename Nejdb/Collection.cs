@@ -139,7 +139,16 @@ namespace Nejdb
         /// <summary>
         /// Begins new transaction
         /// </summary>
-        public void BeginTransaction()
+        public Transaction BeginTransaction()
+        {
+            return new Transaction(this);
+        }
+
+
+        /// <summary>
+        /// Begins new transaction
+        /// </summary>
+        internal void BeginTransactionInternal()
         {
             if (_beginTransaction(CollectionHandle))
             {
@@ -152,7 +161,7 @@ namespace Nejdb
         /// <summary>
         /// Commits current transaction
         /// </summary>
-        public void CommitTransaction()
+        internal void CommitTransactionInternal()
         {
             if (_commitTransaction(CollectionHandle))
             {
@@ -164,7 +173,7 @@ namespace Nejdb
         /// <summary>
         /// Rollbacks current transaction
         /// </summary>
-        public void RollbackTransaction()
+        internal void RollbackTransactionInternal()
         {
             if (_rollbackTransaction(CollectionHandle))
             {
@@ -176,7 +185,7 @@ namespace Nejdb
         /// <summary>
         /// Returns true if transaction is active, false otherwise
         /// </summary>
-        public bool TransactionActive
+        internal bool TransactionActive
         {
             get
             {

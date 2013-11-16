@@ -48,16 +48,41 @@ namespace Ejdb.Tests
         [Test]
         public void Can_begin_and_commit_transaction()
         {
-            _collection.BeginTransaction();
+            Transaction transaction;
+            using (transaction = _collection.BeginTransaction())
+            {
+                _collection.Save(_origin, false);
+                Assert.That(transaction.Active, Is.True);
+                transaction.Commit();
+            }
+            Assert.That(transaction.Active, Is.False);
 
-            var isActive = _collection.TransactionActive;
+            using (var query = _collection.CreateQuery())
+            {
+                var count = query.Count();
 
-            _collection.CommitTransaction();
+                Assert.That(count, Is.EqualTo(1), "The sample document was not persisted");
+            }
+        }
 
-            var notActiveTransaction = !_collection.TransactionActive;
+        [Test]
+        public void Can_begin_and_rollback_transaction()
+        {
+            Transaction transaction;
+            using (transaction = _collection.BeginTransaction())
+            {
+                _collection.Save(_origin, false);
+                Assert.That(transaction.Active, Is.True);
+                transaction.Rollback();
+            }
+            Assert.That(transaction.Active, Is.False);
 
-            Assert.That(isActive, Is.True, "Transaction should be active after begin");
-            Assert.That(notActiveTransaction, Is.True, "Transaction should be active after commit");
+            using (var query = _collection.CreateQuery())
+            {
+                var count = query.Count();
+
+                Assert.That(count, Is.EqualTo(0), "The sample document was persisted");
+            }
         }
 
         [Test]
