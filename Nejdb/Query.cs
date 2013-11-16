@@ -8,8 +8,45 @@ namespace Nejdb
     /// <typeparam name="TDocument"></typeparam>
     public class Query<TDocument> : QueryBase
     {
-        protected Query(Collection collection) : base(collection)
+        internal Query(Collection collection) : base(collection)
         {
+        }
+
+        /// <summary>
+        /// Executes query and returns result as cursor
+        /// </summary>
+        /// <param name="queryMode">Query mode</param>
+        public Cursor<TDocument> Execute(QueryMode queryMode = QueryMode.Normal)
+        {
+            Handle.SetHints(Hints);
+            int count;
+            var cursorHandle = Handle.Execute(queryMode, out count);
+            var cursor = new Cursor<TDocument>(Handle._collection.Database.Library.LibraryHandle, cursorHandle, count);
+            return cursor;
+        }
+
+        /// <summary>
+        /// Returns the only record thats meets search criteria
+        /// </summary>
+        /// <returns></returns>
+        public TDocument FinOne()
+        {
+            using (Cursor<TDocument> cur = Execute(QueryMode.FindOne))
+            {
+                return cur.Next();
+            }
+        }
+
+        /// <summary>
+        /// Returns count of records that meets search criteria
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            using (Cursor<TDocument> cur = Execute(QueryMode.Count))
+            {
+                return cur.Count;
+            }
         }
     }
 

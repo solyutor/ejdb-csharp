@@ -399,6 +399,14 @@ namespace Nejdb
         }
 
         /// <summary>
+        /// Creates new strongly typed query over the collections
+        /// </summary>
+        public Query<TDocument> CreateQuery<TDocument>()
+        {
+            return new Query<TDocument>(this);
+        }
+
+        /// <summary>
         /// Closes collection and disposes all owned resources
         /// </summary>
         public void Dispose()
