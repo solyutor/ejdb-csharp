@@ -15,11 +15,6 @@ namespace Nejdb.Queries
 *
 * - Supported queries:
 
-
-
-* - $in String OR Number OR Array val matches to value in specified array:
-* - {'fpath' : {'$in' : [val1, val2, val3]}}
-* - $nin - Not IN
 * - $strand String tokens OR String array val matches all tokens in specified array:
 * - {'fpath' : {'$strand' : [val1, val2, val3]}}
 * - $stror String tokens OR String array val matches any token in specified array:

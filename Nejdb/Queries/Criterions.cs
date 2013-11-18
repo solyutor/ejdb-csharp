@@ -85,5 +85,15 @@ namespace Nejdb.Queries
         {
             return new BetweenCriterion<TValue>(lower, upper);
         }
+
+        public static ICriterion In<TValue>(params TValue[] values)
+        {
+            return new InCriterion<TValue>(values);
+        }
+
+        public static ICriterion NotIn<TValue>(params TValue[] values)
+        {
+            return new NotInCriterion<TValue>(values);
+        }
     }
 }
