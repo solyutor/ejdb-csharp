@@ -54,7 +54,9 @@
     <Compile Include="CollectionTests.cs" />
     <Compile Include="DatabaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\CriterionTests.cs" />
     <Compile Include="Queries\Name.cs" />
+    <Compile Include="Queries\NumberComparisonCriterionTests.cs" />
     <Compile Include="Queries\Person.cs" />
     <Compile Include="Queries\QueryBuilderTests.cs" />
     <Compile Include="QueryTests.cs" />

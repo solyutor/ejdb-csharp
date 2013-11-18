@@ -8,7 +8,7 @@ namespace Ejdb.Tests
         {
             return new Person
             {
-                Name = new Name{First = "Vladimir", Surname = " Putin"},
+                Name = new Name{First = "Vladimir", Surname = "Putin"},
                 Age = 61,
                 Hobbies = new[] {"Power", "Corruption", "Narcissism"}
             };
@@ -24,8 +24,6 @@ namespace Ejdb.Tests
                 Hobbies = new[] { "Meeting", "Investigation", "Shocking" }
             };
         }
-
-        
         
         public ObjectId Id { get; protected set; }
 

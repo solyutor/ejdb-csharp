@@ -33,5 +33,57 @@ namespace Nejdb.Queries
         {
             return new StartsWithCriterion(value);
         }
+
+
+        /// <summary>
+        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// </summary>
+        /// <typeparam name="TValue">Any numeric type</typeparam>
+        /// <param name="value"></param>
+        public static ICriterion GreaterThan<TValue>(TValue value)
+        {
+            return new NumberComparisonCriterion<TValue>(value, Comparsion.Greater);
+        }
+
+        /// <summary>
+        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// </summary>
+        /// <typeparam name="TValue">Any numeric type</typeparam>
+        /// <param name="value"></param>
+        public static ICriterion GreaterThanOrEqual<TValue>(TValue value)
+        {
+            return new NumberComparisonCriterion<TValue>(value, Comparsion.GreaterOrEqual);
+        }
+
+        /// <summary>
+        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// </summary>
+        /// <typeparam name="TValue">Any numeric type</typeparam>
+        /// <param name="value"></param>
+        public static ICriterion LowerThan<TValue>(TValue value)
+        {
+            return new NumberComparisonCriterion<TValue>(value, Comparsion.Lower);
+        }
+
+        /// <summary>
+        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// </summary>
+        /// <typeparam name="TValue">Any numeric type</typeparam>
+        /// <param name="value"></param>
+        public static ICriterion LowerThanOrEqual<TValue>(TValue value)
+        {
+            return new NumberComparisonCriterion<TValue>(value, Comparsion.LowerOrEqual);
+        }
+
+        /// <summary>
+        /// Creates new instance of <see cref="BetweenCriterion{TValue}"/> 
+        /// </summary>
+        /// <typeparam name="TValue">Any numeric type</typeparam>
+        /// <param name="lower">Lower limit</param>
+        /// <param name="upper">Upper limit</param>
+        public static ICriterion Between<TValue>(TValue lower, TValue upper)
+        {
+            return new BetweenCriterion<TValue>(lower, upper);
+        }
     }
 }

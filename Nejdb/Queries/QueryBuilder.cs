@@ -15,10 +15,8 @@ namespace Nejdb.Queries
 *
 * - Supported queries:
 
-* - $gt, $gte (>, >=) and $lt, $lte for number types:
-* - {'fpath' : {'$gt' : number}, ...}
-* - $bt Between for number types:
-* - {'fpath' : {'$bt' : [num1, num2]}}
+
+
 * - $in String OR Number OR Array val matches to value in specified array:
 * - {'fpath' : {'$in' : [val1, val2, val3]}}
 * - $nin - Not IN
