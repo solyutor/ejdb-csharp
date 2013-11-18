@@ -26,5 +26,14 @@ namespace Nejdb.Queries
         {
             return new NotEqualsCriterion<TValue>(value);
         }
+
+        /// <summary>
+        /// Creates new instance of <see cref="StartsWithCriterion"/> with specified string prefix
+        /// </summary>
+        /// <param name="value">Prefix of a string to search</param>
+        public static ICriterion StartsWith(string value)
+        {
+            return new StartsWithCriterion(value);
+        }
     }
 }

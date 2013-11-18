@@ -57,6 +57,7 @@
     <Compile Include="Queries\ICriterion.cs" />
     <Compile Include="Queries\JsonValueWriter.cs" />
     <Compile Include="Queries\NotEqualsCriterion.cs" />
+    <Compile Include="Queries\StartsWithCriterion.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="NoObjectIdContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

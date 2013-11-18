@@ -73,5 +73,22 @@ namespace Ejdb.Tests
                 Assert.That(person.Name.Surname, Is.EqualTo(Person.Putin().Name.Surname));
             }
         }
+
+        [Test]
+        public void Starts_with_query()
+        {
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, Criterions.StartsWith("Ale"));
+            
+            using (var query = _collection.CreateQuery<Person>(builder))
+            using (var cursor = query.Execute(QueryMode.Explain))
+            {
+                Console.WriteLine(cursor.GetLog());
+
+                var person = cursor[0];
+
+                Assert.That(cursor.Count, Is.EqualTo(1));
+                Assert.That(person.Name.Surname, Is.EqualTo(Person.Navalny().Name.Surname));
+            }
+        }
     }
 }

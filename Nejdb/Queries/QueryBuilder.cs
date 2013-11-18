@@ -18,8 +18,7 @@ namespace Nejdb.Queries
 
 
 * - {'fpath' : {'$not' : {'$begin' : prefix}}} //Field not begins with val
-* - $begin String starts with prefix
-* - {'fpath' : {'$begin' : prefix}}
+
 * - $gt, $gte (>, >=) and $lt, $lte for number types:
 * - {'fpath' : {'$gt' : number}, ...}
 * - $bt Between for number types:
