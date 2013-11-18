@@ -41,7 +41,7 @@ namespace Ejdb.Tests
         }
 
         [Test]
-        public void Simple_match_query()
+        public void Match_criterion_query()
         {
             var builder = new QueryBuilder<Person>().Where(x => x.Name.First, Criterions.Equals("Alexey"));
 
@@ -58,9 +58,10 @@ namespace Ejdb.Tests
         }
 
         [Test]
-        public void Simple_not_match_query()
+        public void Negate_criterion_query()
         {
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, Criterions.NotEquals("Alexey"));
+            var criterion = Criterions.Not(Criterions.Equals("Alexey"));
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
 
             using (var query = _collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
@@ -75,9 +76,10 @@ namespace Ejdb.Tests
         }
 
         [Test]
-        public void Starts_with_query()
+        public void Starts_with_criterion_query()
         {
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, Criterions.StartsWith("Ale"));
+            var startsWith = Criterions.StartsWith("Ale");
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, startsWith);
             
             using (var query = _collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))

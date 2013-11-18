@@ -15,10 +15,6 @@ namespace Nejdb.Queries
 *
 * - Supported queries:
 
-
-
-* - {'fpath' : {'$not' : {'$begin' : prefix}}} //Field not begins with val
-
 * - $gt, $gte (>, >=) and $lt, $lte for number types:
 * - {'fpath' : {'$gt' : number}, ...}
 * - $bt Between for number types:

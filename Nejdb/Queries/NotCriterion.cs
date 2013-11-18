@@ -3,20 +3,19 @@ using Newtonsoft.Json;
 namespace Nejdb.Queries
 {
     /// <summary>
-    /// Negate matches of simple value
+    /// Negates another criterion
     /// </summary>
-    /// <typeparam name="TValue">Type of value to match</typeparam>
-    public class NotEqualsCriterion<TValue> : ICriterion
+    public class NotCriterion : ICriterion
     {
-        private readonly TValue _value;
+        private readonly ICriterion _criterion;
 
         /// <summary>
-        /// Creates new instance of <see cref="NotEqualsCriterion{TValue}"/>
+        /// Creates new instance of <see cref="NotCriterion"/>
         /// </summary>
-        /// <param name="value">A value to negate</param>\
-        public NotEqualsCriterion(TValue value)
+        /// <param name="criterion">A criterion to negate</param>
+        public NotCriterion(ICriterion criterion)
         {
-            _value = value;
+            _criterion = criterion;
         }
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace Nejdb.Queries
             // {'fpath' : {'$not' : val}} //Field not equal to val
             writer.WriteStartObject();
             writer.WritePropertyName("$not");
-            JsonValueWriter<TValue>.Write(writer, _value);
+            _criterion.WriteTo(writer);
             writer.WriteEndObject();
         }
     }

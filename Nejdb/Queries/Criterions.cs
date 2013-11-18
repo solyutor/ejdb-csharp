@@ -6,7 +6,7 @@ namespace Nejdb.Queries
     public static class Criterions
     {
         /// <summary>
-        /// Creates new instance of <see cref="EqualsCriterion{TValue}"/> with specified value/>
+        /// Creates new instance of <see cref="EqualsCriterion{TValue}"/> with specified criterion/>
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="value"></param>
@@ -17,14 +17,12 @@ namespace Nejdb.Queries
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="NotEqualsCriterion{TValue}"/> with specified value/>
+        /// Creates new instance of <see cref="NotCriterion"/> with specified criterion/>
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ICriterion NotEquals<TValue>(TValue value)
+        /// <param name="criterion">A Criterion to negate</param>
+        public static ICriterion Not(ICriterion criterion)
         {
-            return new NotEqualsCriterion<TValue>(value);
+            return new NotCriterion(criterion);
         }
 
         /// <summary>
