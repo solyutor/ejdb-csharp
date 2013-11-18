@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using Nejdb;
 using Nejdb.Bson;
@@ -32,6 +31,12 @@ namespace Ejdb.Tests
             _originBson = BsonDocument.ValueOf(new { Name = "Denis Gladiolus" });
 
             _originSample = new Sample { Name = "Denis Gladiolus" };
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _dataBase.Dispose();
         }
 
         [Test]
@@ -208,13 +213,6 @@ namespace Ejdb.Tests
                     Assert.That(bsonIterator, Is.Not.Null);
                 }
             }
-        }
-
-
-        [TearDown]
-        public void TearDown()
-        {
-            _dataBase.Dispose();
         }
     }
 }

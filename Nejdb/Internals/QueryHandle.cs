@@ -19,7 +19,6 @@ namespace Nejdb.Internals
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbquerydel")]
         private delegate void DeleteQueryDelegate(IntPtr query);
 
-
         ////EJDB_EXPORT EJQ* ejdbqueryhints(EJDB *jb, EJQ *q, void *hintsbsdata)
         //[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqueryhints", CallingConvention = CallingConvention.Cdecl)]
         //static extern IntPtr _ejdbqueryhints([In] IntPtr jb, [In] IntPtr qptr, [In] byte[] bsdata);
@@ -52,17 +51,17 @@ namespace Nejdb.Internals
         private AddOrDelegate _addOr;
 
         private readonly DeleteQueryDelegate _delete;
-        public readonly Collection _collection;
+        public readonly Collection Collection;
 
-        public QueryHandle(Collection collection) : base(true)
+        public QueryHandle(Collection collection, byte[] queryAsBson) : base(true)
         {
-            _collection = collection;
+            Collection = collection;
             var database = collection.Database;
             var libraryHandle = database.Library.LibraryHandle;
 
             var createQuery = libraryHandle.GetUnmanagedDelegate<CreateQueryDelegate>();
 
-            handle = createQuery(database.DatabaseHandle, BsonDocument.Empty.ToByteArray());
+            handle = createQuery(database.DatabaseHandle, queryAsBson);
 
             if (IsInvalid)
             {
@@ -78,12 +77,12 @@ namespace Nejdb.Internals
             _addOr = libraryHandle.GetUnmanagedDelegate<AddOrDelegate>();
         }
 
-        internal void AddOrAdd(byte[] bson)
+        internal void AddOr(byte[] bson)
         {
-            IntPtr qptr = _addOr(_collection.Database.DatabaseHandle, this, bson);
+            IntPtr qptr = _addOr(Collection.Database.DatabaseHandle, this, bson);
             if (qptr == IntPtr.Zero)
             {
-                EjdbException.FromDatabase(_collection.Database, "Failed to append Or restriction");
+                EjdbException.FromDatabase(Collection.Database, "Failed to append Or restriction");
                 //throw new EJDBQueryException(_jb);
             }
         }
@@ -95,13 +94,13 @@ namespace Nejdb.Internals
                 return;
             }
 
-            IntPtr qptr = _setHints(_collection.Database.DatabaseHandle, this, hints.ToByteArray());
+            IntPtr qptr = _setHints(Collection.Database.DatabaseHandle, this, hints.ToByteArray());
 
             if (qptr == IntPtr.Zero)
             {
                 //TODO: throw more specific exception
                 //throw new EJDBQueryException(_jb);
-                EjdbException.FromDatabase(_collection.Database, "Failed to set hints");
+                EjdbException.FromDatabase(Collection.Database, "Failed to set hints");
             }
         }
 
@@ -112,7 +111,7 @@ namespace Nejdb.Internals
             if ((flags & QueryMode.Explain) != 0)
             {
                 //static extern IntPtr _tcxstrnew();
-                logsptr = new QueryLogBuffer(_collection.Database.Library.LibraryHandle); //Create dynamic query execution log buffer
+                logsptr = new QueryLogBuffer(Collection.Database.Library.LibraryHandle); //Create dynamic query execution log buffer
             }
 
             CursorHandle cursorHandle = null;
@@ -121,7 +120,7 @@ namespace Nejdb.Internals
                 int resultCount = 0;
                 //static extern IntPtr _ejdbqryexecute([In] IntPtr jcoll, [In] IntPtr q, out int count, [In] int qflags, [In] IntPtr logxstr);
                 IntPtr bufferPointer = logsptr == null ? IntPtr.Zero : logsptr.DangerousGetHandle();
-                cursorHandle = new CursorHandle(() => _execute(_collection.CollectionHandle, this, out resultCount, flags, bufferPointer), pointer => _deleteCursor(pointer));
+                cursorHandle = new CursorHandle(() => _execute(Collection.CollectionHandle, this, out resultCount, flags, bufferPointer), pointer => _deleteCursor(pointer));
                 count = resultCount;
             }
             finally
@@ -145,7 +144,7 @@ namespace Nejdb.Internals
                     }
                 }
             }
-            _collection.Database.ThrowOnError();
+            Collection.Database.ThrowOnError();
 
             return cursorHandle;
         }

@@ -13,9 +13,9 @@ namespace Nejdb
         private QueryHints _hints;
         private QueryHandle _handle;
 
-        protected QueryBase(Collection collection)
+        protected QueryBase(Collection collection, byte[] queryAsBson)
         {
-            _handle = new QueryHandle(collection);
+            _handle = new QueryHandle(collection, queryAsBson);
             _hints = new QueryHints();
         }
 
@@ -40,7 +40,7 @@ namespace Nejdb
         public void AppendOrRestriction(object docobj)
         {
             BsonDocument doc = BsonDocument.ValueOf(docobj);
-            _handle.AddOrAdd(doc.ToByteArray());
+            _handle.AddOr(doc.ToByteArray());
         }
 
         /// <summary>

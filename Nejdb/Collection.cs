@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Internals;
+using Nejdb.Queries;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
@@ -413,6 +414,14 @@ namespace Nejdb
         public Query<TDocument> CreateQuery<TDocument>()
         {
             return new Query<TDocument>(this);
+        }
+
+        /// <summary>
+        /// Creates new strongly typed query over the collections
+        /// </summary>
+        public Query<TDocument> CreateQuery<TDocument>(QueryBuilder<TDocument> queryBuilder)
+        {
+            return new Query<TDocument>(this, queryBuilder.ToBsonBytes());
         }
 
         /// <summary>

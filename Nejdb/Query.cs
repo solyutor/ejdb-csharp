@@ -8,7 +8,12 @@ namespace Nejdb
     /// <typeparam name="TDocument">Type of document in query</typeparam>
     public class Query<TDocument> : QueryBase
     {
-        internal Query(Collection collection) : base(collection)
+        internal Query(Collection collection, byte[] queryAsBson) : base(collection, queryAsBson)
+        {
+
+        }
+        
+        internal Query(Collection collection) : base(collection, BsonDocument.Empty.ToByteArray())
         {
         }
 
@@ -21,7 +26,7 @@ namespace Nejdb
             Handle.SetHints(Hints);
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
-            var cursor = new Cursor<TDocument>(Handle._collection.Database.Library.LibraryHandle, cursorHandle, count);
+            var cursor = new Cursor<TDocument>(Handle.Collection.Database.Library.LibraryHandle, cursorHandle, count);
             return cursor;
         }
 
@@ -55,7 +60,12 @@ namespace Nejdb
     /// </summary>
     public class Query : QueryBase
     {
-        internal Query(Collection collection) :base(collection)
+        internal Query(Collection collection, byte[] queryAsBson) : base(collection, queryAsBson)
+        {
+
+        }
+        
+        internal Query(Collection collection) : base(collection, BsonDocument.Empty.ToByteArray())
         {
             
         }
@@ -67,9 +77,11 @@ namespace Nejdb
         public Cursor Execute(QueryMode queryMode = QueryMode.Normal)
         {
             Handle.SetHints(Hints);
+
+            
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
-            var cursor = new Cursor(Handle._collection.Database.Library.LibraryHandle, cursorHandle, count);
+            var cursor = new Cursor(Handle.Collection.Database.Library.LibraryHandle, cursorHandle, count);
             return cursor;
         }
 
