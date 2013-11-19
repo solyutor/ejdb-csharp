@@ -57,5 +57,19 @@ namespace Ejdb.Tests
                 Assert.That(person.Name.Surname, Is.EqualTo(Person.Putin().Name.Surname));
             }
         }
+
+        protected void AssertFoundNavalny(QueryBuilder<Person> builder)
+        {
+            using (var query = Collection.CreateQuery<Person>(builder))
+            using (var cursor = query.Execute(QueryMode.Explain))
+            {
+                Console.WriteLine(cursor.GetLog());
+
+                var person = cursor[0];
+
+                Assert.That(cursor.Count, Is.EqualTo(1));
+                Assert.That(person.Name.Surname, Is.EqualTo(Person.Navalny().Name.Surname));
+            }
+        }
     }
 }

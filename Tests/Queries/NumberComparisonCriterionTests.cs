@@ -1,6 +1,4 @@
-﻿using System;
-using Nejdb;
-using Nejdb.Queries;
+﻿using Nejdb.Queries;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -15,16 +13,7 @@ namespace Ejdb.Tests
 
             var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
 
-            using (var query = Collection.CreateQuery<Person>(builder))
-            using (var cursor = query.Execute(QueryMode.Explain))
-            {
-                Console.WriteLine(cursor.GetLog());
-
-                var person = cursor[0];
-
-                Assert.That(cursor.Count, Is.EqualTo(1));
-                Assert.That(person.Name.Surname, Is.EqualTo(Person.Putin().Name.Surname));
-            }
+            AssertFoundPutin(builder);
         }
 
         [Test]
@@ -34,16 +23,7 @@ namespace Ejdb.Tests
 
             var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
 
-            using (var query = Collection.CreateQuery<Person>(builder))
-            using (var cursor = query.Execute(QueryMode.Explain))
-            {
-                Console.WriteLine(cursor.GetLog());
-
-                var person = cursor[0];
-
-                Assert.That(cursor.Count, Is.EqualTo(1));
-                Assert.That(person.Name.Surname, Is.EqualTo(Person.Putin().Name.Surname));
-            }
+            AssertFoundPutin(builder);
         }
 
         [Test]
@@ -53,16 +33,7 @@ namespace Ejdb.Tests
 
             var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
 
-            using (var query = Collection.CreateQuery<Person>(builder))
-            using (var cursor = query.Execute(QueryMode.Explain))
-            {
-                Console.WriteLine(cursor.GetLog());
-
-                var person = cursor[0];
-
-                Assert.That(cursor.Count, Is.EqualTo(1));
-                Assert.That(person.Name.Surname, Is.EqualTo(Person.Navalny().Name.Surname));
-            }
+            AssertFoundNavalny(builder);
         }
 
         [Test]
@@ -72,16 +43,7 @@ namespace Ejdb.Tests
 
             var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
 
-            using (var query = Collection.CreateQuery<Person>(builder))
-            using (var cursor = query.Execute(QueryMode.Explain))
-            {
-                Console.WriteLine(cursor.GetLog());
-
-                var person = cursor[0];
-
-                Assert.That(cursor.Count, Is.EqualTo(1));
-                Assert.That(person.Name.Surname, Is.EqualTo(Person.Navalny().Name.Surname));
-            }
+            AssertFoundNavalny(builder);
         }
         
         [Test]
@@ -91,16 +53,7 @@ namespace Ejdb.Tests
 
             var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
 
-            using (var query = Collection.CreateQuery<Person>(builder))
-            using (var cursor = query.Execute(QueryMode.Explain))
-            {
-                Console.WriteLine(cursor.GetLog());
-
-                var person = cursor[0];
-
-                Assert.That(cursor.Count, Is.EqualTo(1));
-                Assert.That(person.Name.Surname, Is.EqualTo(Person.Navalny().Name.Surname));
-            }
+            AssertFoundNavalny(builder);
         }
     }
 }
