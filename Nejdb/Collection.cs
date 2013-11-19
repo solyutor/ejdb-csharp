@@ -419,7 +419,7 @@ namespace Nejdb
         /// <summary>
         /// Creates new strongly typed query over the collections
         /// </summary>
-        public Query<TDocument> CreateQuery<TDocument>(QueryBuilder<TDocument> queryBuilder)
+        public Query<TDocument> CreateQuery<TDocument>(QueryBuilder queryBuilder)
         {
             return new Query<TDocument>(this, queryBuilder.ToBsonBytes());
         }

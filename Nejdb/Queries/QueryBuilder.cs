@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
@@ -94,20 +92,20 @@ namespace Nejdb.Queries
     ///<summary>
     /// Encapsulates logic to crate queryies
     /// </summary>
-    public class QueryBuilder<TDocument>
+    public class QueryBuilder
     {
-        private readonly Dictionary<string, ICriterion> _criterions;
+        private readonly ICriterion _criterion;
 
         /// <summary>
-        /// Creates new instance of <see cref="QueryBuilder{TDocument}"/>
+        /// Creates new instance of <see cref="QueryBuilder"/>
         /// </summary>
-        public QueryBuilder()
+        public QueryBuilder(ICriterion criterion)
         {
-            _criterions = new Dictionary<string, ICriterion>();
+            _criterion = criterion;
         }
 
         /// <summary>
-        /// Converts <see cref="QueryBuilder{TDocument}"/> to Bson represention of EJDB query 
+        /// Converts <see cref="QueryBuilder"/> to Bson represention of EJDB query 
         /// </summary>
         public byte[] ToBsonBytes()
         {
@@ -122,69 +120,13 @@ namespace Nejdb.Queries
             }
         }
 
-        /// <summary>
-        /// Adds new criterion 
-        /// </summary>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <param name="property"></param>
-        /// <param name="criterion"></param>
-        /// <returns></returns>
-        public QueryBuilder<TDocument> Where<TProperty>(Expression<Func<TDocument, TProperty>> property, ICriterion criterion)
-        {
-            var memberPath = BuildMemberPath(property);
-            _criterions.Add(memberPath, criterion);
-            return this;
-        }
-
-        private string BuildMemberPath<TProperty>(Expression<Func<TDocument, TProperty>> property)
-        {
-            var expression = property.Body;
-
-            var unaryExpression = expression as UnaryExpression;
-            if (unaryExpression != null)
-            {
-                switch (unaryExpression.NodeType)
-                {
-                    case ExpressionType.Convert:
-                    case ExpressionType.ConvertChecked:
-                        expression = unaryExpression.Operand;
-                        break;
-                }
-
-            }
-            var me = expression as MemberExpression;
-
-            if (me == null)
-                throw new InvalidOperationException("No idea how to convert " + property.Body.NodeType + ", " + property.Body + " to a member expression");
-
-            var parts = new List<string>();
-            while (me != null)
-            {
-                parts.Insert(0, me.Member.Name);
-                me = me.Expression as MemberExpression;
-            }
-            return String.Join(".", parts.ToArray());
-        }
-
         private void WriteTo(JsonWriter writer)
         {
             writer.WriteStartObject();
 
-            foreach (var criterion in _criterions)
-            {
-                writer.WritePropertyName(criterion.Key);
-                criterion.Value.WriteTo(writer);
-            }
+            _criterion.WriteTo(writer);
 
             writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Clears all added critrions.
-        /// </summary>
-        public void Clear()
-        {
-            _criterions.Clear();
         }
     }
 }

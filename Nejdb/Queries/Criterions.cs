@@ -1,3 +1,6 @@
+using System;
+using System.Linq.Expressions;
+
 namespace Nejdb.Queries
 {
     /// <summary>
@@ -134,6 +137,11 @@ namespace Nejdb.Queries
         public static ICriterion FieldNotExists()
         {
             return new FieldExistsCriterion(false);
+        }
+
+        public static ICriterion Field<TObject, TProperty>(Expression<Func<TObject, TProperty>> property, ICriterion criterion)
+        {
+            return FieldCriterion.For(property, criterion);
         }
     }
 }

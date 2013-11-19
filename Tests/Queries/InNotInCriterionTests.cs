@@ -9,9 +9,9 @@ namespace Ejdb.Tests
         [Test]
         public void In_criterion_query()
         {
-            var criterion = Criterions.In(36,52);
+            var criterion = Criterions.Field<Person, int>(x => x.Age, Criterions.In(36, 52));
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(criterion);
 
             AssertFoundNavalny(builder);
         }
@@ -19,9 +19,9 @@ namespace Ejdb.Tests
         [Test]
         public void Not_in_criterion_query()
         {
-            var criterion = Criterions.NotIn(36, 52);
+            var criterion = Criterions.Field<Person, int>(x => x.Age, Criterions.NotIn(36, 52));
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(criterion);
 
             AssertFoundPutin(builder);
         }

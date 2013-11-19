@@ -32,8 +32,8 @@ namespace Ejdb.Tests
             
             using (var tx = _collection.BeginTransaction())
             {
-                _collection.Save<Person>(Person.Navalny(), false);
-                _collection.Save<Person>(Person.Putin(), false);
+                _collection.Save(Person.Navalny(), false);
+                _collection.Save(Person.Putin(), false);
                 tx.Commit();
             }
         }
@@ -44,7 +44,7 @@ namespace Ejdb.Tests
             _dataBase.Dispose();
         }
 
-        protected void AssertFoundPutin(QueryBuilder<Person> builder)
+        protected void AssertFoundPutin(QueryBuilder builder)
         {
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
@@ -58,7 +58,7 @@ namespace Ejdb.Tests
             }
         }
 
-        protected void AssertFoundNavalny(QueryBuilder<Person> builder)
+        protected void AssertFoundNavalny(QueryBuilder builder)
         {
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))

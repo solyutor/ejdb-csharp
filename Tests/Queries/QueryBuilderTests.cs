@@ -11,7 +11,9 @@ namespace Ejdb.Tests
         [Test]
         public void Match_criterion_query()
         {
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, Criterions.Equals("Alexey"));
+            var criterion = Criterions.Equals("Alexey");
+
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
 
             AssertFoundNavalny(builder);
         }
@@ -20,7 +22,7 @@ namespace Ejdb.Tests
         public void Negate_criterion_query()
         {
             var criterion = Criterions.Not(Criterions.Equals("Alexey"));
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
 
             AssertFoundPutin(builder);
         }
@@ -30,7 +32,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.FieldExists();
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
 
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
@@ -46,7 +48,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.FieldNotExists();
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
 
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))

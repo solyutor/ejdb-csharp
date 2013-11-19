@@ -11,7 +11,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.GreaterThan(40);
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, int>(x => x.Age, criterion));
 
             AssertFoundPutin(builder);
         }
@@ -21,7 +21,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.GreaterThanOrEqual(61);
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, int>(x => x.Age, criterion));
 
             AssertFoundPutin(builder);
         }
@@ -31,7 +31,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.LowerThan(40);
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, int>(x => x.Age, criterion));
 
             AssertFoundNavalny(builder);
         }
@@ -41,7 +41,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.LowerThanOrEqual(36);
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, int>(x => x.Age, criterion));
 
             AssertFoundNavalny(builder);
         }
@@ -51,7 +51,7 @@ namespace Ejdb.Tests
         {
             var criterion = Criterions.Between(30, 40);
 
-            var builder = new QueryBuilder<Person>().Where(x => x.Age, criterion);
+            var builder = new QueryBuilder(Criterions.Field<Person, int>(x => x.Age, criterion));
 
             AssertFoundNavalny(builder);
         }
