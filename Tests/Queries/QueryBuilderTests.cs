@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using Nejdb.Queries;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 
 namespace Nejdb.Tests.Queries
@@ -57,7 +60,6 @@ namespace Nejdb.Tests.Queries
                 Assert.That(cursor.Count, Is.EqualTo(0));
             }
         }
-
         [Test]
         public void And_criterion_query()
         {
@@ -71,16 +73,16 @@ namespace Nejdb.Tests.Queries
             AssertFoundNavalny(builder);
         }
 
+
         [Test]
         public void Or_criterion_query()
         {
             var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
             var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(61));
 
-            var andCritertion = Criterions.Or(byName, byAge);
+            var criterion = Criterions.Or(byName, byAge);
 
-            var builder = new QueryBuilder(andCritertion);
-
+            var builder = new QueryBuilder(criterion);
             AssertFoundBoth(builder);
         }
 
@@ -100,5 +102,36 @@ namespace Nejdb.Tests.Queries
 
             AssertFoundBoth(builder);
         }
+
+        [Test]
+        public void Element_match_criterion_simple_array_query()
+        {
+            var criterion = Criterions.Field<Person, string[]>(
+                x=> x.Hobbies, 
+                Criterions.MatchElement(
+                    Criterions.Equals("Power")));
+
+            var builder = new QueryBuilder(criterion);
+
+            AssertFoundPutin(builder);
+        }
+
+        [Test]
+        public void Element_match_criterion_complex_property_query()
+        {
+            var criterion = Criterions.Field<Person, Name>(
+                x => x.Name,
+                Criterions.MatchElement(
+                    Criterions.Object(
+                        Criterions.Field<Name, string>(x => x.First, Criterions.Equals("Vladimir")),
+                        Criterions.Field<Name, string>(x => x.Surname, Criterions.Equals("Putin")))
+                    ));
+
+            var builder = new QueryBuilder(criterion);
+
+            AssertFoundPutin(builder);
+        }
     }
+
+
 }

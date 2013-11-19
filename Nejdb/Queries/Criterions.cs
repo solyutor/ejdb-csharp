@@ -163,5 +163,22 @@ namespace Nejdb.Queries
         {
             return new OrCriterion(criterions);
         }
+
+        /// <summary>
+        /// Match arrays of simple values by a value or array of objects by specified criterion on for fields. 
+        /// Fields for object checked using logical AND.
+        /// </summary>
+        public static ICriterion MatchElement(ICriterion criterion)
+        {
+            return new MatchElementCriterion(criterion);
+        }
+
+        /// <summary>
+        /// Encloses criterions to json-object
+        /// </summary>
+        public static ICriterion Object(params ICriterion[] criterions)
+        {
+            return new ObjectCriterion(criterions);
+        }
     }
 }

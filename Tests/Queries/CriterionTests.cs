@@ -45,10 +45,12 @@ namespace Nejdb.Tests.Queries
 
         protected void AssertFoundPutin(QueryBuilder builder)
         {
+            Console.WriteLine(builder.ToString());
+
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
             {
-                Console.WriteLine(builder.ToString());
+                
                 Console.WriteLine(cursor.GetLog());
 
                 Assert.That(cursor.Count, Is.EqualTo(1));

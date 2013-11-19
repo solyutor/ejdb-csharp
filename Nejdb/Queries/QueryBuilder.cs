@@ -14,8 +14,7 @@ namespace Nejdb.Queries
 * - Supported queries:
 
 
-* - $elemMatch The $elemMatch operator matches more than one component within an array element.
-* - { array: { $elemMatch: { value1 : 1, value2 : { $gt: 1 } } } }
+
 * Restriction: only one $elemMatch allowed in context of one array field.
 
 * - Mongodb $(projection) operator supported. (http://docs.mongodb.org/manual/reference/projection/positional/#proj._S_)

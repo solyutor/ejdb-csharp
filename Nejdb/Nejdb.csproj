@@ -65,9 +65,11 @@
     <Compile Include="Queries\InCriterion.cs" />
     <Compile Include="Queries\JsonValueWriter.cs" />
     <Compile Include="Queries\JsonWriterExtensions.cs" />
+    <Compile Include="Queries\MatchElementCriterion.cs" />
     <Compile Include="Queries\NotCriterion.cs" />
     <Compile Include="Queries\NotInCriterion.cs" />
     <Compile Include="Queries\NumberComparisonCriterion.cs" />
+    <Compile Include="Queries\ObjectCriterion.cs" />
     <Compile Include="Queries\OrCriterion.cs" />
     <Compile Include="Queries\StartsWithCriterion.cs" />
     <Compile Include="Queries\StringAndOrAnyCriterion.cs" />
