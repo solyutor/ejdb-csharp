@@ -15,18 +15,7 @@ namespace Nejdb.Queries
         {
             //$nin - Not IN String OR Number OR Array val matches to value in specified array:
             //{'fpath' : {'$nin' : [val1, val2, val3]}}
-
-            writer.WriteStartObject();
-            writer.WritePropertyName("$nin");
-            writer.WriteStartArray();
-
-            for (int index = 0; index < _values.Length; index++)
-            {
-                JsonValueWriter<TValue>.Write(writer, _values[index]);
-            }
-
-            writer.WriteEndArray();
-            writer.WriteEndObject();
+            writer.WriteArrayBaseCritertion("$nin", _values);
         }
     }
 }

@@ -28,16 +28,7 @@ namespace Nejdb.Queries
         {
             //$bt Between for number types:
             //{'fpath' : {'$bt' : [num1, num2]}}
-
-            writer.WriteStartObject();
-            writer.WritePropertyName("$bt");
-            {
-                writer.WriteStartArray();
-                JsonValueWriter<TValue>.Write(writer, _lower);
-                JsonValueWriter<TValue>.Write(writer, _upper);
-            }
-            writer.WriteEndArray();
-        writer.WriteEndObject();
+            writer.WriteArrayBaseCritertion("$bt",_lower, _upper);
         }
     }
 }

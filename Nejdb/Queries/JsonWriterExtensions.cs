@@ -8,7 +8,6 @@ namespace Nejdb.Queries
         {
             writer.WriteStartObject();
 
-
             writer.WritePropertyName(criterion);
 
             writer.WriteStartArray();
@@ -18,6 +17,14 @@ namespace Nejdb.Queries
             }
             writer.WriteEndArray();
 
+            writer.WriteEndObject();
+        }
+
+        public static void WriteObjectBasedCriterion(this JsonWriter writer, string criteriton, ICriterion subCriterion)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName(criteriton);
+            subCriterion.WriteTo(writer);
             writer.WriteEndObject();
         }
     }

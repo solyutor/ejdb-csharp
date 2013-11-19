@@ -22,6 +22,7 @@ namespace Nejdb.Queries
         {
             //$begin String starts with prefix
             //{'fpath' : {'$begin' : prefix}}
+
             writer.WriteStartObject();
             writer.WritePropertyName("$begin");
             JsonValueWriter<string>.Write(writer, _value);

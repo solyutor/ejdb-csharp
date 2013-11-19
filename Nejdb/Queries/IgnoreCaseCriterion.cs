@@ -9,6 +9,10 @@ namespace Nejdb.Queries
     {
         private readonly ICriterion _subCriterion;
 
+        /// <summary>
+        /// Creates new instance of <see cref="IgnoreCaseCriterion"/>
+        /// </summary>
+        /// <param name="subCriterion">criterion to apply data to</param>
         public IgnoreCaseCriterion(ICriterion subCriterion)
         {
             _subCriterion = subCriterion;
@@ -22,11 +26,7 @@ namespace Nejdb.Queries
             //{'name' : {'$icase' : {'$in' : ['théâtre - театр', 'hello world']}}}
             //For case insensitive matching you can create special index of type: `JBIDXISTR`
 
-            writer.WriteStartObject();
-            writer.WritePropertyName("$icase");
-            _subCriterion.WriteTo(writer);
-            writer.WriteEndObject();
-
+            writer.WriteObjectBasedCriterion("$icase", _subCriterion);
         }
     }
 }

@@ -26,10 +26,7 @@ namespace Nejdb.Queries
         {
             //*$not Negate operation.
             // {'fpath' : {'$not' : val}} //Field not equal to val
-            writer.WriteStartObject();
-            writer.WritePropertyName("$not");
-            _criterion.WriteTo(writer);
-            writer.WriteEndObject();
+            writer.WriteObjectBasedCriterion("$not", _criterion);
         }
     }
 }
