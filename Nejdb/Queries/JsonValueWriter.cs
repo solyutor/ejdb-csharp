@@ -8,7 +8,7 @@ namespace Nejdb.Queries
     /// Helps to writer a value to the <see cref="JsonWriter"/>
     /// </summary>
     /// <typeparam name="TValue">A type of value to writer</typeparam>
-    public class JsonValueWriter<TValue>
+    public static class JsonValueWriter<TValue>
     {
         /// <summary>
         /// Delegate that writes a value to <see cref="JsonWriter"/>

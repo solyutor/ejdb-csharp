@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Nejdb;
+using Nejdb.Queries;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -40,6 +42,20 @@ namespace Ejdb.Tests
         public void TearDown()
         {
             _dataBase.Dispose();
+        }
+
+        protected void AssertFoundPutin(QueryBuilder<Person> builder)
+        {
+            using (var query = Collection.CreateQuery<Person>(builder))
+            using (var cursor = query.Execute(QueryMode.Explain))
+            {
+                Console.WriteLine(cursor.GetLog());
+
+                Assert.That(cursor.Count, Is.EqualTo(1));
+
+                var person = cursor[0];
+                Assert.That(person.Name.Surname, Is.EqualTo(Person.Putin().Name.Surname));
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Ejdb.Tests
             {
                 Name = new Name{First = "Vladimir", Surname = "Putin"},
                 Age = 61,
-                Hobbies = new[] {"Power", "Corruption", "Narcissism"}
+                Hobbies = new[] { "Power", "Corruption", "Narcissism", "Patriotic speech" }
             };
 
         }

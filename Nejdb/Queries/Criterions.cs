@@ -95,5 +95,29 @@ namespace Nejdb.Queries
         {
             return new NotInCriterion<TValue>(values);
         }
+
+        /// <summary>
+        /// Matches that field or array at lease one array element contains ALL specified tokens 
+        /// </summary>
+        public static ICriterion All(params string[] tokens)
+        {
+            return new StringAndOrAnyCriterion(tokens, StringAndOrAnyCriterion.Match.All);
+        }
+
+        /// <summary>
+        /// Matches that field or array at lease one array element contains ANY specified token 
+        /// </summary>
+        public static ICriterion Any(params string[] tokens)
+        {
+            return new StringAndOrAnyCriterion(tokens, StringAndOrAnyCriterion.Match.Any);
+        }
+
+        /// <summary>
+        /// Compares string in case insensetive mode
+        /// </summary>
+        public static ICriterion IgnoreCase(ICriterion subCriterion)
+        {
+            return new IgnoreCaseCriterion(subCriterion);
+        }
     }
 }

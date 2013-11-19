@@ -60,6 +60,7 @@
     <Compile Include="Queries\NumberComparisonCriterionTests.cs" />
     <Compile Include="Queries\Person.cs" />
     <Compile Include="Queries\QueryBuilderTests.cs" />
+    <Compile Include="Queries\StringCriterionTests.cs" />
     <Compile Include="QueryTests.cs" />
     <Compile Include="ScratchPad.cs" />
     <Compile Include="SerializationHelper.cs" />

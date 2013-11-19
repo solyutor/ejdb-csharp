@@ -15,17 +15,11 @@ namespace Nejdb.Queries
 *
 * - Supported queries:
 
-* - $strand String tokens OR String array val matches all tokens in specified array:
-* - {'fpath' : {'$strand' : [val1, val2, val3]}}
-* - $stror String tokens OR String array val matches any token in specified array:
-* - {'fpath' : {'$stror' : [val1, val2, val3]}}
+
+
 * - $exists Field existence matching:
 * - {'fpath' : {'$exists' : true|false}}
-* - $icase Case insensitive string matching:
-* - {'fpath' : {'$icase' : 'val1'}} //icase matching
-* Ignore case matching with '$in' operation:
-* - {'name' : {'$icase' : {'$in' : ['théâtre - театр', 'hello world']}}}
-* For case insensitive matching you can create special index of type: `JBIDXISTR`
+
 * - $elemMatch The $elemMatch operator matches more than one component within an array element.
 * - { array: { $elemMatch: { value1 : 1, value2 : { $gt: 1 } } } }
 * Restriction: only one $elemMatch allowed in context of one array field.

@@ -57,12 +57,15 @@
     <Compile Include="Queries\Criterions.cs" />
     <Compile Include="Queries\EqualsCriterion.cs" />
     <Compile Include="Queries\ICriterion.cs" />
+    <Compile Include="Queries\IgnoreCaseCriterion.cs" />
     <Compile Include="Queries\InCriterion.cs" />
     <Compile Include="Queries\JsonValueWriter.cs" />
+    <Compile Include="Queries\JsonWriterExtensions.cs" />
     <Compile Include="Queries\NotCriterion.cs" />
     <Compile Include="Queries\NotInCriterion.cs" />
     <Compile Include="Queries\NumberComparisonCriterion.cs" />
     <Compile Include="Queries\StartsWithCriterion.cs" />
+    <Compile Include="Queries\StringAndOrAnyCriterion.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="NoObjectIdContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
