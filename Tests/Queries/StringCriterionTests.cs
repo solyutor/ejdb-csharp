@@ -45,5 +45,14 @@ namespace Ejdb.Tests
 
             AssertFoundPutin(builder);
         }
+
+        [Test]
+        public void Starts_with_criterion_query()
+        {
+            var startsWith = Criterions.StartsWith("Ale");
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, startsWith);
+
+            AssertFoundNavalny(builder);
+        }
     }
 }

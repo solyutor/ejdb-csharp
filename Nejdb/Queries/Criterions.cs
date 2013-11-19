@@ -119,5 +119,21 @@ namespace Nejdb.Queries
         {
             return new IgnoreCaseCriterion(subCriterion);
         }
+
+        /// <summary>
+        /// Match that field exists
+        /// </summary>
+        public static ICriterion FieldExists()
+        {
+            return new FieldExistsCriterion(true);
+        }
+
+        /// <summary>
+        /// Match that field does not exist
+        /// </summary>
+        public static ICriterion FieldNotExists()
+        {
+            return new FieldExistsCriterion(false);
+        }
     }
 }

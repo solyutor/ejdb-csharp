@@ -1,4 +1,6 @@
-﻿using Nejdb.Queries;
+﻿using System;
+using Nejdb;
+using Nejdb.Queries;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -24,12 +26,35 @@ namespace Ejdb.Tests
         }
 
         [Test]
-        public void Starts_with_criterion_query()
+        public void Exists_criterion_query()
         {
-            var startsWith = Criterions.StartsWith("Ale");
-            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, startsWith);
-            
-            AssertFoundNavalny(builder);
+            var criterion = Criterions.FieldExists();
+
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
+
+            using (var query = Collection.CreateQuery<Person>(builder))
+            using (var cursor = query.Execute(QueryMode.Explain))
+            {
+                Console.WriteLine(cursor.GetLog());
+
+                Assert.That(cursor.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void Not_exists_criterion_query()
+        {
+            var criterion = Criterions.FieldNotExists();
+
+            var builder = new QueryBuilder<Person>().Where(x => x.Name.First, criterion);
+
+            using (var query = Collection.CreateQuery<Person>(builder))
+            using (var cursor = query.Execute(QueryMode.Explain))
+            {
+                Console.WriteLine(cursor.GetLog());
+
+                Assert.That(cursor.Count, Is.EqualTo(0));
+            }
         }
     }
 }
