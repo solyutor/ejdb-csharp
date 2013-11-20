@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
 using Nejdb;
 using Nejdb.Queries;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 
 namespace Ejdb.Tests
@@ -57,6 +60,32 @@ namespace Ejdb.Tests
 
                 Assert.That(cursor.Count, Is.EqualTo(0));
             }
+        }
+
+        [Test]
+        public void And_criterion_query()
+        {
+            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(36));
+
+            var andCritertion = Criterions.And(byName, byAge);
+
+            var builder = new QueryBuilder(andCritertion);
+
+            AssertFoundNavalny(builder);
+        }
+
+        [Test]
+        public void Or_criterion_query()
+        {
+            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(61));
+
+            var andCritertion = Criterions.Or(byName, byAge);
+
+            var builder = new QueryBuilder(andCritertion);
+
+            AssertFoundBoth(builder);
         }
     }
 }

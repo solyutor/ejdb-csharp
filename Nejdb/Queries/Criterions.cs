@@ -139,9 +139,44 @@ namespace Nejdb.Queries
             return new FieldExistsCriterion(false);
         }
 
+        /// <summary>
+        /// Applies specified critertion to sprecified fild
+        /// </summary>
+        /// <param name="property">Object property</param>
+        /// <param name="criterion">Critertion to apply</param>
+        /// <returns></returns>
         public static ICriterion Field<TObject, TProperty>(Expression<Func<TObject, TProperty>> property, ICriterion criterion)
         {
             return FieldCriterion.For(property, criterion);
+        }
+
+        /// <summary>
+        /// Applies specified critertion to sprecified fild
+        /// </summary>
+        /// <param name="path">Dot separated path to field</param>
+        /// <param name="criterion">Critertion to apply</param>
+        /// <returns></returns>
+        public static ICriterion Field(string path, ICriterion criterion)
+        {
+            return new FieldCriterion(path, criterion);
+        }
+
+        /// <summary>
+        /// Combines multiple criterias using logical AND operatero
+        /// </summary>
+        /// <param name="criterions">Critertions to combines</param>
+        public static ICriterion And(params ICriterion[] criterions)
+        {
+            return new AndCriterion(criterions);
+        }
+
+        /// <summary>
+        /// Combines multiple criterias using logical OR operatero
+        /// </summary>
+        /// <param name="criterions">Critertions to combines</param>
+        public static ICriterion Or(params ICriterion[] criterions)
+        {
+            return new OrCriterion(criterions);
         }
     }
 }

@@ -17,11 +17,7 @@ namespace Nejdb.Queries
 * - $elemMatch The $elemMatch operator matches more than one component within an array element.
 * - { array: { $elemMatch: { value1 : 1, value2 : { $gt: 1 } } } }
 * Restriction: only one $elemMatch allowed in context of one array field.
-* - $and, $or joining:
-* - {..., $and : [subq1, subq2, ...] }
-* - {..., $or : [subq1, subq2, ...] }
-* Example: {z : 33, $and : [ {$or : [{a : 1}, {b : 2}]}, {$or : [{c : 5}, {d : 7}]} ] }
-*
+
 * - Mongodb $(projection) operator supported. (http://docs.mongodb.org/manual/reference/projection/positional/#proj._S_)
 * - Mongodb positional $ update operator supported. (http://docs.mongodb.org/manual/reference/operator/positional/)
 *
@@ -120,7 +116,10 @@ namespace Nejdb.Queries
             }
         }
 
-        private void WriteTo(JsonWriter writer)
+        /// <summary>
+        /// Writes EJDB query to specified <see cref="JsonWriter"/>
+        /// </summary>
+        public void WriteTo(JsonWriter writer)
         {
             writer.WriteStartObject();
 

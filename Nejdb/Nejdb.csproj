@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
+    <Compile Include="Queries\AndCriterion.cs" />
     <Compile Include="Queries\BetweenCriterion.cs" />
     <Compile Include="Queries\Comparsion.cs" />
     <Compile Include="Queries\Criterions.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Queries\NotCriterion.cs" />
     <Compile Include="Queries\NotInCriterion.cs" />
     <Compile Include="Queries\NumberComparisonCriterion.cs" />
+    <Compile Include="Queries\OrCriterion.cs" />
     <Compile Include="Queries\StartsWithCriterion.cs" />
     <Compile Include="Queries\StringAndOrAnyCriterion.cs" />
     <Compile Include="Transaction.cs" />
