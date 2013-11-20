@@ -1,12 +1,8 @@
 ﻿using System;
-using System.IO;
-using Nejdb;
 using Nejdb.Queries;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests.Queries
 {
     [TestFixture]
     public class QueryBuilderTests : CriterionTests

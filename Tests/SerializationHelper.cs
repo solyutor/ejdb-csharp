@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests
 {
     public static class SerializationHelper
     {

@@ -1,6 +1,6 @@
 ﻿using Nejdb.Bson;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests
 {
     public class Sample
     {

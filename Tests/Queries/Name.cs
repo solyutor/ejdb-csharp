@@ -1,4 +1,4 @@
-namespace Ejdb.Tests
+namespace Nejdb.Tests.Queries
 {
     public struct Name
     {

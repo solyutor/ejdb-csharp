@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests
 {
     [TestFixture]
     public class ScratchPad

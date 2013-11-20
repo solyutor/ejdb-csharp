@@ -1,7 +1,7 @@
 ﻿using Nejdb.Queries;
 using NUnit.Framework;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests.Queries
 {
     [TestFixture]
     public class InNotInCriterionTests : CriterionTests

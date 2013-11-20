@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using Nejdb;
 using Nejdb.Queries;
 using NUnit.Framework;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests.Queries
 {
     public abstract class CriterionTests
     {

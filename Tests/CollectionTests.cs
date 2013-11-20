@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using Nejdb;
 using Nejdb.Bson;
 using NUnit.Framework;
 
-namespace Ejdb.Tests
+namespace Nejdb.Tests
 {
     [TestFixture]
     public class CollectionTests
