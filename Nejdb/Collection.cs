@@ -421,7 +421,12 @@ namespace Nejdb
         /// </summary>
         public Query<TDocument> CreateQuery<TDocument>(QueryBuilder queryBuilder)
         {
-            return new Query<TDocument>(this, queryBuilder.ToBsonBytes());
+            using (var stream = new MemoryStream())
+            using (var writer = new BsonWriter(stream))
+            {
+                queryBuilder.WriteTo(writer);
+                return new Query<TDocument>(this, stream.GetBuffer());
+            }
         }
 
         /// <summary>

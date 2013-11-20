@@ -127,5 +127,18 @@ namespace Nejdb.Queries
 
             writer.WriteEndObject();
         }
+
+        /// <summary>
+        /// Converts query to json string. Helpful for debug purposes.
+        /// </summary>
+        public string ShowQuery()
+        {
+            using (var stringWriter = new StringWriter())
+            using (var writer = new JsonTextWriter(stringWriter))
+            {
+                WriteTo(writer);
+                return stringWriter.ToString();
+            }
+        }
     }
 }
