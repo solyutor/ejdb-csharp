@@ -83,5 +83,22 @@ namespace Nejdb.Tests.Queries
 
             AssertFoundBoth(builder);
         }
+
+        [Test]
+        public void Complex_criterion_combination_query()
+        {
+            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(36));
+
+            var andCriterion = Criterions.And(byName, byAge);
+
+            var ignoreCaseHobby = Criterions.IgnoreCase(Criterions.Any("corruption"));
+            var byHobbies = Criterions.Field<Person, string[]>(x => x.Hobbies, ignoreCaseHobby);
+            var criterion = Criterions.Or(andCriterion, byHobbies);
+
+            var builder = new QueryBuilder(criterion);
+
+            AssertFoundBoth(builder);
+        }
     }
 }

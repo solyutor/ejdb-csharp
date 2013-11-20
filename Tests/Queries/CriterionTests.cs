@@ -48,6 +48,7 @@ namespace Nejdb.Tests.Queries
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
             {
+                Console.WriteLine(builder.ToString());
                 Console.WriteLine(cursor.GetLog());
 
                 Assert.That(cursor.Count, Is.EqualTo(1));
@@ -62,6 +63,7 @@ namespace Nejdb.Tests.Queries
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
             {
+                Console.WriteLine(builder.ToString());
                 Console.WriteLine(cursor.GetLog());
 
                 var person = cursor[0];
@@ -76,6 +78,7 @@ namespace Nejdb.Tests.Queries
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
             {
+                Console.WriteLine(builder.ToString());
                 Console.WriteLine(cursor.GetLog());
 
                 Assert.That(cursor.Count, Is.EqualTo(2));

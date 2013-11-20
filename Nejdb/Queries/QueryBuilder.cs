@@ -101,22 +101,6 @@ namespace Nejdb.Queries
         }
 
         /// <summary>
-        /// Converts <see cref="QueryBuilder"/> to Bson represention of EJDB query 
-        /// </summary>
-        public byte[] ToBsonBytes()
-        {
-            using (var stream = new MemoryStream())
-            using (var writer = new BsonWriter(stream))
-            {
-                WriteTo(writer);
-                var length = stream.Position + 1;
-                var result = new byte[length];
-                Array.Copy(stream.GetBuffer(), result, length);
-                return result;
-            }
-        }
-
-        /// <summary>
         /// Writes EJDB query to specified <see cref="JsonWriter"/>
         /// </summary>
         public void WriteTo(JsonWriter writer)
@@ -128,14 +112,12 @@ namespace Nejdb.Queries
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Converts query to json string. Helpful for debug purposes.
-        /// </summary>
-        public string ShowQuery()
+        public override string ToString()
         {
             using (var stringWriter = new StringWriter())
             using (var writer = new JsonTextWriter(stringWriter))
             {
+                writer.Formatting = Formatting.Indented;
                 WriteTo(writer);
                 return stringWriter.ToString();
             }
