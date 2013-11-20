@@ -9,18 +9,15 @@ namespace Nejdb.Queries
     public static class Criterions
     {
         /// <summary>
-        /// Creates new instance of <see cref="EqualsCriterion{TValue}"/> with specified criterion/>
+        /// Matches that a field value is equals to supplied value.
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public static ICriterion Equals<TValue>(TValue value)
         {
             return new EqualsCriterion<TValue>(value);
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="NotCriterion"/> with specified criterion/>
+        /// Negates result of supplied criterion
         /// </summary>
         /// <param name="criterion">A Criterion to negate</param>
         public static ICriterion Not(ICriterion criterion)
@@ -29,7 +26,7 @@ namespace Nejdb.Queries
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="StartsWithCriterion"/> with specified string prefix
+        /// Matches that a string field value starts with specified string 
         /// </summary>
         /// <param name="value">Prefix of a string to search</param>
         public static ICriterion StartsWith(string value)
@@ -37,42 +34,33 @@ namespace Nejdb.Queries
             return new StartsWithCriterion(value);
         }
 
-
         /// <summary>
-        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// Matches that a numeric field value is greater than specified value
         /// </summary>
-        /// <typeparam name="TValue">Any numeric type</typeparam>
-        /// <param name="value"></param>
         public static ICriterion GreaterThan<TValue>(TValue value)
         {
             return new NumberComparisonCriterion<TValue>(value, Comparsion.Greater);
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// Matches that a numeric field value is greater than or equal to specified value
         /// </summary>
-        /// <typeparam name="TValue">Any numeric type</typeparam>
-        /// <param name="value"></param>
         public static ICriterion GreaterThanOrEqual<TValue>(TValue value)
         {
             return new NumberComparisonCriterion<TValue>(value, Comparsion.GreaterOrEqual);
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// Matches that a numeric field value is lower than or equal to specified value
         /// </summary>
-        /// <typeparam name="TValue">Any numeric type</typeparam>
-        /// <param name="value"></param>
         public static ICriterion LowerThan<TValue>(TValue value)
         {
             return new NumberComparisonCriterion<TValue>(value, Comparsion.Lower);
         }
 
         /// <summary>
-        /// Creates new instance of <see cref="NumberComparisonCriterion{TValue}"/> 
+        /// Matches that a numeric field value is lower than specified value
         /// </summary>
-        /// <typeparam name="TValue">Any numeric type</typeparam>
-        /// <param name="value"></param>
         public static ICriterion LowerThanOrEqual<TValue>(TValue value)
         {
             return new NumberComparisonCriterion<TValue>(value, Comparsion.LowerOrEqual);
@@ -81,26 +69,29 @@ namespace Nejdb.Queries
         /// <summary>
         /// Creates new instance of <see cref="BetweenCriterion{TValue}"/> 
         /// </summary>
-        /// <typeparam name="TValue">Any numeric type</typeparam>
-        /// <param name="lower">Lower limit</param>
-        /// <param name="upper">Upper limit</param>
         public static ICriterion Between<TValue>(TValue lower, TValue upper)
         {
             return new BetweenCriterion<TValue>(lower, upper);
         }
 
+        /// <summary>
+        /// Checks that a value of a field is equals to any of supplied values;
+        /// </summary>
         public static ICriterion In<TValue>(params TValue[] values)
         {
             return new InCriterion<TValue>(values);
         }
 
+        /// <summary>
+        /// Checks that a value of a field is not equals to any of supplied values;
+        /// </summary>
         public static ICriterion NotIn<TValue>(params TValue[] values)
         {
             return new NotInCriterion<TValue>(values);
         }
 
         /// <summary>
-        /// Matches that field or array at lease one array element contains ALL specified tokens 
+        /// Matches that field or at least one array element contains ALL specified tokens 
         /// </summary>
         public static ICriterion All(params string[] tokens)
         {
@@ -108,7 +99,7 @@ namespace Nejdb.Queries
         }
 
         /// <summary>
-        /// Matches that field or array at lease one array element contains ANY specified token 
+        /// Matches that a field or at least one array element contains ANY specified token 
         /// </summary>
         public static ICriterion Any(params string[] tokens)
         {
@@ -140,22 +131,16 @@ namespace Nejdb.Queries
         }
 
         /// <summary>
-        /// Applies specified critertion to sprecified fild
+        /// Applies specified critertion to sprecified field. Field path is determined using expression tree.
         /// </summary>
-        /// <param name="property">Object property</param>
-        /// <param name="criterion">Critertion to apply</param>
-        /// <returns></returns>
         public static ICriterion Field<TObject, TProperty>(Expression<Func<TObject, TProperty>> property, ICriterion criterion)
         {
             return FieldCriterion.For(property, criterion);
         }
 
         /// <summary>
-        /// Applies specified critertion to sprecified fild
+        /// Applies specified critertion to sprecified field.
         /// </summary>
-        /// <param name="path">Dot separated path to field</param>
-        /// <param name="criterion">Critertion to apply</param>
-        /// <returns></returns>
         public static ICriterion Field(string path, ICriterion criterion)
         {
             return new FieldCriterion(path, criterion);
