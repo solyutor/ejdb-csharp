@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Nejdb.Unofficial</id>
-    <title>>Unofficial bindings for EJDB database</title>
+    <title>Unofficial bindings for EJDB database</title>
     <version>0.0</version>
     <authors>Jury Soldatenkov</authors>
     <owners>Jury Soldatenkov</owners>
@@ -11,6 +11,13 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded and run under both x32/x64 processes.</description>
     <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
+    <releaseNotes>
+        enhancements:
+            #4 Wrap transaction in disposable object.
+            #3 Introduce query API for non-update queries.
+            #2 Add strongly typed queries and cursors.
+            #1 Allow strongly typed save / load.
+    </releaseNotes>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="5.0.8"/>
     </dependencies>
