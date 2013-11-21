@@ -2,13 +2,14 @@
 <package>
   <metadata>
     <id>Nejdb.Unofficial</id>
+    <title>>Unofficial bindings for EJDB database</title>
     <version>0.0</version>
     <authors>Jury Soldatenkov</authors>
     <owners>Jury Soldatenkov</owners>
     <licenseUrl>http://github.com/solyutor/ejdb-csharp/blob/master/LICENSE</licenseUrl>
     <projectUrl>http://github.com/solyutor/ejdb-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded for AnyCPU and can run in  x32/x64 processes.</description>
+    <description>Unofficial bindings for ejbd database (see ejdb.org for details). EJDB lib (version 1.1.25) is embedded and run under both x32/x64 processes.</description>
     <copyright>Copyright (c) 2013 Jury Soldatenkov</copyright>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="5.0.8"/>
