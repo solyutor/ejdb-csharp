@@ -2,7 +2,7 @@ Unofficial .Net Binding for [EJDB](http://ejdb.org)
 ===================================================
 
 
-**Note: This is early days, so this .Net EJDB binding is not completely tested. API is subject to change.**
+**Note: This is early days, API is subject to change.**
 
 
 You can install it using nuget:
@@ -19,6 +19,8 @@ You can install it using nuget:
   3. Dropped support for Mono (I hope it's not hard to restore it).
   4. Nuget package available.
 
+See wiki for [complete documentation](http://github.com/solyutor/ejdb-csharp/wiki)
+----------------------------------------------------------------------------------
 
 One snippet intro
 ---------------------------------
