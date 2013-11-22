@@ -19,11 +19,11 @@ You can install it using nuget:
   3. Dropped support for Mono (I hope it's not hard to restore it).
   4. Nuget package available.
 
-See wiki for [complete documentation](http://github.com/solyutor/ejdb-csharp/wiki)
-----------------------------------------------------------------------------------
 
-One snippet intro
----------------------------------
+
+
+One snippet intro. Look at [documentation](http://github.com/solyutor/ejdb-csharp/wiki) for details.
+------------------------------------------------------------------------------------------------------------
 
 ```c#
 using System;
