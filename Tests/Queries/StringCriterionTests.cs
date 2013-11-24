@@ -50,7 +50,7 @@ namespace Nejdb.Tests.Queries
         public void Starts_with_criterion_query()
         {
             var criterion = Criterions.StartsWith("Ale");
-            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.Firstname, criterion));
 
             AssertFoundNavalny(builder);
         }

@@ -8,7 +8,7 @@ namespace Nejdb.Tests.Queries
         {
             return new Person
             {
-                Name = new Name{First = "Vladimir", Surname = "Putin"},
+                Name = new Name{Firstname = "Vladimir", Surname = "Putin"},
                 Age = 61,
                 Hobbies = new[] { "Power", "Corruption", "Narcissism", "Patriotic speech" }
             };
@@ -19,7 +19,7 @@ namespace Nejdb.Tests.Queries
         {
             return new Person
             {
-                Name = new Name{First =  "Alexey", Surname = "Navalny"},
+                Name = new Name{Firstname =  "Alexey", Surname = "Navalny"},
                 Age = 36,
                 Hobbies = new[] { "Meeting", "Investigation", "Shocking" }
             };

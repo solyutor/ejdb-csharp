@@ -15,7 +15,7 @@ namespace Nejdb.Tests.Queries
         {
             var criterion = Criterions.Equals("Alexey");
 
-            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.Firstname, criterion));
 
             AssertFoundNavalny(builder);
         }
@@ -24,7 +24,7 @@ namespace Nejdb.Tests.Queries
         public void Negate_criterion_query()
         {
             var criterion = Criterions.Not(Criterions.Equals("Alexey"));
-            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.Firstname, criterion));
 
             AssertFoundPutin(builder);
         }
@@ -34,7 +34,7 @@ namespace Nejdb.Tests.Queries
         {
             var criterion = Criterions.FieldExists();
 
-            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.Firstname, criterion));
 
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
@@ -50,7 +50,7 @@ namespace Nejdb.Tests.Queries
         {
             var criterion = Criterions.FieldNotExists();
 
-            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.First, criterion));
+            var builder = new QueryBuilder(Criterions.Field<Person, string>(x => x.Name.Firstname, criterion));
 
             using (var query = Collection.CreateQuery<Person>(builder))
             using (var cursor = query.Execute(QueryMode.Explain))
@@ -63,7 +63,7 @@ namespace Nejdb.Tests.Queries
         [Test]
         public void And_criterion_query()
         {
-            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byName = Criterions.Field<Person, string>(x => x.Name.Firstname, Criterions.Equals("Alexey"));
             var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(36));
 
             var andCritertion = Criterions.And(byName, byAge);
@@ -77,7 +77,7 @@ namespace Nejdb.Tests.Queries
         [Test]
         public void Or_criterion_query()
         {
-            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byName = Criterions.Field<Person, string>(x => x.Name.Firstname, Criterions.Equals("Alexey"));
             var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(61));
 
             var criterion = Criterions.Or(byName, byAge);
@@ -89,7 +89,7 @@ namespace Nejdb.Tests.Queries
         [Test]
         public void Complex_criterion_combination_query()
         {
-            var byName = Criterions.Field<Person, string>(x => x.Name.First, Criterions.Equals("Alexey"));
+            var byName = Criterions.Field<Person, string>(x => x.Name.Firstname, Criterions.Equals("Alexey"));
             var byAge = Criterions.Field<Person, int>(x => x.Age, Criterions.Equals(36));
 
             var andCriterion = Criterions.And(byName, byAge);
@@ -123,7 +123,7 @@ namespace Nejdb.Tests.Queries
                 x => x.Name,
                 Criterions.MatchElement(
                     Criterions.Object(
-                        Criterions.Field<Name, string>(x => x.First, Criterions.Equals("Vladimir")),
+                        Criterions.Field<Name, string>(x => x.Firstname, Criterions.Equals("Vladimir")),
                         Criterions.Field<Name, string>(x => x.Surname, Criterions.Equals("Putin")))
                     ));
 

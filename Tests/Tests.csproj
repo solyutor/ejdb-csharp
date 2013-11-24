@@ -51,6 +51,8 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Tutorial\Author.cs" />
+    <Compile Include="Tutorial\BookHeader.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="DatabaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="TestBSON.cs" />
     <Compile Include="Sample.cs" />
     <Compile Include="TestEJDB.cs" />
+    <Compile Include="Tutorial\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nejdb\Nejdb.csproj">
