@@ -25,6 +25,11 @@ namespace Nejdb.Bson
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct ObjectId : IBsonValue
     {
+        /// <summary>
+        /// Represents and empty identifier
+        /// </summary>
+        public static readonly ObjectId Empty = new ObjectId();
+
         public readonly byte Byte01;
         public readonly byte Byte02;
         public readonly byte Byte03;
@@ -38,9 +43,36 @@ namespace Nejdb.Bson
         public readonly byte Byte11;
         public readonly byte Byte12;
 
+        /// <summary>
+        /// Returns bson type for ObjectId
+        /// </summary>
         public BsonType BsonType
         {
             get { return BsonType.OID; }
+        }
+
+        /// <summary>
+        /// Return true if the instance is empty, false otherwise.
+        /// </summary>
+        public bool IsEmpty
+        {
+            get { return this.Equals(Empty); }
+        }
+
+        public ObjectId(byte byte01, byte byte02, byte byte03, byte byte04, byte byte05, byte byte06, byte byte07, byte byte08, byte byte09, byte byte10, byte byte11, byte byte12)
+        {
+            Byte01 = byte01;
+            Byte02 = byte02;
+            Byte03 = byte03;
+            Byte04 = byte04;
+            Byte05 = byte05;
+            Byte06 = byte06;
+            Byte07 = byte07;
+            Byte08 = byte08;
+            Byte09 = byte09;
+            Byte10 = byte10;
+            Byte11 = byte11;
+            Byte12 = byte12;
         }
 
         public ObjectId(string val)
@@ -155,8 +187,14 @@ namespace Nejdb.Bson
             {
                 return false;
             }
-            var other = (ObjectId)obj;
+            return Equals((ObjectId)obj);
+        }
 
+        /// <summary>
+        /// Check if identifier is equal to other one
+        /// </summary>
+        public bool Equals(ObjectId other)
+        {
             return
                 Byte01 == other.Byte01 &&
                 Byte02 == other.Byte02 &&
@@ -174,7 +212,22 @@ namespace Nejdb.Bson
 
         public override int GetHashCode()
         {
-            return ToString().GetHashCode();
+            unchecked
+            {
+                int hashCode = Byte01.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte02.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte03.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte04.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte05.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte06.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte07.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte08.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte09.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte10.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte11.GetHashCode();
+                hashCode = (hashCode*397) ^ Byte12.GetHashCode();
+                return hashCode;
+            }
         }
 
         public static bool operator ==(ObjectId a, ObjectId b)
@@ -197,7 +250,10 @@ namespace Nejdb.Bson
         //    return a.CompareTo(b) < 0;
         //}
 
-        public static implicit operator ObjectId(string val)
+        /// <summary>
+        /// Converts a hex string to ObjectId
+        /// </summary>
+        public static explicit operator ObjectId(string val)
         {
             return new ObjectId(val);
         }
