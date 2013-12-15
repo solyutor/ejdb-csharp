@@ -42,7 +42,6 @@ namespace Nejdb
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
         private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [In, Out] ref ObjectId oid, [In] bool merge);
 
-
         //EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *id);
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
         //internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] id);
@@ -115,8 +114,10 @@ namespace Nejdb
             _serializer = new JsonSerializer
                           {
                               NullValueHandling = NullValueHandling.Ignore,
-                              ContractResolver = NoObjectIdContractResolver.Instance
+                              ContractResolver = NoObjectIdContractResolver.Instance,
                           };
+            _serializer.Converters.Add(new ObjectIdConverter());
+
         }
 
         private void MapMethods()
@@ -266,7 +267,7 @@ namespace Nejdb
             using (var stream = new MemoryStream())
             {
                 doc.Serialize(stream);
-                var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(), ref oiddata, merge);
+                var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(),  ref oiddata, merge);
 
                 if (saveOk && id == null)
                 {

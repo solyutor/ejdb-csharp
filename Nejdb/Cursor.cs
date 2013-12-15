@@ -7,6 +7,7 @@ using Nejdb.Bson;
 using Nejdb.Internals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
+using Newtonsoft.Json.Converters;
 
 namespace Nejdb
 {
@@ -42,6 +43,7 @@ namespace Nejdb
 
                     var serialzer = new JsonSerializer();
                     serialzer.ContractResolver = NoObjectIdContractResolver.Instance;
+                    serialzer.Converters.Add(new ObjectIdConverter());
                     TDocument result = serialzer.Deserialize<TDocument>(reader);
 
                     IdHelper<TDocument>.SetId(result, id);

@@ -16,6 +16,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Nejdb.Bson;
 
 namespace Nejdb.Internals
 {
@@ -25,6 +26,13 @@ namespace Nejdb.Internals
     /// </summary>
     public static class TypeExtension
     {
+        public static bool IdIsEmpty(object instance, string propertyName)
+        {
+            var property = instance.GetType().GetProperty(propertyName);
+            var id = (ObjectId)property.GetValue(instance, null);
+            return id.IsEmpty;
+        }
+        
         public static bool IsAnonymousType(this Type type)
         {
             bool hasCompilerGeneratedAttribute = (type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Length > 0);

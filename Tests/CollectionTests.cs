@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using NUnit.Framework;
 
@@ -102,6 +103,25 @@ namespace Nejdb.Tests
 
             Assert.That(reloaded.Id, Is.EqualTo(origin.Id));
             Assert.That(reloaded.Name, Is.EqualTo(origin.Name));
+        }
+
+        [Test]
+        public void Can_update_strongly_typed_document()
+        {
+            var origin = new Sample { Name = "John Wayne" };
+            var id = _collection.Save(origin, false);
+
+            var reloaded = _collection.Load<Sample>(id);
+
+
+            reloaded.Name = "Max Payne";
+
+            var id2 = _collection.Save<Sample>(reloaded, false);
+
+            var reloaded2 = _collection.Load<Sample>(id);
+
+            Assert.That(id,  Is.EqualTo(id2));
+            Assert.That(reloaded2.Name, Is.EqualTo(reloaded.Name));
         }
 
         [Test]
