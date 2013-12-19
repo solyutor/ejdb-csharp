@@ -161,7 +161,7 @@ namespace Nejdb.Tests
 
             using (var query = _collection.CreateQuery())
             {
-                var bsonDocument = new BsonDocument(query.FinOne());
+                var bsonDocument = new BsonDocument(query.FindOne());
 
                 Console.WriteLine(bsonDocument);
 
@@ -176,7 +176,7 @@ namespace Nejdb.Tests
 
             using (var query = _collection.CreateQuery<Sample>())
             {
-                var reloaded = query.FinOne();
+                var reloaded = query.FindOne();
 
                 Assert.That(reloaded, Is.Not.Null);
                 Assert.That(reloaded.Id, Is.EqualTo(_originSample.Id));
