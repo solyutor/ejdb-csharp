@@ -17,6 +17,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using Nejdb.Bson;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Nejdb.Internals
 {
@@ -26,13 +28,33 @@ namespace Nejdb.Internals
     /// </summary>
     public static class TypeExtension
     {
+        private static readonly Dictionary<Type, Func<object, ObjectId>> idGetters = new Dictionary<Type, Func<object, ObjectId>>();
+
         public static bool IdIsEmpty(object instance, string propertyName)
         {
-            var property = instance.GetType().GetProperty(propertyName);
-            var id = (ObjectId)property.GetValue(instance, null);
+            var instanceType = instance.GetType();
+            Func<object, ObjectId> propertyRetriever;
+            if (!idGetters.TryGetValue(instanceType, out propertyRetriever))
+            {
+                lock (idGetters)
+                {
+                    if (!idGetters.TryGetValue(instanceType, out propertyRetriever))
+                    {
+                        var parameter = Expression.Parameter(typeof(object));
+                        var cast = Expression.Convert(parameter, instance.GetType());
+                        var propertyGetter = Expression.Property(cast, propertyName);
+
+                        propertyRetriever = Expression.Lambda<Func<object, ObjectId>>(propertyGetter, parameter).Compile();
+
+                        idGetters.Add(instanceType, propertyRetriever);
+                    }
+                }
+            }
+
+            var id = propertyRetriever(instance);
             return id.IsEmpty;
         }
-        
+
         public static bool IsAnonymousType(this Type type)
         {
             bool hasCompilerGeneratedAttribute = (type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Length > 0);
