@@ -16,8 +16,15 @@ namespace Nejdb
     /// </summary>
     public class Cursor<TDocument> : CursorBase, IEnumerable<TDocument>
     {
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
+        private readonly JsonSerializer serializer;
+
+        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
+            : base(libraryHandle, cursorHandle, count)
         {
+            this.serializer = new JsonSerializer();
+            this.serializer.ContractResolver = NoObjectIdContractResolver.Instance;
+            this.serializer.Converters.Add(new ObjectIdConverter());
+
         }
 
         /// <summary>
@@ -41,10 +48,7 @@ namespace Nejdb
                 {
                     var id = new ObjectId(new ArraySegment<byte>(bson, 9, 12));
 
-                    var serialzer = new JsonSerializer();
-                    serialzer.ContractResolver = NoObjectIdContractResolver.Instance;
-                    serialzer.Converters.Add(new ObjectIdConverter());
-                    TDocument result = serialzer.Deserialize<TDocument>(reader);
+                    TDocument result = serializer.Deserialize<TDocument>(reader);
 
                     IdHelper<TDocument>.SetId(result, id);
                     return result;
@@ -68,7 +72,7 @@ namespace Nejdb
         /// </summary>
         public TDocument Current
         {
-            get {  return this[Position]; }
+            get { return this[Position]; }
         }
 
         public IEnumerator<TDocument> GetEnumerator()
@@ -91,7 +95,8 @@ namespace Nejdb
     /// </summary>
     public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count) : base(libraryHandle, cursorHandle, count)
+        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
+            : base(libraryHandle, cursorHandle, count)
         {
         }
 
