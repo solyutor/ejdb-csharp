@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using Nejdb.Bson;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Nejdb.Internals
 {
@@ -28,7 +29,7 @@ namespace Nejdb.Internals
     /// </summary>
     public static class TypeExtension
     {
-        private static readonly Dictionary<Type, Func<object, ObjectId>> idGetters = new Dictionary<Type, Func<object, ObjectId>>();
+        private static readonly ConcurrentDictionary<Type, Func<object, ObjectId>> idGetters = new ConcurrentDictionary<Type, Func<object, ObjectId>>();
 
         public static bool IdIsEmpty(object instance, string propertyName)
         {
@@ -36,19 +37,13 @@ namespace Nejdb.Internals
             Func<object, ObjectId> propertyRetriever;
             if (!idGetters.TryGetValue(instanceType, out propertyRetriever))
             {
-                lock (idGetters)
-                {
-                    if (!idGetters.TryGetValue(instanceType, out propertyRetriever))
-                    {
-                        var parameter = Expression.Parameter(typeof(object));
-                        var cast = Expression.Convert(parameter, instance.GetType());
-                        var propertyGetter = Expression.Property(cast, propertyName);
+                var parameter = Expression.Parameter(typeof(object));
+                var cast = Expression.Convert(parameter, instance.GetType());
+                var propertyGetter = Expression.Property(cast, propertyName);
 
-                        propertyRetriever = Expression.Lambda<Func<object, ObjectId>>(propertyGetter, parameter).Compile();
+                propertyRetriever = Expression.Lambda<Func<object, ObjectId>>(propertyGetter, parameter).Compile();
 
-                        idGetters.Add(instanceType, propertyRetriever);
-                    }
-                }
+                idGetters.TryAdd(instanceType, propertyRetriever);
             }
 
             var id = propertyRetriever(instance);
