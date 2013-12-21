@@ -57,6 +57,7 @@
     <Compile Include="Internals\DatabaseFunctions.cs" />
     <Compile Include="Internals\Functions.cs" />
     <Compile Include="Internals\QueryFunctions.cs" />
+    <Compile Include="ObjectIdConverter.cs" />
     <Compile Include="Queries\AndCriterion.cs" />
     <Compile Include="Queries\BetweenCriterion.cs" />
     <Compile Include="Queries\Comparsion.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Queries\StartsWithCriterion.cs" />
     <Compile Include="Queries\StringAndOrAnyCriterion.cs" />
     <Compile Include="Transaction.cs" />
-    <Compile Include="NoObjectIdContractResolver.cs" />
+    <Compile Include="ObjectIdContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\BsonHandle.cs" />
     <Compile Include="Collection.cs" />

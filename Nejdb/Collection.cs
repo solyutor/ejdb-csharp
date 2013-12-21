@@ -29,13 +29,12 @@ namespace Nejdb
 
             _functions = database.Library.Functions.Collection;
 
-
             _serializer = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = NoObjectIdContractResolver.Instance,
+                ContractResolver = ObjectIdContractResolver.Instance,
             };
-            _serializer.Converters.Add(new ObjectIdConverter());
+            _serializer.Converters.Add(ObjectIdConverter.Instance);
         }
 
         //opens existed
@@ -352,6 +351,8 @@ namespace Nejdb
             {
                 CollectionHandle.Dispose();
                 CollectionHandle = null;
+                _functions = null;
+                _serializer = null;
             }
         }
     }

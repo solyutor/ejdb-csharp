@@ -16,14 +16,16 @@ namespace Nejdb
     /// </summary>
     public class Cursor<TDocument> : CursorBase, IEnumerable<TDocument>
     {
-        private readonly JsonSerializer serializer;
+        private readonly JsonSerializer _serializer;
 
         internal Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
             : base(cursorHandle, cursorResult, count)
         {
-            this.serializer = new JsonSerializer();
-            this.serializer.ContractResolver = NoObjectIdContractResolver.Instance;
-            this.serializer.Converters.Add(new ObjectIdConverter());
+            _serializer = new JsonSerializer
+                          {
+                              ContractResolver = ObjectIdContractResolver.Instance
+                          };
+            _serializer.Converters.Add(ObjectIdConverter.Instance);
 
         }
 
@@ -48,7 +50,7 @@ namespace Nejdb
                 {
                     var id = new ObjectId(new ArraySegment<byte>(bson, 9, 12));
 
-                    TDocument result = serializer.Deserialize<TDocument>(reader);
+                    TDocument result = _serializer.Deserialize<TDocument>(reader);
 
                     IdHelper<TDocument>.SetId(result, id);
                     return result;
