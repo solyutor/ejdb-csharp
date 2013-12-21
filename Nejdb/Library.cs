@@ -78,6 +78,8 @@ namespace Nejdb
         {
             LibraryHandle = libraryHandle;
 
+            Functions = new Functions(libraryHandle);
+
 
             _getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 
@@ -97,6 +99,8 @@ namespace Nejdb
             _version = Native.StringFromNativeUtf8(version); //UnixMarshal.PtrToString(vres, Encoding.UTF8);
             _hexVersion = Convert.ToInt64("0x" + Version.Replace(".", ""), 16);
         }
+
+        internal readonly Functions Functions;
 
         /// <summary>
         /// Gets the EJDB library hex encoded version.

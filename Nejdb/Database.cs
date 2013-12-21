@@ -16,55 +16,9 @@ namespace Nejdb
         public const OpenMode DefaultOpenMode = (OpenMode.Writer | OpenMode.CreateIfNotExists);
 
         internal readonly Library Library;
-
         internal DatabaseHandle DatabaseHandle;
+        private DatabaseFunctions _functions;
 
-        private OpenDatabaseDelegate _openDatabase;
-        private CloseDatabaseDelegate _closeDatabase;
-        private IsOpenDelegate _isOpen;
-        private GetErrorCodeDelegate _getErrorCode;
-        private GetMetaDelegate _getMetadata;
-
-        private SyncDelegate _sync;
-        private CommandDelegate _command;
-
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbopen", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbopen([In] IntPtr db, [In] IntPtr path, int mode);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbopen")]
-        private delegate bool OpenDatabaseDelegate([In] DatabaseHandle database, [In] IntPtr path, [MarshalAs(UnmanagedType.I4)]OpenMode openMode);
-
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbclose", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbclose([In] IntPtr db);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbclose")]
-        private delegate bool CloseDatabaseDelegate([In] DatabaseHandle database);
-
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbisopen", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbisopen([In] IntPtr db);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbisopen")]
-        private delegate bool IsOpenDelegate([In] DatabaseHandle database);
-
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbecode", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern int _ejdbecode([In] IntPtr db);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbecode")]
-        private delegate int GetErrorCodeDelegate([In] DatabaseHandle database);
-
-        ////EJDB_EXPORT Bson* ejdbmeta(EJDB *jb)
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbmeta", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbmeta([In] IntPtr db);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbmeta")]
-        private delegate IntPtr GetMetaDelegate([In] DatabaseHandle database);
-
-        ////EJDB_EXPORT Bson* ejdbcommand2(EJDB *jb, void *cmdBsondata);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcommand2", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbcommand([In] IntPtr db, [In] byte[] cmd);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcommand2")]
-        private delegate IntPtr CommandDelegate([In] DatabaseHandle database, [In] byte[] command);
-
-        ////EJDB_EXPORT bool ejdbsyncdb(EJDB *jb)
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsyncdb", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbsyncdb([In] IntPtr db);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncdb")]
-        private delegate bool SyncDelegate([In] DatabaseHandle database);
 
         /// <summary>
         /// Creates instance of EJDB. 
@@ -72,21 +26,10 @@ namespace Nejdb
         /// <param name="library"></param>
         public Database(Library library)
         {
-            var libraryHandle = library.LibraryHandle;
-            DatabaseHandle = new DatabaseHandle(libraryHandle);
-
+            _functions = library.Functions.Database;
+            DatabaseHandle = new DatabaseHandle(library);
+            
             Library = library;
-
-            _openDatabase = libraryHandle.GetUnmanagedDelegate<OpenDatabaseDelegate>();
-            _closeDatabase = libraryHandle.GetUnmanagedDelegate<CloseDatabaseDelegate>();
-            _isOpen = libraryHandle.GetUnmanagedDelegate<IsOpenDelegate>();
-
-            _getErrorCode = libraryHandle.GetUnmanagedDelegate<GetErrorCodeDelegate>();
-            _getMetadata = libraryHandle.GetUnmanagedDelegate<GetMetaDelegate>();
-
-
-            _command = libraryHandle.GetUnmanagedDelegate<CommandDelegate>();
-            _sync = libraryHandle.GetUnmanagedDelegate<SyncDelegate>();
         }
 
         /// <summary>
@@ -95,7 +38,7 @@ namespace Nejdb
         /// <value>The last DB error code.</value>
         public int LastErrorCode
         {
-            get { return _getErrorCode(DatabaseHandle); }
+            get { return _functions.GetErrorCode(DatabaseHandle); }
         }
 
         /// <summary>
@@ -104,7 +47,7 @@ namespace Nejdb
         /// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
         public bool IsOpen
         {
-            get { return _isOpen(DatabaseHandle); }
+            get { return _functions.IsOpen(DatabaseHandle); }
         }
 
         /// <summary>
@@ -137,7 +80,7 @@ namespace Nejdb
         /// </summary>
         public void Synchronize()
         {
-            if (_sync(DatabaseHandle))
+            if (_functions.Sync(DatabaseHandle))
             {
                 return;
             }
@@ -153,7 +96,7 @@ namespace Nejdb
         {
             get
             {
-                using (var bson = new BsonHandle(() => _getMetadata(DatabaseHandle), Library.FreeBson))
+                using (var bson = new BsonHandle(() => _functions.GetMetadata(DatabaseHandle), Library.FreeBson))
                 {
                     if (bson.IsInvalid)
                     {
@@ -234,7 +177,7 @@ namespace Nejdb
 
             try
             {
-                bool result = _openDatabase(DatabaseHandle, pathPointer, openMode);
+                bool result = _functions.OpenDatabase(DatabaseHandle, pathPointer, openMode);
                 if (!result)
                 {
                     throw EjdbException.FromDatabase(this, "Error on open database");
@@ -253,24 +196,17 @@ namespace Nejdb
         {
             Close();
             DatabaseHandle.Dispose();
-
-            _openDatabase = null;
-            _closeDatabase = null;
-            _isOpen = null;
-            _getErrorCode = null;
-            _getMetadata = null;
-            _sync = null;
-            _command = null;
             DatabaseHandle = null;
+            _functions = null;
         }
         /// <summary>
         /// Closes current database
         /// </summary>
         public void Close()
         {
-            if (_isOpen(DatabaseHandle))
+            if (IsOpen)
             {
-                _closeDatabase(DatabaseHandle);
+                _functions.CloseDatabase(DatabaseHandle);
             }
         }
 

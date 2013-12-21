@@ -15,127 +15,40 @@ namespace Nejdb
         internal CollectionHandle CollectionHandle;
 
         private readonly string _name;
-        private RemoveCollectionDelegate _remove;
-        private BeginTransactionDelegate _beginTransaction;
-        private CommitTransactionDelegate _commitTransaction;
-        private RollbackTransactionDelegate _rollbackTransaction;
-        private TransactionStatusDelegate _transactionStatus;
-        private SyncDelegate _syncCollection;
-        private SaveBsonDelegate _saveBson;
-        private LoadBsonDelegate _loadBson;
-        private DeleteBsonDelegate _deleteBson;
-        private SetIndexDelegate _setIndex;
+        
         private JsonSerializer _serializer;
+        private CollectionFunctions _functions;
 
-        //EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmcoll", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbrmcoll([In] IntPtr db, [In] IntPtr cname, bool unlink);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmcoll")]
-        private delegate bool RemoveCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, bool unlink);
-
-
-        //EJDB_EXPORT bool ejdbsaveBson3(EJCOLL *jcoll, void *bsdata, Bson_oid_t *id, bool merge);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsaveBson3", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbsaveBson([In] IntPtr coll, [In] byte[] bsdata, [Out] byte[] id, [In] bool merge);
-        //TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *id) 
-        //TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *id, bool merge) - this one is preferable. Other two calls it. 		
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
-        private delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [In, Out] ref ObjectId oid, [In] bool merge);
-
-        //EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *id);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] id);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
-        private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [In] ref ObjectId oid);
-
-        //EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *id);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] id);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmbson")]
-        private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] ref ObjectId objectId);
-
-        //EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbtranbegin([In] IntPtr coll);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranbegin")]
-        private delegate bool BeginTransactionDelegate([In] CollectionHandle collection);
-
-        //EJDB_EXPORT bool ejdbtrancommit(EJCOLL *coll);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtrancommit", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbtrancommit([In] IntPtr coll);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtrancommit")]
-        private delegate bool CommitTransactionDelegate([In] CollectionHandle collection);
-
-        ////EJDB_EXPORT bool ejdbtranabort(EJCOLL *coll);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranabort", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbtranabort([In] IntPtr coll);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranabort")]
-        private delegate bool RollbackTransactionDelegate([In] CollectionHandle collection);
-
-        ////EJDB_EXPORT bool ejdbtranstatus(EJCOLL *jcoll, bool *txactive);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranstatus", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbtranstatus([In] IntPtr coll, out bool txactive);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbtranstatus")]
-        private delegate bool TransactionStatusDelegate([In] CollectionHandle collection, out bool isActive);
-
-        ////EJDB_EXPORT bool ejdbsyncoll(EJCOLL *coll)
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsyncoll", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbsyncoll([In] IntPtr coll);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsyncoll")]
-        private delegate bool SyncDelegate([In] CollectionHandle collection);
-
-        ////EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbsetindex", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern bool _ejdbsetindex([In] IntPtr coll, [In] IntPtr ipathptr, int flags);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsetindex")]
-        private delegate bool SetIndexDelegate([In] CollectionHandle collection, [In] IntPtr indexPath, [In] int operation);
-
-        private LibraryHandle LibraryHandle
+        //Creates new;
+        private Collection(Database database, string name, Func<CollectionHandle> generator)
+            
         {
-            get { return Database.DatabaseHandle.LibraryHandle; }
+            Database = database;
+            _name = name;
+            CollectionHandle = generator();
+
+            _functions = database.Library.Functions.Collection;
+
+
+            _serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = NoObjectIdContractResolver.Instance,
+            };
+            _serializer.Converters.Add(new ObjectIdConverter());
         }
 
         //opens existed
-        internal Collection(Database database, string name)
+        internal Collection(Database database, string name) 
+            : this(database, name, () => new CollectionHandle(database, name) )
         {
-            Database = database;
-            _name = name;
-            CollectionHandle = new CollectionHandle(database, name);
-            MapMethods();
+
         }
 
         //Creates new;
-        internal Collection(Database database, string name, CollectionOptions options)
+        internal Collection(Database database, string name, CollectionOptions options) 
+            : this(database, name, () => new CollectionHandle(database, name, options))
         {
-            Database = database;
-            _name = name;
-            CollectionHandle = new CollectionHandle(database, name, options);
-            MapMethods();
-            _serializer = new JsonSerializer
-                          {
-                              NullValueHandling = NullValueHandling.Ignore,
-                              ContractResolver = NoObjectIdContractResolver.Instance,
-                          };
-            _serializer.Converters.Add(new ObjectIdConverter());
-
-        }
-
-        private void MapMethods()
-        {
-            _remove = LibraryHandle.GetUnmanagedDelegate<RemoveCollectionDelegate>();
-
-            _beginTransaction = LibraryHandle.GetUnmanagedDelegate<BeginTransactionDelegate>();
-            _commitTransaction = LibraryHandle.GetUnmanagedDelegate<CommitTransactionDelegate>();
-            _rollbackTransaction = LibraryHandle.GetUnmanagedDelegate<RollbackTransactionDelegate>();
-            _transactionStatus = LibraryHandle.GetUnmanagedDelegate<TransactionStatusDelegate>();
-
-            _syncCollection = LibraryHandle.GetUnmanagedDelegate<SyncDelegate>();
-
-            _saveBson = LibraryHandle.GetUnmanagedDelegate<SaveBsonDelegate>();
-            _loadBson = LibraryHandle.GetUnmanagedDelegate<LoadBsonDelegate>();
-            _deleteBson = LibraryHandle.GetUnmanagedDelegate<DeleteBsonDelegate>();
-
-            _setIndex = LibraryHandle.GetUnmanagedDelegate<SetIndexDelegate>();
         }
 
         /// <summary>
@@ -152,7 +65,7 @@ namespace Nejdb
         /// </summary>
         internal void BeginTransactionInternal()
         {
-            if (_beginTransaction(CollectionHandle))
+            if (_functions.BeginTransaction(CollectionHandle))
             {
                 return;
             }
@@ -165,7 +78,7 @@ namespace Nejdb
         /// </summary>
         internal void CommitTransactionInternal()
         {
-            if (_commitTransaction(CollectionHandle))
+            if (_functions.CommitTransaction(CollectionHandle))
             {
                 return;
             }
@@ -177,7 +90,7 @@ namespace Nejdb
         /// </summary>
         internal void RollbackTransactionInternal()
         {
-            if (_rollbackTransaction(CollectionHandle))
+            if (_functions.RollbackTransaction(CollectionHandle))
             {
                 return;
             }
@@ -192,7 +105,7 @@ namespace Nejdb
             get
             {
                 bool isActive;
-                if (_transactionStatus(CollectionHandle, out isActive))
+                if (_functions.TransactionStatus(CollectionHandle, out isActive))
                 {
                     return isActive;
                 }
@@ -204,7 +117,7 @@ namespace Nejdb
         /// </summary>
         public void Synchronize()
         {
-            if (_syncCollection(CollectionHandle))
+            if (_functions.SyncCollection(CollectionHandle))
             {
                 return;
             }
@@ -222,7 +135,7 @@ namespace Nejdb
             IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
             try
             {
-                _remove(Database.DatabaseHandle, unmanagedName, deleteData);
+                _functions.Remove(Database.DatabaseHandle, unmanagedName, deleteData);
             }
             finally
             {
@@ -240,7 +153,7 @@ namespace Nejdb
             IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
             try
             {
-                _remove(Database.DatabaseHandle, unmanagedName, deleteData);
+                _functions.Remove(Database.DatabaseHandle, unmanagedName, deleteData);
             }
             finally
             {
@@ -267,7 +180,7 @@ namespace Nejdb
             using (var stream = new MemoryStream())
             {
                 doc.Serialize(stream);
-                var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(),  ref oiddata, merge);
+                var saveOk = _functions.SaveBson(CollectionHandle, stream.GetBuffer(), ref oiddata, merge);
 
                 if (saveOk && id == null)
                 {
@@ -299,7 +212,7 @@ namespace Nejdb
 
                 ObjectId id = IdHelper<TDocument>.GetId(document);
 
-                var saveOk = _saveBson(CollectionHandle, stream.GetBuffer(), ref id, merge);
+                var saveOk = _functions.SaveBson(CollectionHandle, stream.GetBuffer(), ref id, merge);
 
                 if (!saveOk)
                 {
@@ -321,7 +234,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public BsonDocument Load(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, ref id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library.FreeBson))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -341,7 +254,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public TDocument Load<TDocument>(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, ref id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library.FreeBson))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -371,7 +284,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public void Delete(ObjectId id)
         {
-            if (_deleteBson(CollectionHandle, ref id))
+            if (_functions.DeleteBson(CollectionHandle, ref id))
             {
                 return;
             }
@@ -389,7 +302,7 @@ namespace Nejdb
             IntPtr pathPointer = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(ipath, Encoding.UTF8);
             try
             {
-                if (_setIndex(CollectionHandle, pathPointer, (int)flags))
+                if (_functions.SetIndex(CollectionHandle, pathPointer, (int)flags))
                 {
                     return;
                 }

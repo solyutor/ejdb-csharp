@@ -9,22 +9,17 @@ namespace Nejdb
     /// </summary>
     public class CursorBase : IDisposable
     {
-        ////const void* ejdbqresultBsondata(EJQRESULT qr, int pos, int *size)
-        //[DllImport(EJDB.EJDB_LIB_NAME, EntryPoint = "ejdbqresultBsondata", CallingConvention = CallingConvention.Cdecl)]
-        //static extern IntPtr _ejdbqresultBsondata([In] IntPtr qres, [In] int pos, out int size);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqresultbsondata")]
-        private delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
-
         private CursorHandle _cursorHandle;
-        private CursorResultDelegate _cursorResult;
-        private int _position;
-        private int _count;
+        private QueryFunctions.CursorResultDelegate _cursorResult;
 
-        internal CursorBase(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
+        private int _position;
+        private readonly int _count;
+
+        internal CursorBase(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult,  int count)
         {
             _cursorHandle = cursorHandle;
+            _cursorResult = cursorResult;
             _count = count;
-            _cursorResult = libraryHandle.GetUnmanagedDelegate<CursorResultDelegate>();
         }
 
         internal IntPtr CursorResult(int index, out int size)
@@ -110,7 +105,13 @@ namespace Nejdb
         /// </summary>
         public void Dispose()
         {
+            if (_cursorHandle == null)
+            {
+                return;
+            }
             _cursorHandle.Dispose();
+            _cursorHandle = null;
+            _cursorResult = null;
         }
 
         /// <summary>

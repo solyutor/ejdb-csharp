@@ -13,33 +13,15 @@ namespace Nejdb.Internals
             get { return _database.DatabaseHandle; }
         }
 
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbgetcoll", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbgetcoll([In] IntPtr db, [In] IntPtr name);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbgetcoll")]
-        private delegate IntPtr GetCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName);
-
-        //will use the only method for simplicity
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr name, IntPtr opts);
-        //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbcreatecoll", CallingConvention = CallingConvention.Cdecl)]
-        //internal static extern IntPtr _ejdbcreatecoll([In] IntPtr db, [In] IntPtr name, ref EJDBCollectionOptionsN opts);
-        //EJCOLL* ejdbcreatecoll(EJDB *jb, const char *colname, EJCOLLOPTS *opts) 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcreatecoll")]
-        private delegate IntPtr CreateCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, ref CollectionOptions options);
-
         //Creates collection with specified name
         public CollectionHandle(Database database, string name, CollectionOptions options) : base(false)
         {
             _database = database;
 
-            var libraryHandle = DatabaseHandle.LibraryHandle;
-
-            var createCollection = libraryHandle.GetUnmanagedDelegate<CreateCollectionDelegate>();
-
             IntPtr unmanagedName = Native.NativeUtf8FromString(name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
             try
             {
-                handle = createCollection(DatabaseHandle, unmanagedName, ref options);
+                handle = _database.Library.Functions.Collection.CreateCollection(DatabaseHandle, unmanagedName, ref options);
 
                 if (IsInvalid)
                 {
@@ -58,13 +40,11 @@ namespace Nejdb.Internals
         {
             _database = database;
 
-            var libraryHandle = DatabaseHandle.LibraryHandle;
-            var getCollection = libraryHandle.GetUnmanagedDelegate<GetCollectionDelegate>();
 
             IntPtr unmanagedName = Native.NativeUtf8FromString(name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
             try
             {
-                handle = getCollection(DatabaseHandle, unmanagedName);
+                handle = _database.Library.Functions.Collection.GetCollection(DatabaseHandle, unmanagedName);
 
                 if (IsInvalid)
                 {

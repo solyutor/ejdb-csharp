@@ -26,7 +26,7 @@ namespace Nejdb
             Handle.SetHints(Hints);
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
-            var cursor = new Cursor<TDocument>(Handle.Collection.Database.Library.LibraryHandle, cursorHandle, count);
+            var cursor = new Cursor<TDocument>(cursorHandle, Handle.Collection.Database.Library.Functions.Query.CursorResult, count);
             return cursor;
         }
 
@@ -81,7 +81,7 @@ namespace Nejdb
             
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
-            var cursor = new Cursor(Handle.Collection.Database.Library.LibraryHandle, cursorHandle, count);
+            var cursor = new Cursor(cursorHandle, Handle.Collection.Database.Library.Functions.Query.CursorResult, count);
             return cursor;
         }
 

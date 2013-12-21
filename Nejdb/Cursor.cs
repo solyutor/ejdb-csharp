@@ -18,8 +18,8 @@ namespace Nejdb
     {
         private readonly JsonSerializer serializer;
 
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
-            : base(libraryHandle, cursorHandle, count)
+        internal Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
+            : base(cursorHandle, cursorResult, count)
         {
             this.serializer = new JsonSerializer();
             this.serializer.ContractResolver = NoObjectIdContractResolver.Instance;
@@ -95,8 +95,8 @@ namespace Nejdb
     /// </summary>
     public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        internal Cursor(LibraryHandle libraryHandle, CursorHandle cursorHandle, int count)
-            : base(libraryHandle, cursorHandle, count)
+        internal Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
+            : base(cursorHandle, cursorResult, count)
         {
         }
 
