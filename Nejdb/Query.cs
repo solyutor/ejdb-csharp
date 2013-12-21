@@ -34,7 +34,7 @@ namespace Nejdb
         /// Returns the only record thats meets search criteria
         /// </summary>
         /// <returns></returns>
-        public TDocument FinOne()
+        public TDocument FindOne()
         {
             using (Cursor<TDocument> cursor = Execute(QueryMode.FindOne))
             {
@@ -89,7 +89,7 @@ namespace Nejdb
         /// Returns the only record thats meets search criteria
         /// </summary>
         /// <returns></returns>
-        public BsonIterator FinOne()
+        public BsonIterator FindOne()
         {
             using (Cursor cur = Execute(QueryMode.FindOne))
             {
