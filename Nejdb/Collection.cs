@@ -46,13 +46,13 @@ namespace Nejdb
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbloadbson", CallingConvention = CallingConvention.Cdecl)]
         //internal static extern IntPtr _ejdbloadbson([In] IntPtr coll, [In] byte[] id);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]
-        private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [In] ObjectId oid);
+        private delegate IntPtr LoadBsonDelegate([In] CollectionHandle collection, [In] ref ObjectId oid);
 
         //EJDB_EXPORT bool ejdbrmBson(EJCOLL *coll, Bson_oid_t *id);
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbrmbson", CallingConvention = CallingConvention.Cdecl)]
         //internal static extern bool _ejdbrmBson([In] IntPtr coll, [In] byte[] id);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmbson")]
-        private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] ObjectId objectId);
+        private delegate bool DeleteBsonDelegate([In] CollectionHandle collection, [In] ref ObjectId objectId);
 
         //EJDB_EXPORT bool ejdbtranbegin(EJCOLL *coll);
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdbtranbegin", CallingConvention = CallingConvention.Cdecl)]
@@ -321,7 +321,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public BsonDocument Load(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, ref id), Database.Library.FreeBson))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -341,7 +341,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public TDocument Load<TDocument>(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _loadBson(CollectionHandle, ref id), Database.Library.FreeBson))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -371,7 +371,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public void Delete(ObjectId id)
         {
-            if (_deleteBson(CollectionHandle, id))
+            if (_deleteBson(CollectionHandle, ref id))
             {
                 return;
             }
