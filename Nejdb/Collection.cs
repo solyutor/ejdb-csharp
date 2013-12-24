@@ -176,7 +176,7 @@ namespace Nejdb
                 oiddata = (ObjectId)id.Value;
             }
 
-            using (var stream = new MemoryStream())
+            using (var stream = Database.StreamPool.GetStream())
             {
                 doc.Serialize(stream);
                 var saveOk = _functions.SaveBson(CollectionHandle, stream.GetBuffer(), ref oiddata, merge);
@@ -204,7 +204,7 @@ namespace Nejdb
         /// <returns>Id of saved document</returns>
         public ObjectId Save<TDocument>(TDocument document, bool merge)
         {
-            using (var stream = new MemoryStream())
+            using (var stream = Database.StreamPool.GetStream())
             using (var writer = new BsonWriter(stream))
             {
                 _serializer.Serialize(writer, document);
@@ -240,7 +240,12 @@ namespace Nejdb
                 {
                     return null;
                 }
-                return Database.Library.ConvertToBsonDocument(bson);
+
+                using (var stream = Database.Library.ConvertToStream(bson, Database.StreamPool))
+                {
+                    return new BsonDocument(stream);
+                }
+                
             }
         }
 
@@ -260,9 +265,8 @@ namespace Nejdb
                 {
                     return default(TDocument);
                 }
-                var bsonBuffer = Database.Library.ConvertToBytes(bson);
 
-                using (var stream = new MemoryStream(bsonBuffer))
+                using (var stream = Database.Library.ConvertToStream(bson, Database.StreamPool))
                 using (var reader = new BsonReader(stream))
                 {
                     var document = _serializer.Deserialize<TDocument>(reader);
@@ -334,7 +338,7 @@ namespace Nejdb
         /// </summary>
         public Query<TDocument> CreateQuery<TDocument>(QueryBuilder queryBuilder)
         {
-            using (var stream = new MemoryStream())
+            using (var stream = Database.StreamPool.GetStream())
             using (var writer = new BsonWriter(stream))
             {
                 queryBuilder.WriteTo(writer);

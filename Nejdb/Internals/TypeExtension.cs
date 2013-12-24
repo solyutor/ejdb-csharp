@@ -15,6 +15,7 @@
 // ============================================================================================
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Nejdb.Bson;
 using System.Linq.Expressions;
@@ -29,7 +30,21 @@ namespace Nejdb.Internals
     /// </summary>
     public static class TypeExtension
     {
+        public static readonly Action<MemoryStream, int> SetLength;
+
+        static TypeExtension ()
+        {
+            var stream = Expression.Parameter(typeof (MemoryStream));
+            var length = Expression.Parameter(typeof (int));
+            var field = Expression.Field(stream, "_length");
+
+            var assign = Expression.Assign(field, length);
+            SetLength = Expression.Lambda<Action<MemoryStream, int>>(assign, stream, length).Compile();
+        }
+
+
         private static readonly ConcurrentDictionary<Type, Func<object, ObjectId>> idGetters = new ConcurrentDictionary<Type, Func<object, ObjectId>>();
+
 
         public static bool IdIsEmpty(object instance, string propertyName)
         {

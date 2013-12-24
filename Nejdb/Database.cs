@@ -18,7 +18,7 @@ namespace Nejdb
         internal readonly Library Library;
         internal DatabaseHandle DatabaseHandle;
         private DatabaseFunctions _functions;
-
+        internal readonly StreamPool StreamPool;
 
         /// <summary>
         /// Creates instance of EJDB. 
@@ -30,6 +30,7 @@ namespace Nejdb
             DatabaseHandle = new DatabaseHandle(library);
             
             Library = library;
+            StreamPool = new StreamPool();
         }
 
         /// <summary>
@@ -101,10 +102,12 @@ namespace Nejdb
                     if (bson.IsInvalid)
                     {
                         EjdbException.FromDatabase(this, "Could not get database metadata");
-
                     }
 
-                    return Library.ConvertToBsonDocument(bson);
+                    using (var stream = Library.ConvertToStream(bson, StreamPool))
+                    {
+                        return new BsonDocument(stream);
+                    }
                 }
             }
         }

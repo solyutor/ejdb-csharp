@@ -56,7 +56,10 @@
     <Compile Include="Internals\CollectionFunctions.cs" />
     <Compile Include="Internals\DatabaseFunctions.cs" />
     <Compile Include="Internals\Functions.cs" />
+    <Compile Include="Internals\PooledMemoryStream.cs" />
+    <Compile Include="Internals\PoolSizeSettings.cs" />
     <Compile Include="Internals\QueryFunctions.cs" />
+    <Compile Include="Internals\StreamPool.cs" />
     <Compile Include="ObjectIdConverter.cs" />
     <Compile Include="Queries\AndCriterion.cs" />
     <Compile Include="Queries\BetweenCriterion.cs" />

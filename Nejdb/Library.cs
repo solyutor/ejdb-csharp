@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Internals;
@@ -61,6 +62,8 @@ namespace Nejdb
 
         private static readonly Lazy<Library> _instance;
 
+        internal readonly Functions Functions;
+
         /// <summary>
         /// Returns an instance of <see cref="Library"/> class.
         /// </summary>
@@ -79,7 +82,6 @@ namespace Nejdb
             LibraryHandle = libraryHandle;
 
             Functions = new Functions(libraryHandle);
-
 
             _getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 
@@ -100,7 +102,6 @@ namespace Nejdb
             _hexVersion = Convert.ToInt64("0x" + Version.Replace(".", ""), 16);
         }
 
-        internal readonly Functions Functions;
 
         /// <summary>
         /// Gets the EJDB library hex encoded version.
@@ -157,19 +158,22 @@ namespace Nejdb
             _freeBson(Bson);
         }
 
-        internal BsonDocument ConvertToBsonDocument(BsonHandle bson)
-        {
-            var bsdata = ConvertToBytes(bson);
-            return new BsonDocument(bsdata);
-        }
-
-        internal byte[] ConvertToBytes(BsonHandle bson)
+        internal Stream ConvertToStream(BsonHandle bson, StreamPool streamPool)
         {
             int size;
             IntPtr bsonPointer = _bsonToString(bson, out size);
-            byte[] bsdata = new byte[size];
-            Marshal.Copy(bsonPointer, bsdata, 0, bsdata.Length);
-            return bsdata;
+
+            MemoryStream stream = streamPool.GetStream();
+
+            if (stream.Capacity < size)
+            {
+                stream.Capacity = size;
+            }
+
+            byte[] buffer = stream.GetBuffer();
+            Marshal.Copy(bsonPointer, buffer, 0, size);
+            TypeExtension.SetLength(stream, size);
+            return stream;
         }
 
         ///// <summary>
@@ -181,10 +185,8 @@ namespace Nejdb
         //public BsonDocument Json2Bson(string json)
         //{
         //	IntPtr jsonptr = Native.NativeUtf8FromString(json);
-
         //	try
         //	{
-
         //		using (var Bson = new BsonHandle())_jsonToBson(jsonptr))
         //		{
         //			return ConvertToBsonDocument(Bson);
