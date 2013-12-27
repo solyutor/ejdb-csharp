@@ -20,7 +20,7 @@ namespace Nejdb.Internals
 
 
         //Creates new instance of ejdb. Don't know what' is it, but it looks it should be done before opening database
-        public DatabaseFunctions(LibraryHandle handle)
+        public unsafe DatabaseFunctions(LibraryHandle handle)
         {
             NewInstance = handle.GetUnmanagedDelegate<NewInstanceDelegate>();
             DeleteInstance = handle.GetUnmanagedDelegate<DeleteInstanceDelegate>();
@@ -47,7 +47,7 @@ namespace Nejdb.Internals
 
         //EJDB_EXPORT bool ejdbopen(EJDB *jb, const char *path, int mode);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbopen")]
-        internal delegate bool OpenDatabaseDelegate([In] DatabaseHandle database, [In] IntPtr path, [MarshalAs(UnmanagedType.I4)]OpenMode openMode);
+        internal unsafe delegate bool OpenDatabaseDelegate([In] DatabaseHandle database, [In] UnsafeBuffer* path, [MarshalAs(UnmanagedType.I4)]OpenMode openMode);
 
         //EJDB_EXPORT bool ejdbclose(EJDB *jb);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbclose")]

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Infrastructure;
 using Nejdb.Internals;
@@ -16,13 +14,12 @@ namespace Nejdb
         internal CollectionHandle CollectionHandle;
 
         private readonly string _name;
-        
+
         private JsonSerializer _serializer;
         private CollectionFunctions _functions;
 
         //Creates new;
         private Collection(Database database, string name, Func<CollectionHandle> generator)
-            
         {
             Database = database;
             _name = name;
@@ -39,14 +36,14 @@ namespace Nejdb
         }
 
         //opens existed
-        internal Collection(Database database, string name) 
-            : this(database, name, () => new CollectionHandle(database, name) )
+        internal Collection(Database database, string name)
+            : this(database, name, () => new CollectionHandle(database, name))
         {
 
         }
 
         //Creates new;
-        internal Collection(Database database, string name, CollectionOptions options) 
+        internal Collection(Database database, string name, CollectionOptions options)
             : this(database, name, () => new CollectionHandle(database, name, options))
         {
         }
@@ -132,15 +129,8 @@ namespace Nejdb
         {
             const bool deleteData = true;
 
-            IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
-            try
-            {
-                _functions.Remove(Database.DatabaseHandle, unmanagedName, deleteData);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
-            }
+            DeleteInternal(deleteData);
+
         }
 
         /// <summary>
@@ -148,17 +138,15 @@ namespace Nejdb
         /// </summary>
         public void Unlink()
         {
-            const bool deleteData = false;
+            const bool unlink = false;
+            DeleteInternal(unlink);
+        }
 
-            IntPtr unmanagedName = Native.NativeUtf8FromString(_name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
-            try
-            {
-                _functions.Remove(Database.DatabaseHandle, unmanagedName, deleteData);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
-            }
+        private unsafe void DeleteInternal(bool drop)
+        {
+            UnsafeBuffer buffer;
+            UnsafeBuffer.FillFromString(&buffer, _name);
+            _functions.Remove(Database.DatabaseHandle, &buffer, drop);
         }
 
         /// <summary>
@@ -246,7 +234,7 @@ namespace Nejdb
                 {
                     return new BsonDocument(stream);
                 }
-                
+
             }
         }
 
@@ -301,21 +289,17 @@ namespace Nejdb
         /// </summary>
         /// <param name="path"></param>
         /// <param name="flags"></param>
-        public void Index(string path, IndexOperations flags)
+        public unsafe void Index(string path, IndexOperations flags)
         {
-            IntPtr pathPointer = Native.NativeUtf8FromString(path); //UnixMarshal.StringToHeap(ipath, Encoding.UTF8);
-            try
+            UnsafeBuffer buffer;
+            UnsafeBuffer.FillFromString(&buffer, path);
+
+            if (_functions.SetIndex(CollectionHandle, &buffer, (int)flags))
             {
-                if (_functions.SetIndex(CollectionHandle, pathPointer, (int)flags))
-                {
-                    return;
-                }
-                throw EjdbException.FromDatabase(Database, "Failed to perform index operation");
+                return;
             }
-            finally
-            {
-                Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(ipathptr);
-            }
+            throw EjdbException.FromDatabase(Database, "Failed to perform index operation");
+
         }
 
         /// <summary>

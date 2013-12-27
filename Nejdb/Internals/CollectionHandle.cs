@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
+﻿using Microsoft.Win32.SafeHandles;
 using Nejdb.Infrastructure;
 
 namespace Nejdb.Internals
@@ -15,48 +13,39 @@ namespace Nejdb.Internals
         }
 
         //Creates collection with specified name
-        public CollectionHandle(Database database, string name, CollectionOptions options) : base(false)
-        {
-            _database = database;
-
-            IntPtr unmanagedName = Native.NativeUtf8FromString(name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
-            try
-            {
-                handle = _database.Library.Functions.Collection.CreateCollection(DatabaseHandle, unmanagedName, ref options);
-
-                if (IsInvalid)
-                {
-                    throw EjdbException.FromDatabase(database, "Unknown error on collection creation");
-                }
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
-            }
-        }
-
-        //gets collection with specified name
-        public CollectionHandle(Database database, string name)
+        public unsafe CollectionHandle(Database database, string name, CollectionOptions options)
             : base(false)
         {
             _database = database;
 
+            UnsafeBuffer buffer;
+            UnsafeBuffer.FillFromString(&buffer, name);
 
-            IntPtr unmanagedName = Native.NativeUtf8FromString(name);//UnixMarshal.StringToHeap(name, Encoding.UTF8);
-            try
-            {
-                handle = _database.Library.Functions.Collection.GetCollection(DatabaseHandle, unmanagedName);
+            handle = _database.Library.Functions.Collection.CreateCollection(DatabaseHandle, &buffer, ref options);
 
-                if (IsInvalid)
-                {
-                    //TODO: Use meta to get actual collection names
-                    throw EjdbException.FromDatabase(database, "Get collection error. May be collection does not exist?");
-                }
-            }
-            finally
+            if (IsInvalid)
             {
-                Marshal.FreeHGlobal(unmanagedName); //UnixMarshal.FreeHeap(cptr);
+                throw EjdbException.FromDatabase(database, "Unknown error on collection creation");
             }
+
+        }
+
+        //gets collection with specified name
+        public unsafe CollectionHandle(Database database, string name)
+            : base(false)
+        {
+            _database = database;
+
+            UnsafeBuffer buffer;
+            UnsafeBuffer.FillFromString(&buffer, name);
+            handle = _database.Library.Functions.Collection.GetCollection(DatabaseHandle, &buffer);
+
+            if (IsInvalid)
+            {
+                //TODO: Use meta to get actual collection names
+                throw EjdbException.FromDatabase(database, "Get collection error. May be collection does not exist?");
+            }
+
         }
 
         protected override bool ReleaseHandle()

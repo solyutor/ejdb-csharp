@@ -7,7 +7,7 @@ namespace Nejdb.Internals
 {
     internal class CollectionFunctions
     {
-        public CollectionFunctions(LibraryHandle handle)
+        public unsafe CollectionFunctions(LibraryHandle handle)
         {
             CreateCollection = handle.GetUnmanagedDelegate<CreateCollectionDelegate>();
             GetCollection = handle.GetUnmanagedDelegate<GetCollectionDelegate>();
@@ -48,16 +48,16 @@ namespace Nejdb.Internals
 
         //EJDB_EXPORT EJCOLL* ejdbgetcoll(EJDB *jb, const char *colname);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbgetcoll")]
-        internal delegate IntPtr GetCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName);
+        internal unsafe delegate IntPtr GetCollectionDelegate([In] DatabaseHandle database, [In] UnsafeBuffer* collectionName);
 
         //EJDB_EXPORT EJCOLL* ejdbcreatecoll(EJDB *jb, const char *colname, EJCOLLOPTS *opts);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbcreatecoll")]
-        internal delegate IntPtr CreateCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, ref CollectionOptions options);
+        internal unsafe delegate IntPtr CreateCollectionDelegate([In] DatabaseHandle database, [In] UnsafeBuffer* collectionName, ref CollectionOptions options);
 
 
         //EJDB_EXPORT bool ejdbrmcoll(EJDB *jb, const char *colname, bool unlinkfile);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbrmcoll")]
-        internal delegate bool RemoveCollectionDelegate([In] DatabaseHandle database, [In] IntPtr collectionName, bool unlink);
+        internal unsafe delegate bool RemoveCollectionDelegate([In] DatabaseHandle database, [In] UnsafeBuffer* collectionName, bool unlink);
 
 
         //EJDB_EXPORT bool ejdbsaveBson3(EJCOLL *jcoll, void *bsdata, Bson_oid_t *id, bool merge);
@@ -96,6 +96,6 @@ namespace Nejdb.Internals
 
         ////EJDB_EXPORT bool ejdbsetindex(EJCOLL *coll, const char *ipath, int flags);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsetindex")]
-        internal delegate bool SetIndexDelegate([In] CollectionHandle collection, [In] IntPtr indexPath, [In] int operation);
+        internal unsafe delegate bool SetIndexDelegate([In] CollectionHandle collection, [In] UnsafeBuffer* indexPath, [In] int operation);
     }
 }

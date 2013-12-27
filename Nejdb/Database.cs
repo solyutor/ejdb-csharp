@@ -29,7 +29,7 @@ namespace Nejdb
         {
             _functions = library.Functions.Database;
             DatabaseHandle = new DatabaseHandle(library);
-            
+
             Library = library;
             StreamPool = new StreamPool();
         }
@@ -175,22 +175,17 @@ namespace Nejdb
         /// </summary>
         /// <param name="dbFilePath">Database filename</param>
         /// <param name="openMode"></param>
-        public void Open(string dbFilePath, OpenMode openMode = DefaultOpenMode)
+        public unsafe void Open(string dbFilePath, OpenMode openMode = DefaultOpenMode)
         {
-            IntPtr pathPointer = Native.NativeUtf8FromString(dbFilePath); //UnixMarshal.StringToHeap(path, Encoding.UTF8);
+            UnsafeBuffer buffer;
+            UnsafeBuffer.FillFromString(&buffer, dbFilePath);
 
-            try
+            bool result = _functions.OpenDatabase(DatabaseHandle, &buffer, openMode);
+            if (!result)
             {
-                bool result = _functions.OpenDatabase(DatabaseHandle, pathPointer, openMode);
-                if (!result)
-                {
-                    throw EjdbException.FromDatabase(this, "Error on open database");
-                }
+                throw EjdbException.FromDatabase(this, "Error on open database");
             }
-            finally
-            {
-                Marshal.FreeHGlobal(pathPointer); //UnixMarshal.FreeHeap(pptr);
-            }
+
         }
 
         /// <summary>

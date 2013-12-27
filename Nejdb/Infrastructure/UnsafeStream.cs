@@ -11,19 +11,19 @@ namespace Nejdb.Infrastructure
         private byte* _current;
         //private int _length;
 
-        public UnsafeStream(BsonHandle bson)
+        public UnsafeStream(byte* origin)
         {
-            _bson = bson;
+            _origin = origin;
+            _current = _origin;
+        }
+
+        public UnsafeStream(BsonHandle bson) : this(bson.GetBsonBuffer())
+        {
             if (bson.IsInvalid)
             {
                 throw new InvalidOperationException();
             }
-
-            _origin = bson.GetBsonBuffer();
-
-            //_length = *((int*) _origin);
-
-            _current = _origin;
+            _bson = bson;
         }
 
         public override void Flush()

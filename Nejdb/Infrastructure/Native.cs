@@ -23,20 +23,6 @@ namespace Nejdb.Infrastructure
 {
     public static class Native
     {
-        static Native()
-        {
-        }
-
-        public static IntPtr NativeUtf8FromString(string managedString)
-        {
-            int len = Encoding.UTF8.GetByteCount(managedString);
-            byte[] buffer = new byte[len + 1];
-            Encoding.UTF8.GetBytes(managedString, 0, managedString.Length, buffer, 0);
-            IntPtr nativeUtf8 = Marshal.AllocHGlobal(buffer.Length);
-            Marshal.Copy(buffer, 0, nativeUtf8, buffer.Length);
-            return nativeUtf8;
-        }
-
         public static string StringFromNativeUtf8(IntPtr nativeUtf8)
         {
             int len = 0;
