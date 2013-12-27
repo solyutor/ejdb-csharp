@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
+    <Compile Include="Infrastructure\UnsafeStream.cs" />
     <Compile Include="Internals\CollectionFunctions.cs" />
     <Compile Include="Internals\DatabaseFunctions.cs" />
     <Compile Include="Internals\Functions.cs" />

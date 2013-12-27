@@ -234,7 +234,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public BsonDocument Load(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -242,7 +242,7 @@ namespace Nejdb
                     return null;
                 }
 
-                using (var stream = Database.Library.ConvertToStream(bson, Database.StreamPool))
+                using (var stream = Database.Library.ConvertToStream(bson))
                 {
                     return new BsonDocument(stream);
                 }
@@ -259,7 +259,7 @@ namespace Nejdb
         /// <param name="id">Id of an object</param>
         public TDocument Load<TDocument>(ObjectId id)
         {
-            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library.FreeBson))
+            using (var bson = new BsonHandle(() => _functions.LoadBson(CollectionHandle, ref id), Database.Library))
             {
                 //document does not exists
                 if (bson.IsInvalid)
@@ -267,7 +267,7 @@ namespace Nejdb
                     return default(TDocument);
                 }
 
-                using (var stream = Database.Library.ConvertToStream(bson, Database.StreamPool))
+                using (var stream = Database.Library.ConvertToStream(bson))
                 using (var reader = new BsonReader(stream))
                 {
                     var document = _serializer.Deserialize<TDocument>(reader);

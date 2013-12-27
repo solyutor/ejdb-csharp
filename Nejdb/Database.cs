@@ -98,14 +98,14 @@ namespace Nejdb
         {
             get
             {
-                using (var bson = new BsonHandle(() => _functions.GetMetadata(DatabaseHandle), Library.FreeBson))
+                using (var bson = new BsonHandle(() => _functions.GetMetadata(DatabaseHandle), Library))
                 {
                     if (bson.IsInvalid)
                     {
                         EjdbException.FromDatabase(this, "Could not get database metadata");
                     }
 
-                    using (var stream = Library.ConvertToStream(bson, StreamPool))
+                    using (var stream = Library.ConvertToStream(bson))
                     {
                         return new BsonDocument(stream);
                     }

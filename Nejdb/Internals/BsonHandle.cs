@@ -5,17 +5,28 @@ namespace Nejdb.Internals
 {
     internal class BsonHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
-        private readonly Action<IntPtr> _delete;
+        private Library _library;
 
-        public BsonHandle(Func<IntPtr> create, Action<IntPtr> delete) : base(true)
+        public BsonHandle(Func<IntPtr> create, Library library) : base(true)
         {
+            _library = library;
             handle = create();
-            _delete = delete;
+            
+        }
+
+        public unsafe byte* GetBsonBuffer()
+        {
+            int size;
+            return _library.GetBsonData(this, out size);
         }
 
         protected override bool ReleaseHandle()
         {
-            _delete(handle);
+            if (_library != null)
+            {
+                _library.FreeBson(handle);
+            }
+            _library = null;
             return true;
         }
     }

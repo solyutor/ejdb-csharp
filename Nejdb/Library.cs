@@ -35,7 +35,7 @@ namespace Nejdb
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "bson_data2", CallingConvention = CallingConvention.Cdecl)]
         //internal static extern IntPtr _bson_data2([In] IntPtr bsptr, out int size);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("bson_data2")]
-        private delegate IntPtr BsonToStringDelegate(BsonHandle Bson, out int size);
+        internal unsafe delegate byte* BsonToStringDelegate(BsonHandle Bson, out int size);
 
 
         //EJDB_EXPORT Bson* json2bson(const char *jsonstr);
@@ -57,7 +57,7 @@ namespace Nejdb
 
         private readonly GetErrorMessage _getErrorMessage;
         private readonly FreeBsonDelegate _freeBson;
-        private readonly BsonToStringDelegate _bsonToString;
+        internal readonly BsonToStringDelegate GetBsonData;
         private JsonToBsonDelegate _jsonToBson;
 
         private static readonly Lazy<Library> _instance;
@@ -77,7 +77,7 @@ namespace Nejdb
             _instance = new Lazy<Library>(Create);
         }
 
-        private Library(LibraryHandle libraryHandle)
+        private unsafe Library(LibraryHandle libraryHandle)
         {
             LibraryHandle = libraryHandle;
 
@@ -86,7 +86,7 @@ namespace Nejdb
             _getErrorMessage = LibraryHandle.GetUnmanagedDelegate<GetErrorMessage>();
 
             _freeBson = libraryHandle.GetUnmanagedDelegate<FreeBsonDelegate>();
-            _bsonToString = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
+            GetBsonData = libraryHandle.GetUnmanagedDelegate<BsonToStringDelegate>();
             //_jsonToBson = libraryHandle.GetUnmanagedDelegate<JsonToBsonDelegate>();
 
             var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
@@ -158,21 +158,9 @@ namespace Nejdb
             _freeBson(Bson);
         }
 
-        internal Stream ConvertToStream(BsonHandle bson, StreamPool streamPool)
+        internal Stream ConvertToStream(BsonHandle bson)
         {
-            int size;
-            IntPtr bsonPointer = _bsonToString(bson, out size);
-
-            MemoryStream stream = streamPool.GetStream();
-
-            if (stream.Capacity < size)
-            {
-                stream.Capacity = size;
-            }
-
-            byte[] buffer = stream.GetBuffer();
-            Marshal.Copy(bsonPointer, buffer, 0, size);
-            TypeExtension.SetLength(stream, size);
+            var stream = new UnsafeStream(bson);
             return stream;
         }
 
