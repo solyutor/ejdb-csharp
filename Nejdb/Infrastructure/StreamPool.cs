@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Nejdb.Internals
+namespace Nejdb.Infrastructure
 {
     /// <summary>
     /// Encapsulates functionality for pooling streams. 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nejdb.Internals
+namespace Nejdb.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
     internal class UnmanagedProcedureAttribute : Attribute

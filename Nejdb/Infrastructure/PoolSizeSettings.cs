@@ -1,4 +1,4 @@
-﻿namespace Nejdb.Internals
+﻿namespace Nejdb.Infrastructure
 {
     /// <summary>
     /// Contains settings for thread-pool

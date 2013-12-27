@@ -1,4 +1,4 @@
-﻿namespace Nejdb.Tests
+﻿namespace Nejdb.Tests.Tutorial
 {
     public struct BookHeader
     {

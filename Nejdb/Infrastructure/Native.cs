@@ -17,8 +17,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Nejdb.Internals;
 
-namespace Nejdb.Internals
+namespace Nejdb.Infrastructure
 {
     public static class Native
     {

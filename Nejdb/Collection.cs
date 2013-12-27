@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
+using Nejdb.Infrastructure;
 using Nejdb.Internals;
 using Nejdb.Queries;
 using Newtonsoft.Json;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Nejdb.Bson;
+using Nejdb.Infrastructure;
 using Nejdb.Internals;
 
 namespace Nejdb

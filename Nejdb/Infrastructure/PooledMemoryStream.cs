@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 
-namespace Nejdb.Internals
+namespace Nejdb.Infrastructure
 {
     /// <summary>
     /// Contains additional functionality to make it possible to use in pool

@@ -2,7 +2,7 @@
 using Nejdb.Tests.Queries;
 using NUnit.Framework;
 
-namespace Nejdb.Tests
+namespace Nejdb.Tests.Tutorial
 {
     [TestFixture]
     public class Tutorial

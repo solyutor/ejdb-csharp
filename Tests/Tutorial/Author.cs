@@ -2,7 +2,7 @@
 using Nejdb.Bson;
 using Nejdb.Tests.Queries;
 
-namespace Nejdb.Tests
+namespace Nejdb.Tests.Tutorial
 {
     public class Author
     {
