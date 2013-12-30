@@ -217,7 +217,7 @@ namespace Nejdb
                     throw EjdbException.FromDatabase(Database, "Failed to save document");
                 }
 
-                IdHelper<TDocument>.SetId(document, objectId);
+                IdHelper<TDocument>.SetId(document, ref objectId);
 
                 return objectId;
             }
@@ -269,7 +269,7 @@ namespace Nejdb
                 using (var reader = new BsonReader(stream))
                 {
                     var document = _serializer.Deserialize<TDocument>(reader);
-                    IdHelper<TDocument>.SetId(document, id);
+                    IdHelper<TDocument>.SetId(document, ref id);
                     return document;
                 }
             }

@@ -21,7 +21,7 @@ namespace Nejdb
         /// Executes query and returns result as cursor
         /// </summary>
         /// <param name="queryMode">Query mode</param>
-        public Cursor<TDocument> Execute(QueryMode queryMode = QueryMode.Normal)
+        public unsafe Cursor<TDocument> Execute(QueryMode queryMode = QueryMode.Normal)
         {
             Handle.SetHints(Hints);
             int count;
@@ -74,11 +74,10 @@ namespace Nejdb
         /// Executes query and returns result as cursor
         /// </summary>
         /// <param name="queryMode">Query mode</param>
-        public Cursor Execute(QueryMode queryMode = QueryMode.Normal)
+        public unsafe Cursor Execute(QueryMode queryMode = QueryMode.Normal)
         {
             Handle.SetHints(Hints);
 
-            
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
             var cursor = new Cursor(cursorHandle, Handle.Collection.Database.Library.Functions.Query.CursorResult, count);

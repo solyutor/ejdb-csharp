@@ -66,7 +66,7 @@ namespace Nejdb.Internals
 
         ////const void* ejdbqresultBsondata(EJQRESULT qr, int pos, int *size)
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbqresultbsondata")]
-        internal delegate IntPtr CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
+        internal unsafe delegate byte* CursorResultDelegate([In] CursorHandle cursor, [In] int position, out int size);
 
         //EJDB_EXPORT TCXSTR *tcxstrnew(void)
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("tcxstrnew")]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Nejdb.Internals;
 
 namespace Nejdb
@@ -15,18 +14,18 @@ namespace Nejdb
         private int _position;
         private readonly int _count;
 
-        internal CursorBase(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult,  int count)
+        internal unsafe CursorBase(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
         {
             _cursorHandle = cursorHandle;
             _cursorResult = cursorResult;
             _count = count;
         }
 
-        internal IntPtr CursorResult(int index, out int size)
+        internal unsafe byte* CursorResult(int index, out int size)
         {
-            IntPtr resultPointer = _cursorResult(_cursorHandle, index, out size);
+            var resultPointer = _cursorResult(_cursorHandle, index, out size);
 
-            if (resultPointer == IntPtr.Zero)
+            if (resultPointer == (byte*)IntPtr.Zero)
             {
                 throw new EjdbException("Cursor result returned invalid pointer.");
             }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using Nejdb.Bson;
+using Nejdb.Infrastructure;
 using Nejdb.Internals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
-using Newtonsoft.Json.Converters;
 
 namespace Nejdb
 {
@@ -18,7 +15,7 @@ namespace Nejdb
     {
         private readonly JsonSerializer _serializer;
 
-        internal Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
+        internal unsafe Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
             : base(cursorHandle, cursorResult, count)
         {
             _serializer = new JsonSerializer
@@ -32,7 +29,7 @@ namespace Nejdb
         /// <summary>
         /// Returns a result with specified index from results
         /// </summary>
-        public TDocument this[int index]
+        public unsafe TDocument this[int index]
         {
             get
             {
@@ -41,18 +38,15 @@ namespace Nejdb
                 int size;
                 var resultPointer = CursorResult(index, out size);
 
-                byte[] bson = new byte[size];
-
-                Marshal.Copy(resultPointer, bson, 0, bson.Length);
-
-                using (var stream = new MemoryStream(bson))
+                using (var stream = new UnsafeStream(resultPointer))
                 using (var reader = new BsonReader(stream))
                 {
-                    var id = new ObjectId(new ArraySegment<byte>(bson, 9, 12));
+                    //TODO: Try to move this hack to deserialization step
+                    var id = *((ObjectId*) (resultPointer + 9));
 
                     TDocument result = _serializer.Deserialize<TDocument>(reader);
 
-                    IdHelper<TDocument>.SetId(result, id);
+                    IdHelper<TDocument>.SetId(result, ref id);
                     return result;
                 }
 
@@ -97,7 +91,7 @@ namespace Nejdb
     /// </summary>
     public class Cursor : CursorBase, IEnumerable<BsonIterator>
     {
-        internal Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
+        internal unsafe Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
             : base(cursorHandle, cursorResult, count)
         {
         }
@@ -105,7 +99,7 @@ namespace Nejdb
         /// <summary>
         /// Returns a result with specified index from results
         /// </summary>
-        public BsonIterator this[int index]
+        public unsafe BsonIterator this[int index]
         {
             get
             {
@@ -113,10 +107,7 @@ namespace Nejdb
 
                 int size;
                 var resultPointer = CursorResult(index, out size);
-
-                byte[] bsdata = new byte[size];
-                Marshal.Copy(resultPointer, bsdata, 0, bsdata.Length);
-                return new BsonIterator(bsdata);
+                return new BsonIterator(new UnsafeStream(resultPointer));
             }
         }
 

@@ -57,10 +57,9 @@ namespace Nejdb
             return _getter(document);
         }
 
-        public static void SetId(TDocument document, ObjectId id)
+        public static void SetId(TDocument document, ref ObjectId id)
         {
             _setter(document, id);
         }
-
     }
 }
