@@ -64,7 +64,7 @@ namespace Nejdb.Internals
         //TODO: Possible save methods: bool ejdbsaveBson(EJCOLL *coll, Bson *bs, Bson_oid_t *id) 
         //TODO: Possible save methods: bool ejdbsaveBson2(EJCOLL *coll, Bson *bs, Bson_oid_t *id, bool merge) - this one is preferable. Other two calls it. 		
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbsavebson3")]
-        internal delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte[] bsdata, [In, Out] ref ObjectId oid, [In] bool merge);
+        internal unsafe delegate bool SaveBsonDelegate([In] CollectionHandle collection, [In] byte* bsdata, [In, Out] ObjectId* oid, [In] bool merge);
 
         //EJDB_EXPORT Bson* ejdbloadbson(EJCOLL *coll, const Bson_oid_t *id);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbloadbson")]

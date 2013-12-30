@@ -154,7 +154,7 @@ namespace Nejdb
         /// </summary>
         /// <param name="doc">Document to save</param>
         /// <param name="merge">If true the merge will be performed with old and new objects. Otherwise old object will be replaced</param>
-        public ObjectId Save(BsonDocument doc, bool merge)
+        public unsafe ObjectId Save(BsonDocument doc, bool merge)
         {
             BsonValue id = doc.GetBsonValue("_id");
 
@@ -168,7 +168,11 @@ namespace Nejdb
             using (var stream = Database.StreamPool.GetStream())
             {
                 doc.Serialize(stream);
-                var saveOk = _functions.SaveBson(CollectionHandle, stream.GetBuffer(), ref oiddata, merge);
+                bool saveOk = false;
+                fixed (byte* streamPointer = &stream.GetBuffer()[0])
+                {
+                    saveOk = _functions.SaveBson(CollectionHandle, streamPointer, &oiddata, merge);
+                }
 
                 if (saveOk && id == null)
                 {
@@ -180,6 +184,7 @@ namespace Nejdb
                     throw EjdbException.FromDatabase(Database, "Failed to save Bson");
                 }
             }
+
             return oiddata;
         }
 
@@ -191,25 +196,30 @@ namespace Nejdb
         /// <param name="document">Document to save</param>
         /// <param name="merge">If true the merge will be performed with old and new objects. Otherwise old object will be replaced</param>
         /// <returns>Id of saved document</returns>
-        public ObjectId Save<TDocument>(TDocument document, bool merge)
+        public unsafe ObjectId Save<TDocument>(TDocument document, bool merge)
         {
+
             using (var stream = Database.StreamPool.GetStream())
             using (var writer = new BsonWriter(stream))
             {
                 _serializer.Serialize(writer, document);
 
-                ObjectId id = IdHelper<TDocument>.GetId(document);
+                ObjectId objectId;
 
-                var saveOk = _functions.SaveBson(CollectionHandle, stream.GetBuffer(), ref id, merge);
+                bool saveOk = false;
+                fixed (byte* streamPointer = &stream.GetBuffer()[0])
+                {
+                    saveOk = _functions.SaveBson(CollectionHandle, streamPointer, &objectId, merge);
+                }
 
                 if (!saveOk)
                 {
                     throw EjdbException.FromDatabase(Database, "Failed to save document");
                 }
 
-                IdHelper<TDocument>.SetId(document, id);
+                IdHelper<TDocument>.SetId(document, objectId);
 
-                return id;
+                return objectId;
             }
         }
 
