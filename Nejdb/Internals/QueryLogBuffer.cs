@@ -24,7 +24,7 @@ namespace Nejdb.Internals
             get { return _functions.BufferSize(handle); }
         }
 
-        public IntPtr AsString()
+        public unsafe sbyte* AsString()
         {
             return _functions.BufferToString(handle);
         }

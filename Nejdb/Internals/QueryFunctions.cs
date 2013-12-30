@@ -19,7 +19,7 @@ namespace Nejdb.Internals
         internal readonly GetSizeDelegate BufferSize;
         internal readonly ToStringDelegate BufferToString;
 
-        public QueryFunctions(LibraryHandle handle)
+        public unsafe QueryFunctions(LibraryHandle handle)
         {
             Create = handle.GetUnmanagedDelegate<CreateQueryDelegate>();
 
@@ -82,6 +82,6 @@ namespace Nejdb.Internals
 
         //EJDB_EXPORT int tcxstrptr(const TCXSTR *xstr);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("tcxstrptr")]
-        internal delegate IntPtr ToStringDelegate(IntPtr query);
+        internal unsafe delegate sbyte* ToStringDelegate(IntPtr query);
     }
 }

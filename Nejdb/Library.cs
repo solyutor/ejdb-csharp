@@ -17,12 +17,12 @@ namespace Nejdb
         //EJDB_EXPORT const char *ejdbversion();
         //internal static extern IntPtr _ejdbversion();
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdbversion")]
-        private delegate IntPtr GetVersion(LibraryHandle handle);
+        private unsafe delegate sbyte* GetVersion(LibraryHandle handle);
 
         //[DllImport(EJDB_LIB_NAME, EntryPoint = "ejdberrmsg", CallingConvention = CallingConvention.Cdecl)]
         //internal static extern IntPtr _ejdberrmsg(int ecode)
         [UnmanagedFunctionPointer(CallingConvention.Cdecl), UnmanagedProcedure("ejdberrmsg")]
-        private delegate IntPtr GetErrorMessage(int errorCode);
+        private unsafe delegate sbyte* GetErrorMessage(int errorCode);
 
 
         //EJDB_EXPORT void Bson_del(Bson *b);
@@ -91,14 +91,14 @@ namespace Nejdb
 
             var getVersion = LibraryHandle.GetUnmanagedDelegate<GetVersion>();
 
-            IntPtr version = getVersion(LibraryHandle);
+            var version = getVersion(LibraryHandle);
 
-            if (version == IntPtr.Zero)
+            if (version == IntPtr.Zero.ToPointer())
             {
                 throw new Exception("Unable to get ejdb library version");
             }
 
-            _version = Native.StringFromNativeUtf8(version); //UnixMarshal.PtrToString(vres, Encoding.UTF8);
+            _version = new string(version); //UnixMarshal.PtrToString(vres, Encoding.UTF8);
             _hexVersion = Convert.ToInt64("0x" + Version.Replace(".", ""), 16);
         }
 
@@ -147,9 +147,9 @@ namespace Nejdb
             return new Database(this);
         }
 
-        public string GetLastErrorMessage(int errorCode)
+        public unsafe string GetLastErrorMessage(int errorCode)
         {
-            return Native.StringFromNativeUtf8(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
+            return new string(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
         }
 
         //Used internally by BsonHandle
@@ -172,7 +172,7 @@ namespace Nejdb
         ///// <param name="json">JSON string</param>
         //public BsonDocument Json2Bson(string json)
         //{
-        //	IntPtr jsonptr = Native.NativeUtf8FromString(json);
+        //	IntPtr jsonptr = Plaform.NativeUtf8FromString(json);
         //	try
         //	{
         //		using (var Bson = new BsonHandle())_jsonToBson(jsonptr))

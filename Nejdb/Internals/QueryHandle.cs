@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.Win32.SafeHandles;
 using Nejdb.Infrastructure;
 
@@ -76,12 +77,12 @@ namespace Nejdb.Internals
                     try
                     {
                         if (cursorHandle != null && !cursorHandle.IsInvalid)
-                        {
-                            //static extern IntPtr _tcxstrptr([In] IntPtr strptr);
-                            IntPtr sbptr = logsptr.AsString();
-
-                            cursorHandle.Log = Native.StringFromNativeUtf8(sbptr); //UnixMarshal.PtrToString(sbptr, Encoding.UTF8);
-                        }
+                            unsafe
+                            {
+                                //static extern IntPtr _tcxstrptr([In] IntPtr strptr);
+                                var sbptr = logsptr.AsString();
+                                cursorHandle.Log = new string(sbptr);
+                            }
                     }
                     finally
                     {
