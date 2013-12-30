@@ -131,7 +131,7 @@ namespace Nejdb
         /// <returns></returns>
         public static Library Create()
         {
-            var libraryHandle = LibraryHandle.Load();
+            var libraryHandle = Platform.LoadEjdbLibrary();
 
             var result = new Library(libraryHandle);
 
