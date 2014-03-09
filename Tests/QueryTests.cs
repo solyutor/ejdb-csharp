@@ -184,6 +184,30 @@ namespace Nejdb.Tests
             }
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Can_execute_strongly_typed_query_with_order_by_hint(bool asc)
+        {
+            _collection.Save(_originSample, false);
+
+            var johnWayne = new Sample { Name = "John Wayne" };
+            _collection.Save(johnWayne, false);
+
+            var compareWith = asc ? _originSample : johnWayne;
+
+            using (var query = _collection.CreateQuery<Sample>())
+            {
+                query.Hints.OrderBy<Sample, string>(x => x.Name, asc);
+                    
+                using (var cursor = query.Execute(QueryMode.Explain))
+                {
+                    Sample first = cursor[0];
+                    Console.WriteLine(cursor.GetLog());
+                    Assert.That(first.Id, Is.EqualTo(compareWith.Id));
+                }
+            }
+        }
+
         [Test]
         public void Can_enumerate_over_strongly_typed_cursor()
         {

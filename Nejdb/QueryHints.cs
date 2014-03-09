@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Nejdb.Bson;
+using Nejdb.Queries;
 
 namespace Nejdb
 {
@@ -59,6 +61,19 @@ namespace Nejdb
             oby[field] = (asc) ? 1 : -1;
 
             return this;
+        }
+
+        /// <summary>
+        /// Set sorted field
+        /// </summary>
+        /// <param name="member">Member to sort by</param>
+        /// <param name="asc"></param>
+        /// <returns></returns>
+        public QueryHints OrderBy<TDocument, TProperty>(Expression<Func<TDocument, TProperty>> member, bool asc = true)
+        {
+            var field = member.ToMemberPath();
+
+            return OrderBy(field, asc);
         }
 
         /// <summary>
