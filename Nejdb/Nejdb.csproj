@@ -129,7 +129,7 @@
     <Compile Include="EjdbQueryException.cs" />
     <Compile Include="Bson\BsonNull.cs" />
     <Compile Include="Bson\BsonUndefined.cs" />
-    <Compile Include="Infrastructure\Plaform.cs" />
+    <Compile Include="Infrastructure\Platform.cs" />
     <Compile Include="Internals\TypeExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -7,12 +7,12 @@ namespace Nejdb.Infrastructure
 {
     internal static class Platform
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern LibraryHandle LoadLibrary(string dllToLoad);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool FreeLibrary(IntPtr hModule);
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern MethodHandle GetProcAddress(LibraryHandle library, string procedureName);
 
