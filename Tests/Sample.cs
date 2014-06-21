@@ -16,4 +16,12 @@ namespace Nejdb.Tests
 
         public string Name { get; set; }
     }
+
+
+    public class NonIdObjectIdSample
+    {
+        public ObjectId Id { get; set; }
+
+        public ObjectId OtherId { get; set; }
+    }
 }
