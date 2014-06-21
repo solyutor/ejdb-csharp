@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text;
 using Microsoft.Win32.SafeHandles;
-using Nejdb.Infrastructure;
 
 namespace Nejdb.Internals
 {

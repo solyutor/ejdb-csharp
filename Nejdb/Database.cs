@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Nejdb.Bson;
 using Nejdb.Infrastructure;
 using Nejdb.Internals;
+using Newtonsoft.Json;
 
 namespace Nejdb
 {
@@ -20,6 +21,7 @@ namespace Nejdb
         internal DatabaseHandle DatabaseHandle;
         private DatabaseFunctions _functions;
         internal readonly StreamPool StreamPool;
+        private JsonSerializer _serializer;
 
         /// <summary>
         /// Creates instance of EJDB. 
@@ -32,6 +34,13 @@ namespace Nejdb
 
             Library = library;
             StreamPool = new StreamPool();
+
+            Serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = NejdbContractResolver.Instance,
+            };
+            Serializer.Converters.Add(ObjectIdConverter.Instance);
         }
 
         /// <summary>
@@ -112,6 +121,23 @@ namespace Nejdb
                 }
             }
         }
+
+        /// <summary>
+        /// Default serialezer used by <see cref="Collection"/> and <see cref="Cursor"/> objects those belongs to <see cref="Database"/> instance.
+        /// </summary>
+        public JsonSerializer Serializer
+        {
+            get { return _serializer; }
+            set
+            {
+                if (value == null)
+                {
+                    ThrowHelper.ThrowNull("value");
+                }
+                _serializer = value;
+            }
+        }
+
 
         ///// <summary>
         ///// Executes EJDB command.

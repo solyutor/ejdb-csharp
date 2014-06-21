@@ -8,15 +8,21 @@ using Newtonsoft.Json.Bson;
 
 namespace Nejdb
 {
+    /// <summary>
+    /// Represents named collection of bson document. Allows to perform basic CRUD operation over documents.
+    /// </summary>
     public class Collection : IDisposable
     {
+        /// <summary>
+        /// A reference to <see cref="Database"/> object the collection belongs to.
+        /// </summary>
         public readonly Database Database;
         internal CollectionHandle CollectionHandle;
 
         private readonly string _name;
 
-        private JsonSerializer _serializer;
         private CollectionFunctions _functions;
+        private JsonSerializer _serializer;
 
         //Creates new;
         private Collection(Database database, string name, Func<CollectionHandle> generator)
@@ -27,12 +33,8 @@ namespace Nejdb
 
             _functions = database.Library.Functions.Collection;
 
-            _serializer = new JsonSerializer
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = NejdbContractResolver.Instance,
-            };
-            _serializer.Converters.Add(ObjectIdConverter.Instance);
+            Serializer = database.Serializer;
+
         }
 
         //opens existed
@@ -109,6 +111,23 @@ namespace Nejdb
                 throw EjdbException.FromDatabase(Database, "Failed to get transaction status");
             }
         }
+
+        /// <summary>
+        /// Get or sets serializer for the collection
+        /// </summary>
+        public JsonSerializer Serializer
+        {
+            get { return _serializer; }
+            set
+            {
+                if (value == null)
+                {
+                    ThrowHelper.ThrowNull("value");
+                }
+                _serializer = value;
+            }
+        }
+
         /// <summary>
         /// Synchronize content of a EJDB collection database with the file on device
         /// </summary>
@@ -202,7 +221,7 @@ namespace Nejdb
             using (var stream = Database.StreamPool.GetStream())
             using (var writer = new BsonWriter(stream))
             {
-                _serializer.Serialize(writer, document);
+                Serializer.Serialize(writer, document);
 
                 ObjectId objectId;
 
@@ -268,7 +287,7 @@ namespace Nejdb
                 using (var stream = Database.Library.ConvertToStream(bson))
                 using (var reader = new BsonReader(stream))
                 {
-                    var document = _serializer.Deserialize<TDocument>(reader);
+                    var document = Serializer.Deserialize<TDocument>(reader);
                     IdHelper<TDocument>.SetId(document, ref id);
                     return document;
                 }

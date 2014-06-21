@@ -26,7 +26,8 @@ namespace Nejdb
             Handle.SetHints(Hints);
             int count;
             var cursorHandle = Handle.Execute(queryMode, out count);
-            var cursor = new Cursor<TDocument>(cursorHandle, Handle.Collection.Database.Library.Functions.Query.CursorResult, count);
+            var serializer = Handle.Collection.Serializer;
+            var cursor = new Cursor<TDocument>(cursorHandle, Handle.Collection.Database.Library.Functions.Query.CursorResult, count, serializer);
             return cursor;
         }
 

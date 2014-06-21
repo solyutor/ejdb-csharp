@@ -13,17 +13,12 @@ namespace Nejdb
     /// </summary>
     public class Cursor<TDocument> : CursorBase, IEnumerable<TDocument>
     {
-        private readonly JsonSerializer _serializer;
+        private JsonSerializer _serializer;
 
-        internal unsafe Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count)
+        internal unsafe Cursor(CursorHandle cursorHandle, QueryFunctions.CursorResultDelegate cursorResult, int count, JsonSerializer serializer)
             : base(cursorHandle, cursorResult, count)
         {
-            _serializer = new JsonSerializer
-                          {
-                              ContractResolver = NejdbContractResolver.Instance
-                          };
-            _serializer.Converters.Add(ObjectIdConverter.Instance);
-
+            Serializer = serializer;
         }
 
         /// <summary>
@@ -44,7 +39,7 @@ namespace Nejdb
                     //TODO: Try to move this hack to deserialization step
                     var id = *((ObjectId*) (resultPointer + 9));
 
-                    TDocument result = _serializer.Deserialize<TDocument>(reader);
+                    TDocument result = Serializer.Deserialize<TDocument>(reader);
 
                     IdHelper<TDocument>.SetId(result, ref id);
                     return result;
@@ -69,6 +64,22 @@ namespace Nejdb
         public TDocument Current
         {
             get { return this[Position]; }
+        }
+
+        /// <summary>
+        /// Used to deserialize documents in an instance of <see cref="Cursor"/>
+        /// </summary>
+        public JsonSerializer Serializer
+        {
+            get { return _serializer; }
+            set
+            {
+                if (value == null)
+                {
+                    ThrowHelper.ThrowNull("value");
+                }
+                _serializer = value;
+            }
         }
 
         public IEnumerator<TDocument> GetEnumerator()

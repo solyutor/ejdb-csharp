@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
+    <Compile Include="Infrastructure\ThrowHelper.cs" />
     <Compile Include="Infrastructure\UnsafeBuffer.cs" />
     <Compile Include="Infrastructure\UnsafeStream.cs" />
     <Compile Include="Internals\CollectionFunctions.cs" />
