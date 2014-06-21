@@ -86,7 +86,7 @@
     <Compile Include="Queries\StartsWithCriterion.cs" />
     <Compile Include="Queries\StringAndOrAnyCriterion.cs" />
     <Compile Include="Transaction.cs" />
-    <Compile Include="ObjectIdContractResolver.cs" />
+    <Compile Include="NejdbContractResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\BsonHandle.cs" />
     <Compile Include="Collection.cs" />

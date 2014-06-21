@@ -104,6 +104,17 @@ namespace Nejdb.Tests
             Assert.That(reloaded.Id, Is.EqualTo(origin.Id));
             Assert.That(reloaded.Name, Is.EqualTo(origin.Name));
         }
+
+        [Test]
+        public void Can_save_and_load_strongly_typed_document_with_private_setter_property()
+        {
+            var origin = new Sample ("Mhatma Handi");
+            var id = _collection.Save(origin, false);
+
+            var reloaded = _collection.Load<Sample>(id);
+            
+            Assert.That(reloaded.PrivateName, Is.EqualTo(origin.PrivateName));
+        }
         
         [Test]
         public void Can_save_and_load_strongly_typed_document_with_reference_to_other_object_id()

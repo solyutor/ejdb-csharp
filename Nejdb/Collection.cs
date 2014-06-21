@@ -30,7 +30,7 @@ namespace Nejdb
             _serializer = new JsonSerializer
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = ObjectIdContractResolver.Instance,
+                ContractResolver = NejdbContractResolver.Instance,
             };
             _serializer.Converters.Add(ObjectIdConverter.Instance);
         }

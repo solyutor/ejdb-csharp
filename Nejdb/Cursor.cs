@@ -20,7 +20,7 @@ namespace Nejdb
         {
             _serializer = new JsonSerializer
                           {
-                              ContractResolver = ObjectIdContractResolver.Instance
+                              ContractResolver = NejdbContractResolver.Instance
                           };
             _serializer.Converters.Add(ObjectIdConverter.Instance);
 

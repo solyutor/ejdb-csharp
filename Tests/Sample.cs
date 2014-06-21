@@ -4,9 +4,19 @@ namespace Nejdb.Tests
 {
     public class Sample
     {
+        public Sample()
+        {
+            
+        }
+        public Sample(string privateName)
+        {
+            PrivateName = privateName;
+        }
         public ObjectId Id { get; private set; }
 
         public string Name { get; set; }
+
+        public string PrivateName { get; private set; }
     }
 
 
