@@ -24,16 +24,12 @@ namespace Nejdb
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var bsonReader = reader as BsonReader;
-            if (bsonReader == null)
-            {
-                return new ObjectId(reader.ReadAsString());
-            }
-            else
-            {
-                var bytes = bsonReader.ReadAsBytes();
-                return new ObjectId(bytes);    
-            }
+            throw new NotSupportedException("Cannot read using ObjectIdConverter. Use conversion operator on ObjectId type.");
+        }
+
+        public override bool CanRead
+        {
+            get { return false; }
         }
 
         public override bool CanConvert(Type objectType)

@@ -8,4 +8,12 @@ namespace Nejdb.Tests
 
         public string Name { get; set; }
     }
+
+
+    public class PublicObjectIdSample
+    {
+        public ObjectId Id { get; set; }
+
+        public string Name { get; set; }
+    }
 }

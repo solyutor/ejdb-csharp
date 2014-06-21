@@ -257,5 +257,10 @@ namespace Nejdb.Bson
         {
             return new ObjectId(val);
         }
+        
+        public static explicit operator ObjectId(byte[] val)
+        {
+            return new ObjectId(val);
+        }
     }
 }
