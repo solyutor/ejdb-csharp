@@ -19,6 +19,7 @@ namespace Nejdb.Infrastructure
         {
             
         }
+
         /// <summary>
         /// Owns stream in a thread safe manner
         /// </summary>
@@ -29,6 +30,9 @@ namespace Nejdb.Infrastructure
             return result == Free;
         }
 
+        /// <summary>
+        /// Clears memory stream buffer, sets position to zero, and marks it as free. 
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             SetLength(0);

@@ -147,7 +147,7 @@ namespace Nejdb
             return new Database(this);
         }
 
-        public unsafe string GetLastErrorMessage(int errorCode)
+        internal unsafe string GetLastErrorMessage(int errorCode)
         {
             return new string(_getErrorMessage(errorCode)); //UnixMarshal.PtrToString(_ejdberrmsg((int) ecode), Encoding.UTF8);
         }
@@ -186,6 +186,10 @@ namespace Nejdb
         //	}
         //}
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             LibraryHandle.Dispose();

@@ -235,7 +235,7 @@ namespace Nejdb
             }
         }
 
-        protected internal void ThrowOnError()
+        internal void ThrowOnError()
         {
             var errorCode = LastErrorCode;
 

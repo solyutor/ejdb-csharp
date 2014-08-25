@@ -22,6 +22,10 @@ using Nejdb.Internals;
 namespace Nejdb.Bson
 {
 
+    /// <summary>
+    /// Encapsulates value and operations over BSON id object.
+    /// <remarks>Look at http://bsonspec.org/ for details</remarks>
+    /// </summary>
     [Serializable, StructLayout(LayoutKind.Sequential)]
     public struct ObjectId : IBsonValue
     {
@@ -59,6 +63,9 @@ namespace Nejdb.Bson
             get { return this.Equals(Empty); }
         }
 
+        /// <summary>
+        /// Creates new instance of <see cref="ObjectId"/> from specified <seealso cref="byte"/> values.
+        /// </summary>
         public ObjectId(byte byte01, byte byte02, byte byte03, byte byte04, byte byte05, byte byte06, byte byte07, byte byte08, byte byte09, byte byte10, byte byte11, byte byte12)
         {
             Byte01 = byte01;
@@ -75,60 +82,76 @@ namespace Nejdb.Bson
             Byte12 = byte12;
         }
 
-        public ObjectId(string val)
+        /// <summary>
+        /// Creates new instance of <see cref="ObjectId"/> from its string representation
+        /// </summary>
+        /// <param name="value">A string representation of <see cref="ObjectId"/></param>
+        /// <exception cref="ArgumentException"></exception>
+        public ObjectId(string value)
         {
-            if (!IsValidOid(val))
+            if (!IsValidObjectId(value))
             {
-                throw new ArgumentException("Invalid oid string");
+                throw new ArgumentException("Invalid objectId string");
             }
 
-            Byte01 = val.ToByteFromHex(0);
-            Byte02 = val.ToByteFromHex(2);
-            Byte03 = val.ToByteFromHex(4);
-            Byte04 = val.ToByteFromHex(6);
-            Byte05 = val.ToByteFromHex(8);
-            Byte06 = val.ToByteFromHex(10);
-            Byte07 = val.ToByteFromHex(12);
-            Byte08 = val.ToByteFromHex(14);
-            Byte09 = val.ToByteFromHex(16);
-            Byte10 = val.ToByteFromHex(18);
-            Byte11 = val.ToByteFromHex(20);
-            Byte12 = val.ToByteFromHex(22);
+            Byte01 = value.ToByteFromHex(0);
+            Byte02 = value.ToByteFromHex(2);
+            Byte03 = value.ToByteFromHex(4);
+            Byte04 = value.ToByteFromHex(6);
+            Byte05 = value.ToByteFromHex(8);
+            Byte06 = value.ToByteFromHex(10);
+            Byte07 = value.ToByteFromHex(12);
+            Byte08 = value.ToByteFromHex(14);
+            Byte09 = value.ToByteFromHex(16);
+            Byte10 = value.ToByteFromHex(18);
+            Byte11 = value.ToByteFromHex(20);
+            Byte12 = value.ToByteFromHex(22);
         }
 
-        public ObjectId(byte[] val)
+        /// <summary>
+        /// Creates new instance of <see cref="ObjectId"/> from its byte array representation
+        /// </summary>
+        /// <param name="value"><see cref="ObjectId"/> as byte array</param>
+        public ObjectId(byte[] value)
         {
-            Byte01 = val[0];
-            Byte02 = val[1];
-            Byte03 = val[2];
-            Byte04 = val[3];
-            Byte05 = val[4];
-            Byte06 = val[5];
-            Byte07 = val[6];
-            Byte08 = val[7];
-            Byte09 = val[8];
-            Byte10 = val[9];
-            Byte11 = val[10];
-            Byte12 = val[11];
+            Byte01 = value[0];
+            Byte02 = value[1];
+            Byte03 = value[2];
+            Byte04 = value[3];
+            Byte05 = value[4];
+            Byte06 = value[5];
+            Byte07 = value[6];
+            Byte08 = value[7];
+            Byte09 = value[8];
+            Byte10 = value[9];
+            Byte11 = value[10];
+            Byte12 = value[11];
         }
 
-        public ObjectId(ArraySegment<byte> segment)
+        /// <summary>
+        /// Creates new instance of <see cref="ObjectId"/> from its byte array representation in array segment
+        /// </summary>
+        /// <param name="value"><see cref="ObjectId"/> as byte array</param>
+        public ObjectId(ArraySegment<byte> value)
         {
-            var val = segment.Array;
-            Byte01 = val[segment.Offset + 0];
-            Byte02 = val[segment.Offset + 1];
-            Byte03 = val[segment.Offset + 2];
-            Byte04 = val[segment.Offset + 3];
-            Byte05 = val[segment.Offset + 4];
-            Byte06 = val[segment.Offset + 5];
-            Byte07 = val[segment.Offset + 6];
-            Byte08 = val[segment.Offset + 7];
-            Byte09 = val[segment.Offset + 8];
-            Byte10 = val[segment.Offset + 9];
-            Byte11 = val[segment.Offset + 10];
-            Byte12 = val[segment.Offset + 11];
+            var val = value.Array;
+            Byte01 = val[value.Offset + 0];
+            Byte02 = val[value.Offset + 1];
+            Byte03 = val[value.Offset + 2];
+            Byte04 = val[value.Offset + 3];
+            Byte05 = val[value.Offset + 4];
+            Byte06 = val[value.Offset + 5];
+            Byte07 = val[value.Offset + 6];
+            Byte08 = val[value.Offset + 7];
+            Byte09 = val[value.Offset + 8];
+            Byte10 = val[value.Offset + 9];
+            Byte11 = val[value.Offset + 10];
+            Byte12 = val[value.Offset + 11];
         }
 
+        /// <summary>
+        /// Creates new instance of <see cref="ObjectId"/> from binary reader
+        /// </summary>
         public ObjectId(BinaryReader reader)
         {
             Byte01 = reader.ReadByte();
@@ -146,16 +169,21 @@ namespace Nejdb.Bson
 
         }
 
-        public static bool IsValidOid(string oid)
+        /// <summary>
+        /// Check validity of string representation of <see cref="ObjectId"/>
+        /// </summary>
+        /// <param name="objectId"><see cref="ObjectId"/> as string</param>
+        /// <returns>True if object id is valid. False otherwise.</returns>
+        public static bool IsValidObjectId(string objectId)
         {
-            if (oid.Length != 24)
+            if (objectId.Length != 24)
             {
                 return false;
 
             }
-            for (int j = 0; j < oid.Length; j++)
+            for (int j = 0; j < objectId.Length; j++)
             {
-                var symbol = Char.ToLowerInvariant(oid[j]);
+                var symbol = Char.ToLowerInvariant(objectId[j]);
 
                 if ((symbol >= '0' && symbol <= '9') || ((symbol >= 'a' && symbol <= 'f')))
                 {
@@ -167,16 +195,29 @@ namespace Nejdb.Bson
         }
 
 
+        /// <summary>
+        /// Converts <see cref="ObjectId"/> to byte array representation
+        /// </summary>
         public byte[] ToBytes()
         {
             return new[] { Byte01, Byte02, Byte03, Byte04, Byte05, Byte06, Byte07, Byte08, Byte09, Byte10, Byte11, Byte12 };
         }
 
+        /// <summary>
+        /// Returns <see cref="string"/> representation of <see cref="ObjectId"/> using hex numbers.
+        /// </summary>
         public override string ToString()
         {
             return BitConverter.ToString(ToBytes()).Replace("-", "").ToLower();
         }
 
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal.
+        /// </summary>
+        /// <returns>
+        /// true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+        /// </returns>
+        /// <param name="obj">Another object to compare to. </param><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -210,6 +251,13 @@ namespace Nejdb.Bson
                 Byte12 == other.Byte12;
         }
 
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A 32-bit signed integer that is the hash code for this instance.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         public override int GetHashCode()
         {
             unchecked
@@ -230,11 +278,19 @@ namespace Nejdb.Bson
             }
         }
 
+        /// <summary>
+        /// Checks equality of two <see cref="ObjectId"/>
+        /// </summary>
+        /// <returns>True if object id are equal, False otherwise</returns>
         public static bool operator ==(ObjectId a, ObjectId b)
         {
             return a.Equals(b);
         }
 
+        /// <summary>
+        /// Checks inequality of two <see cref="ObjectId"/>
+        /// </summary>
+        /// <returns>True if object id are not equal, False otherwise</returns>
         public static bool operator !=(ObjectId a, ObjectId b)
         {
             return !(a == b);
@@ -253,14 +309,17 @@ namespace Nejdb.Bson
         /// <summary>
         /// Converts a hex string to ObjectId
         /// </summary>
-        public static explicit operator ObjectId(string val)
+        public static explicit operator ObjectId(string value)
         {
-            return new ObjectId(val);
+            return new ObjectId(value);
         }
         
-        public static explicit operator ObjectId(byte[] val)
+        /// <summary>
+        /// Converts byte array to an instanse of  <see cref="ObjectId"/>
+        /// </summary>
+        public static explicit operator ObjectId(byte[] value)
         {
-            return new ObjectId(val);
+            return new ObjectId(value);
         }
     }
 }
