@@ -286,7 +286,7 @@ namespace Nejdb.Bson
         /// <remarks>
         /// Hierarchical field paths are NOT supported. Use <c>[]</c> operator instead.
         /// </remarks>
-        /// <param name="key">Bson document key</param>
+        /// <param name="key">Bson document index</param>
         /// <see cref="BsonValue"/>
         public object GetObjectValue(string key)
         {
@@ -295,9 +295,9 @@ namespace Nejdb.Bson
         }
 
         /// <summary>
-        /// Determines whether this document has the specified key.
+        /// Determines whether this document has the specified index.
         /// </summary>
-        /// <returns><c>true</c> if this document has the specified key; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if this document has the specified index; otherwise, <c>false</c>.</returns>
         /// <param name="key">Key.</param>
         public bool HasKey(string key)
         {
@@ -305,13 +305,13 @@ namespace Nejdb.Bson
         }
 
         /// <summary>
-        /// Gets the <see cref="BsonDocument"/> with the specified key.
+        /// Gets the <see cref="BsonDocument"/> with the specified index.
         /// </summary>
         /// <remarks>
         /// Getter for hierarchical field paths are supported.
         /// </remarks>
         /// <param name="key">Key.</param>
-        /// <returns>Key object </c> or <c>null</c> if the key is not exists or value type is either 
+        /// <returns>Key object or <c>null</c> if the index is not exists or value type is either 
         /// <see cref="Bson.BsonType.NULL"/> or <see cref="Bson.BsonType.UNDEFINED"/></returns>
         public object this[string key]
         {
@@ -352,7 +352,7 @@ namespace Nejdb.Bson
                     }
                     else
                     {
-                        throw new Exception(string.Format("Unsupported value type: {0} for doc[key] assign operation", v.GetType()));
+                        throw new Exception(string.Format("Unsupported value type: {0} for doc[index] assign operation", v.GetType()));
                     }
                 }
                 setter(this, key, v);
@@ -680,7 +680,7 @@ namespace Nejdb.Bson
             return this;
         }
 
-        protected virtual void CheckKey(string key)
+        protected virtual void CheckKey(string index)
         {
         }
 

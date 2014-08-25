@@ -19,295 +19,518 @@ using System;
 namespace Nejdb.Bson
 {
 
+    /// <summary>
+    /// Implementes an array of bson values. 
+    /// </summary>
     [Serializable]
     public class BsonArray : BsonDocument
     {
-
+        /// <summary>
+        /// Bson Type this document. 
+        /// </summary>
+        /// <remarks>
+        /// Type is always <see cref="Bson.BsonType.ARRAY"/>
+        /// </remarks>
+        /// <value>The type of the Bson.</value>
         public override BsonType BsonType
         {
             get {  return BsonType.ARRAY; }
         }
 
-        public object this[int key]
+        /// <summary>
+        /// Gets bson value at specified position
+        /// </summary>
+        /// <param name="index"></param>
+        public object this[int index]
         {
-            get { return GetObjectValue(key.ToString()); }
+            get { return GetObjectValue(index.ToString()); }
         }
 
+        /// <summary>
+        /// Creates empty instance of <see cref="BsonArray"/>
+        /// </summary>
         public BsonArray()
         {
         }
 
-        public BsonArray(BsonUndefined[] arr)
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Values in array</param>
+        public BsonArray(BsonUndefined[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
                 SetUndefined(i);
             }
         }
 
-        public BsonArray(BsonNull[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of null values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonNull[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
                 SetNull(i);
             }
         }
 
-        public BsonArray(ushort[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Placeholders for values</param>
+        public BsonArray(ushort[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, (int)arr[i]);
+                SetNumber(i, array[i]);
             }
         }
 
-        public BsonArray(uint[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="uint"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(uint[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, (long)arr[i]);
+                SetNumber(i, array[i]);
             }
         }
 
-        public BsonArray(ulong[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="ulong"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(ulong[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, (long)arr[i]);
+                SetNumber(i, (long)array[i]);
             }
         }
 
-        public BsonArray(short[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="short"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(short[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, (int)arr[i]);
+                SetNumber(i, array[i]);
             }
         }
 
-        public BsonArray(string[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="string"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(string[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetString(i, arr[i]);
+                SetString(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="int"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(int[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetNumber(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="long"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(long[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetNumber(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="float"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(float[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetNumber(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="double"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(double[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetNumber(i, array[i]);
             }
         }
 
-        public BsonArray(int[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="bool"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(bool[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, arr[i]);
+                SetBool(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="ObjectId"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(ObjectId[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetObjectId(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="DateTime"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(DateTime[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetDate(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonDocument"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonDocument[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetObject(i, array[i]);
+            }
+        }
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonArray"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonArray[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetArray(i, array[i]);
+            }
+        }
+        
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonRegexp"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonRegexp[] array)
+        {
+            for (var i = 0; i < array.Length; ++i)
+            {
+                SetRegexp(i, array[i]);
             }
         }
 
-        public BsonArray(long[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonTimestamp"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonTimestamp[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, arr[i]);
+                SetTimestamp(i, array[i]);
             }
         }
 
-        public BsonArray(float[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonCodeWScope"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonCodeWScope[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, arr[i]);
+                SetCodeWScope(i, array[i]);
             }
         }
 
-        public BsonArray(double[] arr)
+        /// <summary>
+        /// Creates new instance of <see cref="BsonArray"/>
+        /// </summary>
+        /// <param name="array">Array of <seealso cref="BsonBinData"/> values to place in <see cref="BsonArray"/></param>
+        public BsonArray(BsonBinData[] array)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            for (var i = 0; i < array.Length; ++i)
             {
-                SetNumber(i, arr[i]);
+                SetBinData(i, array[i]);
             }
         }
 
-        public BsonArray(bool[] arr)
+        /// <summary>
+        /// Sets null at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetNull(int index)
         {
-            for (var i = 0; i < arr.Length; ++i)
+            return SetNull(index.ToString());
+        }
+
+        /// <summary>
+        /// Sets null at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetUndefined(int index)
+        {
+            return SetUndefined(index.ToString());
+        }
+
+        /// <summary>
+        /// Sets bson max key at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetMaxKey(int index)
+        {
+            return SetMaxKey(index.ToString());
+        }
+
+        /// <summary>
+        /// Sets bson min key specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetMinKey(int index)
+        {
+            return SetMinKey(index.ToString());
+        }
+
+        /// <summary>
+        /// Sets <see cref="ObjectId"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">String representation of <see cref="ObjectId"/></param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetObjectId(int index, string value)
+        {
+            return SetOID(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="ObjectId"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="ObjectId"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetObjectId(int index, ObjectId value)
+        {
+            return SetOID(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="bool"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="bool"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetBool(int index, bool value)
+        {
+            return SetBool(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="int"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="int"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetNumber(int index, int value)
+        {
+            return SetNumber(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="long"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="long"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetNumber(int index, long value)
+        {
+            return SetNumber(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="double"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="double"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetNumber(int index, double value)
+        {
+            return SetNumber(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="float"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="float"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetNumber(int index, float value)
+        {
+            return SetNumber(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="string"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="string"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetString(int index, string value)
+        {
+            return SetString(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets javascript code at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">Javascript code as string</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetCode(int index, string value)
+        {
+            return SetCode(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets bson symbol at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">Bson symbol</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetSymbol(int index, string value)
+        {
+            return SetSymbol(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="DateTime"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="DateTime"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetDate(int index, DateTime value)
+        {
+            return SetDate(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonRegexp"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="BsonRegexp"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetRegexp(int index, BsonRegexp value)
+        {
+            return SetRegexp(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonBinData"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An <see cref="BsonBinData"/> value</param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetBinData(int index, BsonBinData value)
+        {
+            return SetBinData(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonDocument"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An instance of <see cref="BsonDocument"/></param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetObject(int index, BsonDocument value)
+        {
+            return SetDocument(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonArray"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An instance of <see cref="BsonArray"/></param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetArray(int index, BsonArray value)
+        {
+            return SetArray(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonTimestamp"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An instance of <see cref="BsonTimestamp"/></param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetTimestamp(int index, BsonTimestamp value)
+        {
+            return SetTimestamp(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Sets <see cref="BsonCodeWScope"/> value at specified position.
+        /// </summary>
+        /// <param name="index">Index to place value at</param>
+        /// <param name="value">An instance of <see cref="BsonCodeWScope"/></param>
+        /// <returns>Returns itself</returns>
+        public BsonDocument SetCodeWScope(int index, BsonCodeWScope value)
+        {
+            return SetCodeWScope(index.ToString(), value);
+        }
+
+        /// <summary>
+        /// Ensures that specified index exists. 
+        /// </summary>
+        /// <param name="index">Index to check</param>
+        /// <exception cref="InvalidBsonDataException">If index does not exists</exception>
+        protected override void CheckKey(string index)
+        {
+            int parsedIndex;
+            if (index == null || !int.TryParse(index, out parsedIndex) || parsedIndex < 0)
             {
-                SetBool(i, arr[i]);
-            }
-        }
-
-        public BsonArray(ObjectId[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetOID(i, arr[i]);
-            }
-        }
-
-        public BsonArray(DateTime[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetDate(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonDocument[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetObject(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonArray[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetArray(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonRegexp[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetRegexp(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonTimestamp[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetTimestamp(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonCodeWScope[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetCodeWScope(i, arr[i]);
-            }
-        }
-
-        public BsonArray(BsonBinData[] arr)
-        {
-            for (var i = 0; i < arr.Length; ++i)
-            {
-                SetBinData(i, arr[i]);
-            }
-        }
-
-        public BsonDocument SetNull(int idx)
-        {
-            return base.SetNull(idx.ToString());
-        }
-
-        public BsonDocument SetUndefined(int idx)
-        {
-            return base.SetUndefined(idx.ToString());
-        }
-
-        public BsonDocument SetMaxKey(int idx)
-        {
-            return base.SetMaxKey(idx.ToString());
-        }
-
-        public BsonDocument SetMinKey(int idx)
-        {
-            return base.SetMinKey(idx.ToString());
-        }
-
-        public BsonDocument SetOID(int idx, string oid)
-        {
-            return base.SetOID(idx.ToString(), oid);
-        }
-
-        public BsonDocument SetOID(int idx, ObjectId oid)
-        {
-            return base.SetOID(idx.ToString(), oid);
-        }
-
-        public BsonDocument SetBool(int idx, bool val)
-        {
-            return base.SetBool(idx.ToString(), val);
-        }
-
-        public BsonDocument SetNumber(int idx, int val)
-        {
-            return base.SetNumber(idx.ToString(), val);
-        }
-
-        public BsonDocument SetNumber(int idx, long val)
-        {
-            return base.SetNumber(idx.ToString(), val);
-        }
-
-        public BsonDocument SetNumber(int idx, double val)
-        {
-            return base.SetNumber(idx.ToString(), val);
-        }
-
-        public BsonDocument SetNumber(int idx, float val)
-        {
-            return base.SetNumber(idx.ToString(), val);
-        }
-
-        public BsonDocument SetString(int idx, string val)
-        {
-            return base.SetString(idx.ToString(), val);
-        }
-
-        public BsonDocument SetCode(int idx, string val)
-        {
-            return base.SetCode(idx.ToString(), val);
-        }
-
-        public BsonDocument SetSymbol(int idx, string val)
-        {
-            return base.SetSymbol(idx.ToString(), val);
-        }
-
-        public BsonDocument SetDate(int idx, DateTime val)
-        {
-            return base.SetDate(idx.ToString(), val);
-        }
-
-        public BsonDocument SetRegexp(int idx, BsonRegexp val)
-        {
-            return base.SetRegexp(idx.ToString(), val);
-        }
-
-        public BsonDocument SetBinData(int idx, BsonBinData val)
-        {
-            return base.SetBinData(idx.ToString(), val);
-        }
-
-        public BsonDocument SetObject(int idx, BsonDocument val)
-        {
-            return base.SetDocument(idx.ToString(), val);
-        }
-
-        public BsonDocument SetArray(int idx, BsonArray val)
-        {
-            return base.SetArray(idx.ToString(), val);
-        }
-
-        public BsonDocument SetTimestamp(int idx, BsonTimestamp val)
-        {
-            return base.SetTimestamp(idx.ToString(), val);
-        }
-
-        public BsonDocument SetCodeWScope(int idx, BsonCodeWScope val)
-        {
-            return base.SetCodeWScope(idx.ToString(), val);
-        }
-
-        protected override void CheckKey(string key)
-        {
-            int idx;
-            if (key == null || !int.TryParse(key, out idx) || idx < 0)
-            {
-                throw new InvalidBsonDataException(string.Format("Invalid array key: {0}", key));
+                throw new InvalidBsonDataException(string.Format("Invalid array index: {0}", index));
             }
         }
     }

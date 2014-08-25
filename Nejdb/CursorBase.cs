@@ -87,7 +87,7 @@ namespace Nejdb
         }
 
         /// <summary>
-        /// Returns query log if query executed with <see cref="QueryMode#Explain"/>
+        /// Returns query log if query executed with <see cref="QueryMode.Explain"/>
         /// </summary>
         /// <returns></returns>
         public string GetLog()

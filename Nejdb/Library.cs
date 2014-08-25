@@ -126,7 +126,7 @@ namespace Nejdb
 
         /// <summary>
         /// Creates new instance of a <see cref="Library"/> class.
-        /// <remarks>It's better to use the only instance of library for process. You can manage it yourself or use <see cref="Library#Instance"/> property.</remarks>
+        /// <remarks>It's better to use the only instance of library for process. You can manage it yourself or use <see cref="Library.Instance"/> property.</remarks>
         /// </summary>
         /// <returns></returns>
         public static Library Create()

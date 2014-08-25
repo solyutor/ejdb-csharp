@@ -59,7 +59,7 @@ namespace Nejdb
         }
 
         /// <summary>
-        /// Returns document at current <see cref="CursorBase#Position"/>
+        /// Returns document at current <see cref="CursorBase.Position"/>
         /// </summary>
         public TDocument Current
         {
@@ -134,7 +134,7 @@ namespace Nejdb
 
 
         /// <summary>
-        /// Returns document at current <see cref="CursorBase#Position"/>
+        /// Returns document at current <see cref="CursorBase.Position"/>
         /// </summary>
         public BsonIterator Current
         {

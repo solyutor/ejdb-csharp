@@ -5,7 +5,7 @@ using Newtonsoft.Json.Bson;
 
 namespace Nejdb.Queries
 {
-    /**
+    /*
 * Create query object.
 * Sucessfully created queries must be destroyed with ejdbquerydel().
 *
