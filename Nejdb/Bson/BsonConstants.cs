@@ -15,6 +15,7 @@
 // ============================================================================================
 
 using System;
+using System.Text;
 
 namespace Nejdb.Bson
 {
@@ -24,15 +25,14 @@ namespace Nejdb.Bson
     /// </summary>
     public static class BsonConstants
     {
-
-        static BsonConstants()
-        {
-            Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        }
+        /// <summary>
+        /// Gets epoch.
+        /// </summary>
+        public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
-        /// Gets or sets the epoch.
+        /// Default <see cref="System.Text.Encoding"/> for all bson strings (UTF-8 without BOM). 
         /// </summary>
-        public static DateTime Epoch { get; private set; }
+        public static readonly Encoding Encoding = new UTF8Encoding(false, true);
     }
 }

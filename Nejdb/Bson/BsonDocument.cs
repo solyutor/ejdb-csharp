@@ -515,7 +515,7 @@ namespace Nejdb.Bson
             {
                 long start = os.Position;
                 os.Position += 4; //skip int32 document size
-                using (var bw = new ExtBinaryWriter(os, Encoding.UTF8, true))
+                using (var bw = new ExtBinaryWriter(os, BsonConstants.Encoding, true))
                 {
                     foreach (BsonValue bv in _fieldslist)
                     {
@@ -540,7 +540,7 @@ namespace Nejdb.Bson
                     }
                     darr = ms.ToArray();
                 }
-                using (var bw = new ExtBinaryWriter(os, Encoding.UTF8, true))
+                using (var bw = new ExtBinaryWriter(os, BsonConstants.Encoding, true))
                 {
                     bw.Write(darr.Length + 4/*doclen*/ + 1/*0x00*/);
                     bw.Write(darr);

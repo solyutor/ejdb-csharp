@@ -17,18 +17,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Nejdb.Bson;
 
 namespace Nejdb.Internals
 {
 
     public class ExtBinaryReader : BinaryReader
     {
+        private readonly bool _leaveopen;
 
-        public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
-
-        bool _leaveopen;
-
-        public ExtBinaryReader(Stream input) : this(input, DEFAULT_ENCODING)
+        public ExtBinaryReader(Stream input) : this(input, BsonConstants.Encoding)
         {
         }
 
@@ -36,13 +34,13 @@ namespace Nejdb.Internals
         {
         }
 
-        public ExtBinaryReader(Stream input, bool leaveOpen) : this(input, DEFAULT_ENCODING, leaveOpen)
+        public ExtBinaryReader(Stream input, bool leaveOpen) : this(input, BsonConstants.Encoding, leaveOpen)
         {
         }
 
         public ExtBinaryReader(Stream input, Encoding encoding, bool leaveopen) : base(input, encoding)
         {
-            this._leaveopen = leaveopen;
+            _leaveopen = leaveopen;
         }
 
         protected override void Dispose(bool disposing)
@@ -58,7 +56,8 @@ namespace Nejdb.Internals
             {
                 sb.Add(bv);
             }
-            return Encoding.UTF8.GetString(sb.ToArray());
+
+            return BsonConstants.Encoding.GetString(sb.ToArray());
         }
 
         public void SkipCString()

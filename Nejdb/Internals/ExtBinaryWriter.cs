@@ -16,22 +16,23 @@
 
 using System.IO;
 using System.Text;
+using Nejdb.Bson;
 
 namespace Nejdb.Internals
 {
 
     public class ExtBinaryWriter : BinaryWriter
     {
-        public static Encoding DEFAULT_ENCODING = Encoding.UTF8;
         Encoding _encoding;
         bool _leaveopen;
 
         public ExtBinaryWriter()
         {
-            _encoding = DEFAULT_ENCODING;
+            _encoding = BsonConstants.Encoding;
         }
 
-        public ExtBinaryWriter(Stream output) : this(output, DEFAULT_ENCODING, false)
+        public ExtBinaryWriter(Stream output)
+            : this(output, BsonConstants.Encoding, false)
         {
         }
 
@@ -45,7 +46,7 @@ namespace Nejdb.Internals
         {
         }
 
-        public ExtBinaryWriter(Stream output, bool leaveopen) : this(output, DEFAULT_ENCODING, leaveopen)
+        public ExtBinaryWriter(Stream output, bool leaveopen) : this(output, BsonConstants.Encoding, leaveopen)
         {
         }
 
