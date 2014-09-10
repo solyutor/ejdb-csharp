@@ -49,21 +49,35 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\quarks\src\Quarks\Native\LibraryHandle.cs">
+      <Link>Infrastructure\Platform\LibraryHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\quarks\src\Quarks\Native\MethodHandle.cs">
+      <Link>Infrastructure\Platform\MethodHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\quarks\src\Quarks\Native\Platform.cs">
+      <Link>Infrastructure\Platform\Platform.cs</Link>
+    </Compile>
+    <Compile Include="..\quarks\src\Quarks\Native\UnmanagedProcName.cs">
+      <Link>Infrastructure\Platform\UnmanagedProcName.cs</Link>
+    </Compile>
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="CursorBase.cs" />
     <Compile Include="IdHelper.cs" />
+    <Compile Include="Infrastructure\EmbeddedResource.cs" />
+    <Compile Include="Infrastructure\Streams\PooledMemoryStream.cs" />
+    <Compile Include="Infrastructure\Streams\PoolSizeSettings.cs" />
+    <Compile Include="Infrastructure\Streams\StreamExtensions.cs" />
+    <Compile Include="Infrastructure\Streams\StreamPool.cs" />
     <Compile Include="Infrastructure\ThrowHelper.cs" />
-    <Compile Include="Infrastructure\UnsafeBuffer.cs" />
-    <Compile Include="Infrastructure\UnsafeStream.cs" />
+    <Compile Include="Infrastructure\Streams\UnsafeBuffer.cs" />
+    <Compile Include="Infrastructure\Streams\UnsafeStream.cs" />
     <Compile Include="Internals\CollectionFunctions.cs" />
     <Compile Include="Internals\DatabaseFunctions.cs" />
     <Compile Include="Internals\Functions.cs" />
-    <Compile Include="Infrastructure\PooledMemoryStream.cs" />
-    <Compile Include="Infrastructure\PoolSizeSettings.cs" />
     <Compile Include="Internals\QueryFunctions.cs" />
-    <Compile Include="Infrastructure\StreamPool.cs" />
     <Compile Include="ObjectIdConverter.cs" />
     <Compile Include="Queries\AndCriterion.cs" />
     <Compile Include="Queries\BetweenCriterion.cs" />
@@ -101,18 +115,14 @@
     <Compile Include="IndexOperations.cs" />
     <Compile Include="OpenMode.cs" />
     <Compile Include="Internals\DatabaseHandle.cs" />
-    <Compile Include="Internals\LibraryHandle.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Internals\QueryHandle.cs" />
     <Compile Include="Internals\QueryLogBuffer.cs" />
     <Compile Include="QueryMode.cs" />
     <Compile Include="Internals\ExtBinaryReader.cs" />
     <Compile Include="Internals\ExtBinaryWriter.cs" />
-    <Compile Include="Infrastructure\UnmanagedProcName.cs" />
-    <Compile Include="Internals\ResourceHelper.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Library.cs" />
-    <Compile Include="Internals\MethodHandle.cs" />
     <Compile Include="Bson\BsonType.cs" />
     <Compile Include="Bson\InvalidBsonDataException.cs" />
     <Compile Include="Bson\ObjectId.cs" />
@@ -130,7 +140,6 @@
     <Compile Include="EjdbQueryException.cs" />
     <Compile Include="Bson\BsonNull.cs" />
     <Compile Include="Bson\BsonUndefined.cs" />
-    <Compile Include="Infrastructure\Platform.cs" />
     <Compile Include="Internals\TypeExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Nejdb.Infrastructure;
+using Codestellation.Quarks.Native;
 
 namespace Nejdb.Internals
 {

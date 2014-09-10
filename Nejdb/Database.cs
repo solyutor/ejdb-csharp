@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using Codestellation.Quarks.Streams;
 using Nejdb.Bson;
 using Nejdb.Infrastructure;
 using Nejdb.Internals;

@@ -1,4 +1,6 @@
-﻿namespace Nejdb.Internals
+﻿using Codestellation.Quarks.Native;
+
+namespace Nejdb.Internals
 {
     internal class Functions
     {

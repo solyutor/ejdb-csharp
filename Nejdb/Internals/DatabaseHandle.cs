@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using Codestellation.Quarks.Native;
+using Microsoft.Win32.SafeHandles;
 
 namespace Nejdb.Internals
 {

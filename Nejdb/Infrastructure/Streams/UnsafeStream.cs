@@ -2,7 +2,7 @@
 using System.IO;
 using Nejdb.Internals;
 
-namespace Nejdb.Infrastructure
+namespace Nejdb.Infrastructure.Streams
 {
     internal sealed unsafe class UnsafeStream : Stream
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Nejdb.Bson;
 using Nejdb.Infrastructure;
+using Nejdb.Infrastructure.Streams;
 using Nejdb.Internals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;

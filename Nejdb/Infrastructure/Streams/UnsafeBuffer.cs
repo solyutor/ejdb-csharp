@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Nejdb.Bson;
+using Nejdb.Infrastructure.Streams;
 
 namespace Nejdb.Infrastructure
 {

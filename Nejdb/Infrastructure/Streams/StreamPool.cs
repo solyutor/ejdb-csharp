@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Nejdb.Infrastructure
+namespace Codestellation.Quarks.Streams
 {
     /// <summary>
     /// Encapsulates functionality for pooling streams. 
     /// </summary>
-    public class StreamPool
+    internal class StreamPool
     {
         private readonly PoolSizeSettings _settings;
         private readonly PooledMemoryStream[] _pooledStreams;

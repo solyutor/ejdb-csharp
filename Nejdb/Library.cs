@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Codestellation.Quarks.Native;
+using Codestellation.Quarks.Resources;
+using Codestellation.Quarks.Streams;
 using Nejdb.Infrastructure;
+using Nejdb.Infrastructure.Streams;
 using Nejdb.Internals;
 
 namespace Nejdb
@@ -131,7 +135,14 @@ namespace Nejdb
         /// <returns></returns>
         public static Library Create()
         {
-            var libraryHandle = Platform.LoadEjdbLibrary();
+            //var libraryHandle = Platform.LoadEjdbLibrary();
+            var resourceName = string.Format("tcejdb{0}.dll", Environment.Is64BitProcess ? "64" : "32");
+
+            var libraryPath = EmbeddedResource
+                .EndsWith(resourceName)
+                .ExportToTempFile();
+
+            var libraryHandle = Platform.LoadLibraryEx(libraryPath);
 
             var result = new Library(libraryHandle);
 
