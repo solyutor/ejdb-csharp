@@ -46,5 +46,20 @@ namespace Codestellation.Quarks.Native
                 File.Delete(libraryHandle.LibraryPath);
             }
         }
+
+        public static LibraryHandle LoadLibraryEx(string libraryPath)
+        {
+            var libraryHandle = LoadLibrary(libraryPath);
+
+            if (libraryHandle.IsInvalid)
+            {
+                var error = Marshal.GetLastWin32Error();
+                throw new InvalidOperationException("Win32 error " + error);
+            }
+
+            libraryHandle.LibraryPath = libraryPath;
+
+            return libraryHandle;
+        }
     }
 }
