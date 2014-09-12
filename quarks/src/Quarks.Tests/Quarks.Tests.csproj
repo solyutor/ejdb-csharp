@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -40,10 +43,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllInternalsTests.cs" />
     <Compile Include="DateAndTime\ClockTests.cs" />
     <Compile Include="Enumerations\EnumIndexerTests.cs" />
     <Compile Include="Enumerations\EnumUtil.cs" />
     <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
+    <Compile Include="IO\FolderTests.cs" />
+    <Compile Include="ScratchPad.cs" />
+    <Compile Include="Streams\ReusableStreamTests.cs" />
     <Compile Include="StringUtils\StringExtensionsTests.cs" />
     <Compile Include="Resources\EmbeddedResourceTests.cs" />
     <Compile Include="Streams\StreamExtensionsTests.cs" />
