@@ -14,7 +14,17 @@ namespace Nejdb
             var bsonWriter = writer as BsonWriter;
             if (bsonWriter != null)
             {
-                bsonWriter.WriteObjectId(((ObjectId)value).ToBytes());
+                var objectId = (ObjectId?)value;
+
+                if (objectId.HasValue)
+                {
+                    byte[] bytes = objectId.Value.ToBytes();
+                    bsonWriter.WriteObjectId(bytes);
+                }
+                else
+                {
+                    bsonWriter.WriteNull();
+                }
             }
             else
             {
@@ -34,7 +44,7 @@ namespace Nejdb
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof (ObjectId);
+            return objectType == typeof (ObjectId) || objectType == typeof(ObjectId?);
         }
     }
 }

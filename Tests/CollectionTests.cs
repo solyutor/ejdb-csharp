@@ -123,12 +123,25 @@ namespace Nejdb.Tests
 
             var otherId = _collection.Save(other, false);
 
-            var origin = new NonIdObjectIdSample{OtherId = otherId};
+            var origin = new NonIdObjectIdSample{OtherId = otherId, OtherNullableId = otherId};
             var id = _collection.Save(origin, false);
 
             var reloaded = _collection.Load<NonIdObjectIdSample>(id);
 
             Assert.That(reloaded.OtherId, Is.EqualTo(otherId));
+            Assert.That(reloaded.OtherNullableId.HasValue, Is.True);
+            Assert.That(reloaded.OtherNullableId.Value, Is.EqualTo(otherId));
+        }
+
+        [Test]
+        public void Can_save_and_load_strongly_typed_document_with_nullable_object_id()
+        {
+            var origin = new NonIdObjectIdSample();
+            var id = _collection.Save(origin, false);
+
+            var reloaded = _collection.Load<NonIdObjectIdSample>(id);
+
+            Assert.That(reloaded.OtherNullableId.HasValue, Is.False);
         }
         
         [Test]

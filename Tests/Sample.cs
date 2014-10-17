@@ -33,5 +33,7 @@ namespace Nejdb.Tests
         public ObjectId Id { get; set; }
 
         public ObjectId OtherId { get; set; }
+
+        public ObjectId? OtherNullableId { get; set; }
     }
 }
